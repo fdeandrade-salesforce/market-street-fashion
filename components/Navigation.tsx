@@ -146,6 +146,8 @@ export default function Navigation() {
   const [showToast, setShowToast] = useState(false)
   const [cartIconPulse, setCartIconPulse] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const autoCloseTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const isHoveringMinicartRef = useRef(false)
 
   // Store availability mapping - same logic as Cart page
   const getItemAvailability = (itemId: string, storeId: string, allPickupItems: CartItem[]): boolean => {
@@ -198,19 +200,61 @@ export default function Navigation() {
     }
 
     const handleItemAdded = (e: CustomEvent<{ product: any; item: CartItem; isNewItem: boolean }>) => {
-      const { product, isNewItem } = e.detail
-      setToastMessage(`${product.name} ${isNewItem ? 'added to' : 'updated in'} cart`)
+      const { product, item, isNewItem } = e.detail
+      // Clear any existing auto-close timeout
+      if (autoCloseTimeoutRef.current) {
+        clearTimeout(autoCloseTimeoutRef.current)
+        autoCloseTimeoutRef.current = null
+      }
+      // Open minicart with animation
+      setIsCartOpen(true)
+      // Dispatch event with item ID for animation
+      window.dispatchEvent(new CustomEvent('itemAddedToMiniCart', { 
+        detail: { itemId: item.id }
+      }))
+      // Show brief toast message (minicart will also show the product)
+      setToastMessage(`${product.name} added to cart`)
       setShowToast(true)
+      // Auto-close minicart after 3 seconds, but only if not hovering
+      // Delay the check slightly to allow hover detection to initialize
+      setTimeout(() => {
+        // Check hover state before setting timeout
+        if (!isHoveringMinicartRef.current) {
+          autoCloseTimeoutRef.current = setTimeout(() => {
+            // Double-check hover state before closing
+            if (!isHoveringMinicartRef.current) {
+              setIsCartOpen(false)
+            }
+            autoCloseTimeoutRef.current = null
+          }, 3000)
+        }
+      }, 150)
       setCartIconPulse(true)
       setTimeout(() => setCartIconPulse(false), 600)
     }
 
+    const handleMinicartHover = (e: CustomEvent<{ isHovering: boolean }>) => {
+      isHoveringMinicartRef.current = e.detail.isHovering
+      // If user starts hovering, cancel auto-close immediately
+      if (e.detail.isHovering) {
+        if (autoCloseTimeoutRef.current) {
+          clearTimeout(autoCloseTimeoutRef.current)
+          autoCloseTimeoutRef.current = null
+        }
+      }
+    }
+
     window.addEventListener('cartUpdated', handleCartUpdate as EventListener)
     window.addEventListener('itemAddedToCart', handleItemAdded as EventListener)
+    window.addEventListener('minicartHover', handleMinicartHover as EventListener)
     
     return () => {
       window.removeEventListener('cartUpdated', handleCartUpdate as EventListener)
       window.removeEventListener('itemAddedToCart', handleItemAdded as EventListener)
+      window.removeEventListener('minicartHover', handleMinicartHover as EventListener)
+      if (autoCloseTimeoutRef.current) {
+        clearTimeout(autoCloseTimeoutRef.current)
+      }
     }
   }, [])
 
@@ -259,7 +303,7 @@ export default function Navigation() {
                 onMouseEnter={() => item.children && handleMouseEnter(item.label)}
                 onMouseLeave={handleMouseLeave}
               >
-                <a
+                <Link
                   href={item.href}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                     activeDropdown === item.label
@@ -268,7 +312,7 @@ export default function Navigation() {
                   }`}
                 >
                   {item.label}
-                </a>
+                </Link>
               </div>
             ))}
           </div>
@@ -339,25 +383,25 @@ export default function Navigation() {
           <div className="md:hidden py-4 border-t border-brand-gray-200">
             {navigationItems.map((item) => (
               <div key={item.label}>
-                <a
+                <Link
                   href={item.href}
                   className={`block py-3 px-4 text-brand-black hover:bg-brand-gray-50 transition-colors font-medium ${item.className || ''}`}
                   onClick={() => setIsMenuOpen(false)}
                 >
                   {item.label}
-                </a>
+                </Link>
                 {item.children && (
                   <div className="pl-8 pb-2">
                     {item.children.flatMap((column) =>
                       column.items.map((link) => (
-                        <a
+                        <Link
                           key={link.label}
                           href={link.href}
                           className="block py-2 text-sm text-brand-gray-600 hover:text-brand-black transition-colors"
                           onClick={() => setIsMenuOpen(false)}
                         >
                           {link.label}
-                        </a>
+                        </Link>
                       ))
                     )}
                   </div>
@@ -395,13 +439,13 @@ export default function Navigation() {
                       <ul className="space-y-2">
                         {column.items.map((link) => (
                           <li key={link.label}>
-                            <a
+                            <Link
                               href={link.href}
                               className="text-sm text-brand-black hover:text-brand-blue-500 transition-colors"
                               onClick={() => setActiveDropdown(null)}
                             >
                               {link.label}
-                            </a>
+                            </Link>
                           </li>
                         ))}
                       </ul>
@@ -412,7 +456,7 @@ export default function Navigation() {
               
               {/* Featured Image */}
               {activeNavItem.featuredImage && (
-                <a
+                <Link
                   href={activeNavItem.featuredLink || activeNavItem.href}
                   className="relative w-56 h-40 bg-brand-gray-100 rounded-lg overflow-hidden group flex-shrink-0"
                   onClick={() => setActiveDropdown(null)}
@@ -429,7 +473,7 @@ export default function Navigation() {
                       </p>
                     </div>
                   )}
-                </a>
+                </Link>
               )}
             </div>
           </div>
@@ -458,7 +502,14 @@ export default function Navigation() {
       {/* Mini Cart */}
       <MiniCart
         isOpen={isCartOpen}
-        onClose={() => setIsCartOpen(false)}
+        onClose={() => {
+          // Clear auto-close timeout when manually closing
+          if (autoCloseTimeoutRef.current) {
+            clearTimeout(autoCloseTimeoutRef.current)
+            autoCloseTimeoutRef.current = null
+          }
+          setIsCartOpen(false)
+        }}
         items={cartItems}
         onUpdateQuantity={(itemId, quantity) => {
           updateCartQuantity(itemId, quantity)
@@ -555,7 +606,8 @@ export default function Navigation() {
         message={toastMessage}
         isVisible={showToast}
         onClose={() => setShowToast(false)}
-        duration={3000}
+        duration={2000}
+        type="success"
       />
     </nav>
   )

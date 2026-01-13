@@ -8,7 +8,10 @@ import Footer from './Footer'
 import AnnouncementBar from './AnnouncementBar'
 import ProductCard from './ProductCard'
 import { Product } from './ProductListingPage'
-import { getFeaturedProducts } from '../lib/products'
+import { getFeaturedProducts, getAllProducts } from '../lib/products'
+import QuickViewModal from './QuickViewModal'
+import NotifyMeModal from './NotifyMeModal'
+import { addToCart } from '../lib/cart'
 
 interface OrderItem {
   image: string
@@ -82,6 +85,8 @@ export default function OrderDetailPage({ order }: OrderDetailPageProps) {
   const [email, setEmail] = useState('')
   const [currentSlide, setCurrentSlide] = useState(0)
   const [showTrackingDropdown, setShowTrackingDropdown] = useState(false)
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null)
+  const [notifyMeProduct, setNotifyMeProduct] = useState<Product | null>(null)
 
   // Safety check - if order is invalid, show error (after hooks)
   if (!order || !order.orderNumber) {
@@ -106,14 +111,33 @@ export default function OrderDetailPage({ order }: OrderDetailPageProps) {
   // Get suggested products
   const suggestedProducts: Product[] = getFeaturedProducts().slice(0, 4)
 
-  const handleQuickView = (product: Product) => {
-    console.log('Quick view:', product.id)
-    // Quick view logic here
+  // Helper function to check if product has variants
+  const hasVariants = (product: Product): boolean => {
+    if (product.size && product.size.length > 1) return true
+    if (product.colors && product.colors.length > 1) return true
+    if (product.variants && product.variants > 0) return true
+    return false
   }
 
-  const handleAddToCart = (product: Product) => {
-    console.log('Add to cart:', product.id)
-    // Add to cart logic here
+  // Unified handler for Quick View/Quick Add
+  const handleUnifiedAction = (product: Product) => {
+    // Check if product is out of stock first
+    if (!product.inStock) {
+      setNotifyMeProduct(product)
+      return
+    }
+
+    if (hasVariants(product)) {
+      // Product has variants - open modal for variant selection
+      setQuickViewProduct(product)
+    } else {
+      // No variants - add to cart directly
+      addToCart(product, 1)
+    }
+  }
+
+  const handleNotifyMe = (email: string) => {
+    console.log(`Notify ${email} when ${notifyMeProduct?.name} is available`)
   }
 
   const handleAddToWishlist = (product: Product) => {
@@ -750,8 +774,7 @@ export default function OrderDetailPage({ order }: OrderDetailPageProps) {
                 <ProductCard
                   key={product.id}
                   product={product}
-                  onQuickView={handleQuickView}
-                  onAddToCart={handleAddToCart}
+                  onUnifiedAction={handleUnifiedAction}
                   onAddToWishlist={handleAddToWishlist}
                 />
               ))}
@@ -768,6 +791,29 @@ export default function OrderDetailPage({ order }: OrderDetailPageProps) {
       </main>
 
       <Footer />
+
+      {/* Quick View Modal */}
+      {quickViewProduct && (
+        <QuickViewModal
+          product={quickViewProduct}
+          allProducts={getAllProducts()}
+          isOpen={!!quickViewProduct}
+          onClose={() => setQuickViewProduct(null)}
+          onAddToCart={(product, size, color) => addToCart(product, 1, size, color)}
+          onAddToWishlist={handleAddToWishlist}
+          onNotify={(product) => setNotifyMeProduct(product)}
+        />
+      )}
+
+      {/* Notify Me Modal */}
+      {notifyMeProduct && (
+        <NotifyMeModal
+          product={notifyMeProduct}
+          isOpen={!!notifyMeProduct}
+          onClose={() => setNotifyMeProduct(null)}
+          onNotify={handleNotifyMe}
+        />
+      )}
     </div>
   )
 }

@@ -1,10 +1,13 @@
-import React from 'react'
+import React, { useState, useMemo } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { Product } from './ProductListingPage'
 import LazyImage from './LazyImage'
+import { getAllProducts } from '../lib/products'
 
 interface ProductCardProps {
   product: Product
+  onUnifiedAction?: (product: Product) => void
   onAddToCart?: (product: Product) => void
   onQuickView?: (product: Product) => void
   onAddToWishlist?: (product: Product) => void
@@ -14,16 +17,66 @@ interface ProductCardProps {
 
 export default function ProductCard({
   product,
+  onUnifiedAction,
   onAddToCart,
   onQuickView,
   onAddToWishlist,
   showQuickAdd = false,
   isInWishlist = false,
 }: ProductCardProps) {
-  const hasDiscount = product.originalPrice && product.originalPrice > product.price
-  const discountPercentage = hasDiscount
-    ? Math.round(((product.originalPrice! - product.price) / product.originalPrice!) * 100)
-    : null
+  const router = useRouter()
+  const [hoveredColor, setHoveredColor] = useState<string | null>(null)
+
+  // Get all products to find color variants
+  const allProducts = useMemo(() => getAllProducts(), [])
+
+  // Find variant products by matching product name and color
+  const variantProducts = useMemo(() => {
+    if (!product.colors || product.colors.length <= 1) {
+      return {}
+    }
+    
+    const variants: Record<string, Product> = {}
+    
+    // Find products with the same name but different colors
+    allProducts.forEach((p) => {
+      if (p.name === product.name && p.color && product.colors?.includes(p.color)) {
+        variants[p.color] = p
+      }
+    })
+    
+    return variants
+  }, [allProducts, product.name, product.colors])
+
+  // Get current variant based on hovered color
+  const currentDisplayVariant = useMemo(() => {
+    if (hoveredColor && variantProducts[hoveredColor]) {
+      return variantProducts[hoveredColor]
+    }
+    return product
+  }, [hoveredColor, variantProducts, product])
+
+  // Get current image based on hovered color
+  const currentImage = useMemo(() => {
+    return currentDisplayVariant.images?.[0] || currentDisplayVariant.image
+  }, [currentDisplayVariant])
+
+  // Check if current display variant (hovered or default) is out of stock
+  const isCurrentlyOutOfStock = !currentDisplayVariant.inStock
+
+  // Use current display variant's discount if provided, otherwise calculate from price difference
+  const hasDiscount = currentDisplayVariant.discountPercentage !== undefined 
+    ? currentDisplayVariant.discountPercentage > 0
+    : currentDisplayVariant.originalPrice && currentDisplayVariant.originalPrice > currentDisplayVariant.price
+  
+  const discountPercentage = currentDisplayVariant.discountPercentage !== undefined
+    ? currentDisplayVariant.discountPercentage
+    : hasDiscount && currentDisplayVariant.originalPrice
+      ? Math.round(((currentDisplayVariant.originalPrice - currentDisplayVariant.price) / currentDisplayVariant.originalPrice) * 100)
+      : null
+  
+  // Percent-off badge value (can be different from calculated discount)
+  const percentOffBadge = currentDisplayVariant.percentOff !== undefined ? currentDisplayVariant.percentOff : discountPercentage
 
   const getBadgeLabel = (badge: string) => {
     const labels: Record<string, string> = {
@@ -47,11 +100,12 @@ export default function ProductCard({
     return colors[badge] || 'bg-brand-gray-800'
   }
 
-  const badges = product.badges || []
-  if (product.isNew) badges.push('new')
-  if (product.isBestSeller) badges.push('best-seller')
-  if (product.isOnlineOnly) badges.push('online-only')
-  if (product.isLimitedEdition) badges.push('limited-edition')
+  // Calculate badges based on current display variant (hovered or default)
+  const badges = currentDisplayVariant.badges || []
+  if (currentDisplayVariant.isNew) badges.push('new')
+  if (currentDisplayVariant.isBestSeller) badges.push('best-seller')
+  if (currentDisplayVariant.isOnlineOnly) badges.push('online-only')
+  if (currentDisplayVariant.isLimitedEdition) badges.push('limited-edition')
   if (hasDiscount) badges.push('promotion')
 
   const handleQuickAdd = () => {
@@ -60,19 +114,44 @@ export default function ProductCard({
     }
   }
 
+  // Helper function to check if product has variants
+  const hasVariants = (): boolean => {
+    if (product.size && product.size.length > 1) return true
+    if (product.colors && product.colors.length > 1) return true
+    if (product.variants && product.variants > 0) return true
+    return false
+  }
+
+  const productHasVariants = hasVariants()
+
   return (
     <div className="product-card group">
-      <Link href={`/product/${product.id}`} className="product-image relative block">
-        <LazyImage
-          src={product.image}
-          alt={product.name}
-          className="w-full h-full"
-          objectFit="cover"
+      <div className="product-image relative">
+        <div className="relative w-full h-full">
+          <LazyImage
+            src={currentImage}
+            alt={product.name}
+            className={`${
+              isCurrentlyOutOfStock ? 'opacity-50' : ''
+            }`}
+            objectFit="cover"
+          />
+        </div>
+        <Link 
+          href={`/product/${product.id}`} 
+          className="absolute inset-0 z-[1] cursor-pointer" 
+          aria-label={`View ${product.name}`}
         />
         
         {/* Badges */}
-        <div className="absolute top-2 left-2 flex flex-col items-start gap-1 z-10">
-          {badges.slice(0, 2).map((badge, idx) => (
+        <div className="absolute top-2 left-2 flex flex-col items-start gap-1 z-20">
+          {/* Out of Stock Badge - Show first if current display variant (hovered or default) is out of stock */}
+          {isCurrentlyOutOfStock && (
+            <span className="bg-red-600 text-white px-2 py-1 text-xs font-semibold uppercase rounded-md inline-block">
+              Out of Stock
+            </span>
+          )}
+          {badges.filter(badge => badge !== 'promotion').slice(0, 2).map((badge, idx) => (
             <span
               key={idx}
               className={`${getBadgeColor(badge)} text-white px-2 py-1 text-xs font-semibold uppercase rounded-md inline-block`}
@@ -80,15 +159,16 @@ export default function ProductCard({
               {getBadgeLabel(badge)}
             </span>
           ))}
-          {hasDiscount && !badges.includes('promotion') && (
+          {/* Percent-off badge - show if there's a discount (prioritize this over promotion badge) */}
+          {percentOffBadge !== null && percentOffBadge !== undefined && (
             <span className="bg-brand-blue-500 text-white px-2 py-1 text-xs font-semibold rounded-md inline-block">
-              -{discountPercentage}%
+              -{percentOffBadge}%
             </span>
           )}
         </div>
 
         {/* Top Right Icons Container */}
-        <div className="absolute top-2 right-2 flex flex-col items-end gap-2 z-10">
+        <div className="absolute top-2 right-2 flex flex-col items-end gap-2 z-20">
           {/* Store Availability Icon - Subtle, always visible */}
           {product.storeAvailable && (
             <div className="group/pickup relative">
@@ -133,75 +213,128 @@ export default function ProductCard({
           )}
         </div>
 
-        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-5 transition-opacity duration-300" />
+        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-5 transition-opacity duration-300 pointer-events-none" />
         
-        {/* Quick Actions - Stacked vertically */}
-        <div className="absolute bottom-4 left-0 right-0 px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-10">
+        {/* Quick Actions - Unified entry point */}
+        <div className="absolute bottom-4 left-0 right-0 px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-20">
           <div className="flex flex-col gap-2">
-            {onQuickView && (
-              <button
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  onQuickView(product)
-                }}
-                className="w-full bg-white text-brand-black py-2 px-4 text-sm font-medium hover:bg-brand-gray-100 transition-colors rounded-lg shadow-sm"
-                aria-label={`Quick view ${product.name}`}
-              >
-                Quick view
-              </button>
-            )}
-            {showQuickAdd && product.inStock ? (
-              <button
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  handleQuickAdd()
-                }}
-                className="w-full bg-brand-blue-500 text-white py-2 px-4 text-sm font-medium hover:bg-brand-blue-600 transition-colors rounded-lg shadow-sm"
-                aria-label={`Quick add ${product.name} to cart`}
-              >
-                Quick add
-              </button>
+            {onUnifiedAction ? (
+              !product.inStock ? (
+                <button
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    onUnifiedAction(product)
+                  }}
+                  className="w-full bg-white text-brand-black py-2 px-4 text-sm font-medium hover:bg-brand-gray-100 transition-colors rounded-lg shadow-sm"
+                  aria-label={`Notify me when ${product.name} is available`}
+                >
+                  Notify me
+                </button>
+              ) : (
+                <button
+                  onClick={(e) => {
+                    e.preventDefault()
+                    e.stopPropagation()
+                    onUnifiedAction(product)
+                  }}
+                  className={`w-full py-2 px-4 text-sm font-medium transition-colors rounded-lg shadow-sm ${
+                    productHasVariants
+                      ? 'bg-white text-brand-black hover:bg-brand-gray-100'
+                      : 'bg-brand-blue-500 text-white hover:bg-brand-blue-600'
+                  }`}
+                  aria-label={productHasVariants ? `Quick add ${product.name}` : `Add ${product.name} to cart`}
+                >
+                  {productHasVariants ? 'Quick Add' : 'Add to cart'}
+                </button>
+              )
             ) : (
-              <button
-                onClick={(e) => {
-                  e.preventDefault()
-                  e.stopPropagation()
-                  onAddToCart?.(product)
-                }}
-                className="w-full bg-brand-blue-500 text-white py-2 px-4 text-sm font-medium hover:bg-brand-blue-600 transition-colors rounded-lg shadow-sm"
-                aria-label={`Add ${product.name} to cart`}
-              >
-                Add to cart
-              </button>
+              <>
+                {onQuickView && (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      onQuickView(product)
+                    }}
+                    className="w-full bg-white text-brand-black py-2 px-4 text-sm font-medium hover:bg-brand-gray-100 transition-colors rounded-lg shadow-sm"
+                    aria-label={`Quick view ${product.name}`}
+                  >
+                    Quick view
+                  </button>
+                )}
+                {showQuickAdd && product.inStock ? (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      handleQuickAdd()
+                    }}
+                    className="w-full bg-brand-blue-500 text-white py-2 px-4 text-sm font-medium hover:bg-brand-blue-600 transition-colors rounded-lg shadow-sm"
+                    aria-label={`Quick add ${product.name} to cart`}
+                  >
+                    Quick add
+                  </button>
+                ) : (
+                  <button
+                    onClick={(e) => {
+                      e.preventDefault()
+                      e.stopPropagation()
+                      onAddToCart?.(product)
+                    }}
+                    className="w-full bg-brand-blue-500 text-white py-2 px-4 text-sm font-medium hover:bg-brand-blue-600 transition-colors rounded-lg shadow-sm"
+                    aria-label={`Add ${product.name} to cart`}
+                  >
+                    Add to cart
+                  </button>
+                )}
+              </>
             )}
           </div>
         </div>
-      </Link>
-      <Link href={`/product/${product.id}`} className="block p-4">
+      </div>
+      <div className="relative p-4">
+        <Link 
+          href={`/product/${product.id}`} 
+          className="absolute inset-0 z-[1]" 
+          aria-label={`View ${product.name}`}
+        />
         {/* Brand */}
         {product.brand && (
-          <p className="text-xs text-brand-gray-600 mb-1">
+          <p className="text-xs text-brand-gray-600 mb-1 relative z-20">
             {product.brand}
           </p>
         )}
         
         {/* Category */}
         {product.category && (
-          <p className="text-xs text-brand-gray-600 mb-1">
+          <p className="text-xs text-brand-gray-600 mb-1 relative z-20">
             {product.category}
           </p>
         )}
         
         {/* Name */}
-        <h3 className="text-sm font-medium text-brand-black mb-2 line-clamp-2">
+        <h3 className="text-sm font-medium text-brand-black mb-2 line-clamp-2 relative z-20">
           {product.name}
         </h3>
 
+        {/* SKU */}
+        {product.sku && (
+          <p className="text-xs text-brand-gray-500 mb-1 relative z-20">
+            SKU: {product.sku}
+          </p>
+        )}
+
+        {/* Short Description */}
+        {product.shortDescription && (
+          <p className="text-xs text-brand-gray-600 mb-2 line-clamp-2 relative z-20">
+            {product.shortDescription}
+          </p>
+        )}
+
         {/* Ratings */}
         {product.rating !== undefined && (
-          <div className="flex items-center gap-2 mb-2">
+          <div className="flex items-center gap-2 mb-2 relative z-20">
             <div className="flex items-center">
               {[...Array(5)].map((_, i) => (
                 <svg
@@ -226,28 +359,57 @@ export default function ProductCard({
 
         {/* Color Swatches */}
         {product.colors && product.colors.length > 0 && (
-          <div className="flex items-center gap-1 mb-2">
-            {product.colors.slice(0, 5).map((color, idx) => (
-              <div
-                key={idx}
-                className="w-4 h-4 rounded-full border border-brand-gray-300"
-                style={{
-                  backgroundColor: color.toLowerCase() === 'white' ? '#fff' : 
-                                  color.toLowerCase() === 'black' ? '#000' :
-                                  color.toLowerCase() === 'red' ? '#ef4444' :
-                                  color.toLowerCase() === 'blue' ? '#3b82f6' :
-                                  color.toLowerCase() === 'green' ? '#22c55e' :
-                                  color.toLowerCase() === 'yellow' ? '#eab308' :
-                                  color.toLowerCase() === 'pink' ? '#ec4899' :
-                                  color.toLowerCase() === 'purple' ? '#a855f7' :
-                                  color.toLowerCase() === 'orange' ? '#f97316' :
-                                  color.toLowerCase() === 'brown' ? '#a16207' :
-                                  color.toLowerCase() === 'gray' ? '#6b7280' :
-                                  color.toLowerCase() === 'beige' ? '#f5f5dc' : '#ccc',
-                }}
-                title={color}
-              />
-            ))}
+          <div className="flex items-center gap-1 mb-2 relative z-20">
+            {product.colors.slice(0, 5).map((color, idx) => {
+              const variantProduct = variantProducts[color]
+              const isCurrentColor = product.color === color
+              const hasVariant = !!variantProduct && variantProduct.id !== product.id
+              
+              return (
+                <Link
+                  key={idx}
+                  href={hasVariant ? `/product/${variantProduct.id}` : `/product/${product.id}`}
+                  onClick={(e) => {
+                    e.stopPropagation()
+                    if (hasVariant) {
+                      e.preventDefault()
+                      router.push(`/product/${variantProduct.id}`)
+                    }
+                  }}
+                  onMouseEnter={(e) => {
+                    e.stopPropagation()
+                    setHoveredColor(color)
+                  }}
+                  onMouseLeave={(e) => {
+                    e.stopPropagation()
+                    setHoveredColor(null)
+                  }}
+                  className={`w-4 h-4 rounded-full border transition-all cursor-pointer relative z-20 ${
+                    isCurrentColor 
+                      ? 'border-brand-blue-500 ring-2 ring-brand-blue-200' 
+                      : hoveredColor === color
+                        ? 'border-brand-gray-500 ring-1 ring-brand-gray-300'
+                        : 'border-brand-gray-300 hover:border-brand-gray-400'
+                  }`}
+                  style={{
+                    backgroundColor: color.toLowerCase() === 'white' ? '#fff' : 
+                                    color.toLowerCase() === 'black' ? '#000' :
+                                    color.toLowerCase() === 'red' ? '#ef4444' :
+                                    color.toLowerCase() === 'blue' ? '#3b82f6' :
+                                    color.toLowerCase() === 'green' ? '#22c55e' :
+                                    color.toLowerCase() === 'yellow' ? '#eab308' :
+                                    color.toLowerCase() === 'pink' ? '#ec4899' :
+                                    color.toLowerCase() === 'purple' ? '#a855f7' :
+                                    color.toLowerCase() === 'orange' ? '#f97316' :
+                                    color.toLowerCase() === 'brown' ? '#a16207' :
+                                    color.toLowerCase() === 'gray' ? '#6b7280' :
+                                    color.toLowerCase() === 'beige' ? '#f5f5dc' : '#ccc',
+                  }}
+                  title={color}
+                  aria-label={`View ${product.name} in ${color}`}
+                />
+              )
+            })}
             {product.colors.length > 5 && (
               <span className="text-xs text-brand-gray-600 ml-1">+{product.colors.length - 5}</span>
             )}
@@ -258,17 +420,24 @@ export default function ProductCard({
         )}
 
         {/* Price */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 relative z-20">
           <span className="text-base font-semibold text-brand-black">
-            ${product.price.toFixed(2)}
+            ${currentDisplayVariant.price.toFixed(2)}
           </span>
-          {hasDiscount && (
+          {hasDiscount && currentDisplayVariant.originalPrice && (
             <span className="text-sm text-brand-gray-500 line-through">
-              ${product.originalPrice!.toFixed(2)}
+              ${currentDisplayVariant.originalPrice.toFixed(2)}
             </span>
           )}
         </div>
-      </Link>
+
+        {/* Promotional Message */}
+        {currentDisplayVariant.promotionalMessage && (
+          <p className="text-xs text-green-600 font-medium mt-2 relative z-20">
+            {currentDisplayVariant.promotionalMessage}
+          </p>
+        )}
+      </div>
     </div>
   )
 }

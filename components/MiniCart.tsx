@@ -57,10 +57,36 @@ export default function MiniCart({
   const firstFocusableRef = useRef<HTMLButtonElement>(null)
   const lastFocusableRef = useRef<HTMLButtonElement>(null)
   const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const scrollableContentRef = useRef<HTMLDivElement>(null)
+  const highlightedItemRefs = useRef<Record<string, HTMLDivElement | null>>({})
   const [showStoreLocator, setShowStoreLocator] = useState(false)
   const [canScrollLeft, setCanScrollLeft] = useState(false)
   const [canScrollRight, setCanScrollRight] = useState(true)
   const [fulfillmentDropdowns, setFulfillmentDropdowns] = useState<Record<string, boolean>>({})
+  const [highlightedItemId, setHighlightedItemId] = useState<string | null>(null)
+  const [pendingScrollProductId, setPendingScrollProductId] = useState<string | null>(null)
+  
+  // Track hover state and notify parent to prevent auto-close
+  useEffect(() => {
+    if (!isOpen) return
+    
+    const handleMouseEnter = () => {
+      window.dispatchEvent(new CustomEvent('minicartHover', { detail: { isHovering: true } }))
+    }
+    const handleMouseLeave = () => {
+      window.dispatchEvent(new CustomEvent('minicartHover', { detail: { isHovering: false } }))
+    }
+    
+    const drawer = drawerRef.current
+    if (drawer) {
+      drawer.addEventListener('mouseenter', handleMouseEnter)
+      drawer.addEventListener('mouseleave', handleMouseLeave)
+      return () => {
+        drawer.removeEventListener('mouseenter', handleMouseEnter)
+        drawer.removeEventListener('mouseleave', handleMouseLeave)
+      }
+    }
+  }, [isOpen])
   
   // Group items by fulfillment method
   const pickupItems = items.filter(item => item.fulfillmentMethod === 'pickup')
@@ -174,6 +200,69 @@ export default function MiniCart({
     }
   }, [isOpen])
 
+  // Listen for item added event to highlight it and scroll into view
+  useEffect(() => {
+    const handleItemAdded = (e: CustomEvent<{ itemId: string }>) => {
+      const { itemId } = e.detail
+      setHighlightedItemId(itemId)
+      
+      // Scroll the highlighted item into view after a short delay to allow minicart to open
+      setTimeout(() => {
+        const itemElement = highlightedItemRefs.current[itemId]
+        if (itemElement && scrollableContentRef.current) {
+          // Scroll the item into view with smooth behavior
+          itemElement.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'nearest',
+            inline: 'nearest'
+          })
+        }
+      }, 100)
+      
+      // Remove highlight after animation completes
+      setTimeout(() => {
+        setHighlightedItemId(null)
+      }, 2000)
+    }
+
+    window.addEventListener('itemAddedToMiniCart', handleItemAdded as EventListener)
+    return () => {
+      window.removeEventListener('itemAddedToMiniCart', handleItemAdded as EventListener)
+    }
+  }, [])
+
+  // Watch for pending scroll product to appear in items array
+  useEffect(() => {
+    if (pendingScrollProductId) {
+      const newItem = items.find(item => item.product.id === pendingScrollProductId)
+      if (newItem) {
+        setHighlightedItemId(newItem.id)
+        // Wait for element to be rendered and ref to be set
+        const scrollToItem = () => {
+          const itemElement = highlightedItemRefs.current[newItem.id]
+          if (itemElement && scrollableContentRef.current) {
+            // Scroll the item into view with smooth behavior (same as regular item added)
+            itemElement.scrollIntoView({ 
+              behavior: 'smooth', 
+              block: 'nearest',
+              inline: 'nearest'
+            })
+          } else {
+            // Element not ready yet, try again after a short delay
+            setTimeout(scrollToItem, 50)
+          }
+        }
+        // Start checking after a brief delay to allow DOM update
+        setTimeout(scrollToItem, 150)
+        // Remove highlight after animation completes
+        setTimeout(() => {
+          setHighlightedItemId(null)
+        }, 2000)
+        setPendingScrollProductId(null)
+      }
+    }
+  }, [items, pendingScrollProductId])
+
   if (!isOpen) return null
 
   return (
@@ -248,8 +337,8 @@ export default function MiniCart({
         </div>
 
         {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto">
-          <div className="p-4 md:p-6 space-y-4">
+        <div ref={scrollableContentRef} className="flex-1 overflow-y-auto overflow-x-hidden">
+          <div className="pt-4 md:pt-6 pb-4 md:pb-6 space-y-4">
             {/* Cart Items */}
             {items.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-16 px-4 text-center">
@@ -291,7 +380,7 @@ export default function MiniCart({
               <>
                 {/* Pickup Store Info Section - At Top of Pickup Items */}
                 {pickupItems.length > 0 && (
-                  <div className="pb-4 border-b border-brand-gray-200">
+                  <div className="px-4 md:px-6 pb-4 border-b border-brand-gray-200">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex items-start gap-2 flex-1">
                         <svg className="w-5 h-5 text-brand-black flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -332,12 +421,19 @@ export default function MiniCart({
 
                 {/* Pickup Items */}
                 {pickupItems.length > 0 && (
-                  <div className="space-y-4">
-                    {pickupItems.map((item, index) => (
+                  <div className="py-4 md:py-6 divide-y divide-brand-gray-200">
+                    {pickupItems.map((item, index) => {
+                      const isHighlighted = highlightedItemId === item.id
+                      return (
                       <div
                         key={item.id}
-                        className={`flex gap-4 pb-4 ${
-                          index < pickupItems.length - 1 ? 'border-b border-brand-gray-200' : ''
+                        ref={(el) => {
+                          if (el) highlightedItemRefs.current[item.id] = el
+                        }}
+                        className={`flex gap-4 py-4 px-4 md:px-6 transition-colors duration-500 ${
+                          isHighlighted 
+                            ? 'bg-brand-blue-50 rounded-lg' 
+                            : ''
                         }`}
                       >
                         {/* Product Image */}
@@ -352,7 +448,9 @@ export default function MiniCart({
                         {/* Product Details */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start gap-2 mb-1">
-                            <h3 className="text-sm font-medium text-brand-black line-clamp-2 flex-1">
+                            <h3 className={`text-sm font-medium line-clamp-2 flex-1 transition-colors duration-500 ${
+                              isHighlighted ? 'text-brand-blue-700 font-semibold' : 'text-brand-black'
+                            }`}>
                               {item.product.name}
                             </h3>
                             {/* Fulfillment Badge - Clickable */}
@@ -536,22 +634,32 @@ export default function MiniCart({
                           </button>
                         </div>
                       </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 )}
 
                 {/* Delivery Items */}
                 {deliveryItems.length > 0 && (
-                  <div className="pt-4 border-t border-brand-gray-200 space-y-4">
-                    {deliveryItems.map((item, index) => (
+                  <div className="pt-4 border-t border-brand-gray-200 py-4 md:py-6 divide-y divide-brand-gray-200">
+                    {deliveryItems.map((item, index) => {
+                      const isHighlighted = highlightedItemId === item.id
+                      return (
                       <div
                         key={item.id}
-                        className={`flex gap-4 pb-4 ${
-                          index < deliveryItems.length - 1 ? 'border-b border-brand-gray-200' : ''
+                        ref={(el) => {
+                          if (el) highlightedItemRefs.current[item.id] = el
+                        }}
+                        className={`flex gap-4 py-4 px-4 md:px-6 transition-colors duration-500 ${
+                          isHighlighted 
+                            ? 'bg-brand-blue-50 rounded-lg' 
+                            : ''
                         }`}
                       >
                         {/* Product Image */}
-                        <div className="flex-shrink-0 w-20 h-20 md:w-24 md:h-24 bg-brand-gray-100 rounded-lg overflow-hidden">
+                        <div className={`flex-shrink-0 w-20 h-20 md:w-24 md:h-24 bg-brand-gray-100 rounded-lg overflow-hidden transition-all duration-500 ${
+                          isHighlighted ? 'ring-2 ring-brand-blue-500 ring-offset-2' : ''
+                        }`}>
                           <img
                             src={item.product.image}
                             alt={item.product.name}
@@ -562,7 +670,9 @@ export default function MiniCart({
                         {/* Product Details */}
                         <div className="flex-1 min-w-0">
                           <div className="flex items-start gap-2 mb-1">
-                            <h3 className="text-sm font-medium text-brand-black line-clamp-2 flex-1">
+                            <h3 className={`text-sm font-medium line-clamp-2 flex-1 transition-colors duration-500 ${
+                              isHighlighted ? 'text-brand-blue-700 font-semibold' : 'text-brand-black'
+                            }`}>
                               {item.product.name}
                             </h3>
                             {/* Fulfillment Badge - Clickable */}
@@ -730,7 +840,8 @@ export default function MiniCart({
                           </button>
                         </div>
                       </div>
-                    ))}
+                      )
+                    })}
                   </div>
                 )}
               </>
@@ -738,7 +849,7 @@ export default function MiniCart({
 
             {/* Complete the Look Section */}
             {upsellProduct && items.length > 0 && upsellProducts.length > 0 && (
-              <div className="pt-4 border-t border-brand-gray-200">
+              <div className="px-4 md:px-6 pt-4 border-t border-brand-gray-200">
                 <h3 className="text-lg font-semibold text-brand-black mb-1">Complete the look</h3>
                 <p className="text-sm text-brand-gray-600 mb-4">Description</p>
                 
@@ -835,7 +946,11 @@ export default function MiniCart({
                           {/* Add to Cart Button */}
                           {onAddUpsellToCart && (
                             <button
-                              onClick={() => onAddUpsellToCart(product)}
+                              onClick={() => {
+                                onAddUpsellToCart(product)
+                                // Set pending scroll product ID - useEffect will watch for it in items array
+                                setPendingScrollProductId(product.id)
+                              }}
                               className="w-full btn btn-primary text-sm py-2"
                               aria-label={`Add ${product.name} to cart`}
                             >

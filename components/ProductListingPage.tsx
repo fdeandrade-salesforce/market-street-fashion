@@ -5,6 +5,7 @@ import ProductCard from './ProductCard'
 import QuickViewModal from './QuickViewModal'
 import LazyImage from './LazyImage'
 import StoreLocatorModal from './StoreLocatorModal'
+import NotifyMeModal from './NotifyMeModal'
 import { addToCart } from '../lib/cart'
 
 export interface Product {
@@ -31,6 +32,11 @@ export interface Product {
   isLimitedEdition?: boolean
   storeAvailable?: boolean // For pickup badges
   variants?: number // Number of additional variants
+  sku?: string // Product SKU
+  shortDescription?: string // Short product description
+  discountPercentage?: number // Product-level discount percentage
+  percentOff?: number // Percent-off badge value
+  promotionalMessage?: string // Promotional message (e.g., "Extra 25% Off with code EXTRA25")
 }
 
 interface FilterState {
@@ -52,7 +58,11 @@ interface ProductListingPageProps {
   itemsPerPage?: number
   contentSlots?: {
     aboveGrid?: React.ReactNode
-    withinGrid?: { position: number; content: React.ReactNode }[]
+    withinGrid?: { 
+      position: number
+      content: React.ReactNode
+      columns?: 1 | 2 | 3 | 4 | 'full' // Number of columns to span, or 'full' for full width
+    }[]
   }
 }
 
@@ -82,6 +92,7 @@ export default function ProductListingPage({
   })
   const [currentPage, setCurrentPage] = useState(1)
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null)
+  const [notifyMeProduct, setNotifyMeProduct] = useState<Product | null>(null)
   const [wishlist, setWishlist] = useState<string[]>([])
   const [showStoreLocator, setShowStoreLocator] = useState(false)
   const [selectedStore, setSelectedStore] = useState<{
@@ -154,6 +165,11 @@ export default function ProductListingPage({
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [priceRange])
+
+  // Toggle filter sidebar visibility
+  const handleToggleFilters = () => {
+    setShowFilters((prev) => !prev)
+  }
 
   // Apply filters and sorting
   const filteredAndSortedProducts = useMemo(() => {
@@ -235,6 +251,53 @@ export default function ProductListingPage({
     }
   }, [currentPage, enableInfiniteScroll])
 
+  // Normalize content slot positions to appear only after complete rows
+  // Positions should be multiples of 4 + 1 (i.e., 5, 9, 13, 17, etc.)
+  // This ensures content blocks only appear after complete rows and never break the grid
+  const normalizedContentSlots = useMemo(() => {
+    if (!contentSlots?.withinGrid) return undefined
+
+    return {
+      ...contentSlots,
+      withinGrid: contentSlots.withinGrid.map((slot) => {
+        // Calculate which complete row this should appear after
+        // Position 5 = after row 1 (4 products), Position 9 = after row 2 (8 products), etc.
+        // Formula: round down to nearest multiple of 4, then add 1
+        const rowNumber = Math.floor((slot.position - 1) / 4)
+        const normalizedPosition = rowNumber * 4 + 1
+        
+        // Warn in development if position was adjusted
+        if (process.env.NODE_ENV === 'development' && slot.position !== normalizedPosition) {
+          console.warn(
+            `Content slot position ${slot.position} was normalized to ${normalizedPosition} to ensure it appears after a complete row (positions must be 5, 9, 13, 17, etc. - multiples of 4 + 1).`
+          )
+        }
+
+        return {
+          ...slot,
+          position: normalizedPosition,
+        }
+      }),
+    }
+  }, [contentSlots])
+
+  // Helper function to check if product has variants that require selection
+  const hasVariants = (product: Product): boolean => {
+    // Check if product has multiple sizes (more than 1 option)
+    if (product.size && product.size.length > 1) {
+      return true
+    }
+    // Check if product has multiple color variants (more than 1 option)
+    if (product.colors && product.colors.length > 1) {
+      return true
+    }
+    // Check if product has variants property indicating additional variants
+    if (product.variants && product.variants > 0) {
+      return true
+    }
+    return false
+  }
+
   // Handlers
   const handleAddToCart = (product: Product, size?: string, color?: string) => {
     addToCart(product, 1, size, color)
@@ -242,6 +305,29 @@ export default function ProductListingPage({
 
   const handleAddToCartSimple = (product: Product) => {
     addToCart(product, 1)
+  }
+
+  // Unified handler for Quick View/Quick Add
+  const handleUnifiedAction = (product: Product) => {
+    // Check if product is out of stock first
+    if (!product.inStock) {
+      setNotifyMeProduct(product)
+      return
+    }
+
+    if (hasVariants(product)) {
+      // Product has variants - open modal for variant selection
+      setQuickViewProduct(product)
+    } else {
+      // No variants - add to cart directly
+      handleAddToCartSimple(product)
+    }
+  }
+
+  const handleNotifyMe = (email: string) => {
+    // Handle notify me - could send to API
+    console.log(`Notify ${email} when ${notifyMeProduct?.name} is available`)
+    // You can add toast notification here
   }
 
   const handleAddToWishlist = (product: Product) => {
@@ -290,8 +376,82 @@ export default function ProductListingPage({
     })
   }
 
+  // Check if price range is at default
+  const isPriceRangeDefault = useMemo(() => {
+    return filters.priceRange[0] === priceRange[0] && filters.priceRange[1] === priceRange[1]
+  }, [filters.priceRange, priceRange])
+
   const activeFiltersCount =
-    filters.sizes.length + filters.colors.length + filters.categories.length + (filters.inStockOnly ? 1 : 0)
+    filters.sizes.length +
+    filters.colors.length +
+    filters.categories.length +
+    (filters.inStockOnly ? 1 : 0) +
+    (!isPriceRangeDefault ? 1 : 0)
+
+  // Get active filters as chips data
+  const activeFilterChips = useMemo(() => {
+    const chips: Array<{ id: string; label: string; onRemove: () => void }> = []
+
+    // Price range filter (only if not at default range)
+    if (
+      filters.priceRange[0] !== priceRange[0] ||
+      filters.priceRange[1] !== priceRange[1]
+    ) {
+      chips.push({
+        id: 'price-range',
+        label: `$${Math.round(filters.priceRange[0])} - $${Math.round(filters.priceRange[1])}`,
+        onRemove: () => {
+          setFilters((prev) => ({
+            ...prev,
+            priceRange: [priceRange[0], priceRange[1]] as [number, number],
+          }))
+        },
+      })
+    }
+
+    // Size filters
+    filters.sizes.forEach((size) => {
+      chips.push({
+        id: `size-${size}`,
+        label: size === 'S' ? 'Small' : size === 'M' ? 'Medium' : size === 'L' ? 'Large' : size === 'XL' ? 'Extra Large' : size,
+        onRemove: () => handleSizeToggle(size),
+      })
+    })
+
+    // Color filters
+    filters.colors.forEach((color) => {
+      chips.push({
+        id: `color-${color}`,
+        label: color.charAt(0).toUpperCase() + color.slice(1),
+        onRemove: () => handleColorToggle(color),
+      })
+    })
+
+    // Category filters
+    filters.categories.forEach((category) => {
+      chips.push({
+        id: `category-${category}`,
+        label: category,
+        onRemove: () => handleCategoryToggle(category),
+      })
+    })
+
+    // In stock only filter
+    if (filters.inStockOnly) {
+      chips.push({
+        id: 'in-stock',
+        label: 'In Stock Only',
+        onRemove: () => {
+          setFilters((prev) => ({
+            ...prev,
+            inStockOnly: false,
+          }))
+        },
+      })
+    }
+
+    return chips
+  }, [filters, priceRange])
 
   // Get header image based on subcategory
   const getHeaderImage = () => {
@@ -374,28 +534,91 @@ export default function ProductListingPage({
           ))}
         </nav>
 
-        <div className="flex flex-col lg:flex-row gap-8">
+        {/* Toolbar - Filters and Sort */}
+        <div className="flex items-center justify-between mb-6">
+          <button
+            onClick={handleToggleFilters}
+            className={`btn flex items-center gap-2 ${
+              showFilters 
+                ? 'btn-primary' 
+                : 'btn-secondary'
+            }`}
+            aria-label="Toggle filters"
+            aria-expanded={showFilters}
+            aria-pressed={showFilters}
+          >
+            <svg
+              className="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+              />
+            </svg>
+            <span className="text-sm font-medium uppercase tracking-wide">Filters</span>
+            {activeFiltersCount > 0 && (
+              <span className="inline-flex items-center justify-center min-w-[1.5rem] h-5 px-2 bg-brand-blue-500 text-white text-xs font-semibold rounded-full">
+                {activeFiltersCount}
+              </span>
+            )}
+          </button>
+
+          <div className="flex items-center space-x-3">
+            <label className="text-sm text-brand-gray-600 uppercase tracking-wide">
+              Sort by:
+            </label>
+            <div className="relative">
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as SortOption)}
+                className="appearance-none border border-brand-gray-300 px-4 py-2 pr-10 text-sm text-brand-black bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue-500 uppercase tracking-wide rounded-lg cursor-pointer"
+              >
+                <option value="relevance">Relevance</option>
+                <option value="newest">Newest</option>
+                <option value="price-asc">Price: Low to High</option>
+                <option value="price-desc">Price: High to Low</option>
+                <option value="rating">Rating</option>
+                <option value="name-asc">Name: A to Z</option>
+                <option value="name-desc">Name: Z to A</option>
+              </select>
+              <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                <svg
+                  className="w-4 h-4 text-brand-gray-400"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div className={`flex flex-col lg:flex-row transition-all duration-300 ${showFilters ? 'gap-8' : 'lg:gap-0'}`}>
           {/* Filters Sidebar */}
           <aside
-            className={`lg:w-64 flex-shrink-0 ${
-              showFilters ? 'block' : 'hidden lg:block'
+            className={`flex-shrink-0 transition-all duration-300 ease-in-out ${
+              showFilters 
+                ? 'block opacity-100 translate-x-0 w-full lg:w-64 lg:max-w-64' 
+                : 'hidden lg:block lg:opacity-0 lg:-translate-x-8 lg:pointer-events-none lg:w-0 lg:max-w-0 lg:overflow-hidden'
             }`}
           >
+            <div className={`transition-opacity duration-200 ${
+              showFilters ? 'opacity-100 delay-75' : 'lg:opacity-0'
+            }`}>
             <div>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-lg font-semibold text-brand-black uppercase tracking-wide">
-                  Filters
-                </h2>
-                {activeFiltersCount > 0 && (
-                  <button
-                    onClick={clearFilters}
-                    className="text-xs text-brand-gray-600 hover:text-brand-black underline"
-                  >
-                    Clear all
-                  </button>
-                )}
-              </div>
-
               <div className="space-y-4">
                 {/* Shop by Availability */}
                 <div className="bg-white border border-brand-gray-200 rounded-lg overflow-hidden">
@@ -733,73 +956,52 @@ export default function ProductListingPage({
                 )}
               </div>
             </div>
+            </div>
           </aside>
 
           {/* Products Section */}
-          <div className="flex-1">
-            {/* Toolbar */}
-            <div className="flex items-center justify-between mb-6">
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className="lg:hidden flex items-center space-x-2 text-brand-black hover:text-brand-gray-600"
-              >
-                <svg
-                  className="w-5 h-5"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-                  />
-                </svg>
-                <span className="text-sm uppercase tracking-wide">Filters</span>
-                {activeFiltersCount > 0 && (
-                  <span className="bg-brand-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
-                    {activeFiltersCount}
-                  </span>
-                )}
-              </button>
+          <div className="flex-1 transition-all duration-300">
 
-              <div className="flex items-center space-x-3 ml-auto">
-                <label className="text-sm text-brand-gray-600 uppercase tracking-wide">
-                  Sort by:
-                </label>
-                <div className="relative">
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value as SortOption)}
-                    className="appearance-none border border-brand-gray-300 px-4 py-2 pr-10 text-sm text-brand-black bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue-500 uppercase tracking-wide rounded-lg cursor-pointer"
-                  >
-                    <option value="relevance">Relevance</option>
-                    <option value="newest">Newest</option>
-                    <option value="price-asc">Price: Low to High</option>
-                    <option value="price-desc">Price: High to Low</option>
-                    <option value="rating">Rating</option>
-                    <option value="name-asc">Name: A to Z</option>
-                    <option value="name-desc">Name: Z to A</option>
-                  </select>
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <svg
-                      className="w-4 h-4 text-brand-gray-400"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
+            {/* Applied Filters Chip Bar */}
+            {activeFilterChips.length > 0 && (
+              <div className="mb-6">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="text-sm text-brand-gray-600 uppercase tracking-wide mr-1">
+                    Applied Filters:
+                  </span>
+                  {activeFilterChips.map((chip) => (
+                    <button
+                      key={chip.id}
+                      onClick={chip.onRemove}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-brand-gray-100 text-brand-black text-sm font-medium rounded-lg hover:bg-brand-gray-200 transition-colors"
+                      aria-label={`Remove ${chip.label} filter`}
                     >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
-                  </div>
+                      <span>{chip.label}</span>
+                      <svg
+                        className="w-4 h-4 text-brand-gray-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M6 18L18 6M6 6l12 12"
+                        />
+                      </svg>
+                    </button>
+                  ))}
+                  <button
+                    onClick={clearFilters}
+                    className="text-sm text-brand-gray-600 hover:text-brand-black underline ml-2"
+                  >
+                    Clear all
+                  </button>
                 </div>
               </div>
-            </div>
+            )}
 
             {/* Content Slot Above Grid */}
             {contentSlots?.aboveGrid && (
@@ -809,26 +1011,100 @@ export default function ProductListingPage({
             {/* Products Grid */}
             {paginatedProducts.length > 0 ? (
               <>
-                <div className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                  {paginatedProducts.map((product, index) => {
-                    // Check if there's a content slot at this position
-                    const contentSlot = contentSlots?.withinGrid?.find(
-                      (slot) => slot.position === index + 1
-                    )
+                <div className={`grid grid-cols-2 gap-6 [grid-auto-flow:dense] transition-all duration-300 ${
+                  showFilters 
+                    ? 'lg:grid-cols-3 xl:grid-cols-3' 
+                    : 'lg:grid-cols-3 xl:grid-cols-4'
+                }`}>
+                  {(() => {
+                    // Build a flat array of all grid items (products + content blocks) in order
+                    // Track grid position to ensure items fill rows sequentially without gaps
+                    const gridItems: Array<{ 
+                      type: 'product' | 'content'
+                      data: any
+                      key: string
+                      columnSpan: number // Track column span for grid position calculation
+                    }> = []
 
-                    return (
-                      <React.Fragment key={product.id}>
-                        {contentSlot && <div className="col-span-full">{contentSlot.content}</div>}
-                        <ProductCard
-                          product={product}
-                          onAddToCart={handleAddToCartSimple}
-                          onQuickView={(p) => setQuickViewProduct(p)}
-                          onAddToWishlist={handleAddToWishlist}
-                          showQuickAdd={true}
-                        />
-                      </React.Fragment>
-                    )
-                  })}
+                    // First, build the array with all items
+                    paginatedProducts.forEach((product, index) => {
+                      const productPosition = index + 1
+                      const contentSlot = normalizedContentSlots?.withinGrid?.find(
+                        (slot) => slot.position === productPosition
+                      )
+
+                      // Insert content block before the product if it exists at this position
+                      if (contentSlot) {
+                        const getColumnSpan = (columns?: 1 | 2 | 3 | 4 | 'full') => {
+                          if (columns === 'full' || columns === 4) return 4
+                          if (columns === 2) return 2
+                          if (columns === 3) return 3
+                          return 1
+                        }
+                        
+                        gridItems.push({
+                          type: 'content',
+                          data: contentSlot,
+                          key: `content-${productPosition}`,
+                          columnSpan: getColumnSpan(contentSlot.columns),
+                        })
+                      }
+
+                      // Add the product (always 1 column)
+                      gridItems.push({
+                        type: 'product',
+                        data: product,
+                        key: product.id,
+                        columnSpan: 1,
+                      })
+                    })
+
+                    // Render all grid items
+                    return gridItems.map((item) => {
+                      if (item.type === 'content') {
+                        const contentSlot = item.data
+                        const getColumnSpan = (columns?: 1 | 2 | 3 | 4 | 'full') => {
+                          if (columns === 'full') {
+                            // Full-width: span all columns (dense flow will handle placement)
+                            return showFilters 
+                              ? 'col-span-2 lg:col-span-3 xl:col-span-3'
+                              : 'col-span-2 lg:col-span-3 xl:col-span-4'
+                          }
+                          if (!columns || columns === 1) {
+                            return 'col-span-1'
+                          }
+                          if (columns === 2) {
+                            return 'col-span-2 lg:col-span-2 xl:col-span-2'
+                          }
+                          if (columns === 3) {
+                            return 'col-span-2 lg:col-span-3 xl:col-span-3'
+                          }
+                          if (columns === 4) {
+                            // Full-width: span all columns (dense flow will handle placement)
+                            return showFilters 
+                              ? 'col-span-2 lg:col-span-3 xl:col-span-3'
+                              : 'col-span-2 lg:col-span-3 xl:col-span-4'
+                          }
+                          return 'col-span-1'
+                        }
+
+                        return (
+                          <div key={item.key} className={getColumnSpan(contentSlot.columns)}>
+                            {contentSlot.content}
+                          </div>
+                        )
+                      } else {
+                        return (
+                          <ProductCard
+                            key={item.key}
+                            product={item.data}
+                            onUnifiedAction={handleUnifiedAction}
+                            onAddToWishlist={handleAddToWishlist}
+                          />
+                        )
+                      }
+                    })
+                  })()}
                 </div>
 
                 {/* Pagination */}
@@ -938,6 +1214,7 @@ export default function ProductListingPage({
           onClose={() => setQuickViewProduct(null)}
           onAddToCart={handleAddToCart}
           onAddToWishlist={handleAddToWishlist}
+          onNotify={(product) => setNotifyMeProduct(product)}
         />
       )}
 
@@ -956,6 +1233,16 @@ export default function ProductListingPage({
         productName={category}
         selectedStoreId={selectedStore?.id}
       />
+
+      {/* Notify Me Modal */}
+      {notifyMeProduct && (
+        <NotifyMeModal
+          product={notifyMeProduct}
+          isOpen={!!notifyMeProduct}
+          onClose={() => setNotifyMeProduct(null)}
+          onNotify={handleNotifyMe}
+        />
+      )}
     </div>
   )
 }

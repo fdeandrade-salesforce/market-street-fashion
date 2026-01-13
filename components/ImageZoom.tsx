@@ -26,6 +26,7 @@ export default function ImageZoom({ src, alt, className = '' }: ImageZoomProps) 
 
   const handleMouseLeave = useCallback(() => {
     if (isZoomed) {
+      setIsZoomed(false)
       setPosition({ x: 50, y: 50 })
     }
   }, [isZoomed])
@@ -42,7 +43,7 @@ export default function ImageZoom({ src, alt, className = '' }: ImageZoomProps) 
         className={`aspect-square bg-brand-gray-100 rounded-2xl overflow-hidden relative ${
           isZoomed ? 'cursor-move' : 'cursor-zoom-in'
         }`}
-        onClick={!isZoomed ? toggleZoom : undefined}
+        onClick={toggleZoom}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
       >
@@ -63,8 +64,8 @@ export default function ImageZoom({ src, alt, className = '' }: ImageZoomProps) 
 
         {/* Zoom indicator overlay when zoomed */}
         {isZoomed && (
-          <div className="absolute top-4 left-4 bg-black/70 text-white text-xs px-3 py-1.5 rounded-full pointer-events-none">
-            Move cursor to pan • Click to exit
+          <div className="absolute top-4 right-4 bg-black/70 text-white text-xs px-3 py-1.5 rounded-full pointer-events-none">
+            Move cursor to pan
           </div>
         )}
       </div>
@@ -90,15 +91,6 @@ export default function ImageZoom({ src, alt, className = '' }: ImageZoomProps) 
         )}
       </button>
 
-      {/* Click overlay to exit zoom */}
-      {isZoomed && (
-        <button
-          onClick={toggleZoom}
-          className="absolute bottom-4 left-4 px-3 py-1.5 bg-white/90 hover:bg-white text-brand-gray-700 text-sm font-medium rounded-lg shadow-md transition-colors z-10"
-        >
-          Exit Zoom
-        </button>
-      )}
     </div>
   )
 }

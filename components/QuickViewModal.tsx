@@ -22,6 +22,7 @@ interface QuickViewModalProps {
   onClose: () => void
   onAddToCart: (product: Product, size?: string, color?: string) => void
   onAddToWishlist: (product: Product) => void
+  onNotify?: (product: Product) => void
 }
 
 export default function QuickViewModal({
@@ -31,6 +32,7 @@ export default function QuickViewModal({
   onClose,
   onAddToCart,
   onAddToWishlist,
+  onNotify,
 }: QuickViewModalProps) {
   const [selectedSize, setSelectedSize] = useState<string>(product.size?.[0] || '')
   const [selectedColor, setSelectedColor] = useState<string>(product.color || product.colors?.[0] || '')
@@ -103,6 +105,50 @@ export default function QuickViewModal({
     setCurrentImageIndex(0)
   }, [selectedColor])
 
+  // Discount calculation (same as ProductCard and PDP)
+  const hasDiscount = currentVariant.discountPercentage !== undefined 
+    ? currentVariant.discountPercentage > 0
+    : currentVariant.originalPrice && currentVariant.originalPrice > currentVariant.price
+  
+  const discountPercentage = currentVariant.discountPercentage !== undefined
+    ? currentVariant.discountPercentage
+    : hasDiscount && currentVariant.originalPrice
+      ? Math.round(((currentVariant.originalPrice - currentVariant.price) / currentVariant.originalPrice) * 100)
+      : null
+  
+  // Percent-off badge value (can be different from calculated discount)
+  const percentOffBadge = currentVariant.percentOff !== undefined ? currentVariant.percentOff : discountPercentage
+
+  // Badge logic (same as ProductCard and PDP)
+  const getBadgeLabel = (badge: string) => {
+    const labels: Record<string, string> = {
+      'new': 'New',
+      'best-seller': 'Best Seller',
+      'online-only': 'Online Only',
+      'limited-edition': 'Limited Edition',
+      'promotion': 'Sale',
+    }
+    return labels[badge] || badge
+  }
+
+  const getBadgeColor = (badge: string) => {
+    const colors: Record<string, string> = {
+      'new': 'bg-green-600',
+      'best-seller': 'bg-brand-blue-500',
+      'online-only': 'bg-purple-600',
+      'limited-edition': 'bg-orange-600',
+      'promotion': 'bg-brand-blue-500',
+    }
+    return colors[badge] || 'bg-brand-gray-800'
+  }
+
+  const badges = currentVariant.badges || []
+  if (currentVariant.isNew) badges.push('new')
+  if (currentVariant.isBestSeller) badges.push('best-seller')
+  if (currentVariant.isOnlineOnly) badges.push('online-only')
+  if (currentVariant.isLimitedEdition) badges.push('limited-edition')
+  if (hasDiscount) badges.push('promotion')
+
   // Carousel navigation
   const thumbnailContainerRef = useRef<HTMLDivElement>(null)
   const mainImageRef = useRef<HTMLDivElement>(null)
@@ -172,6 +218,7 @@ export default function QuickViewModal({
   const handleAddToCart = () => {
     addToCart(currentVariant, 1, selectedSize, selectedColor)
     onAddToCart(currentVariant, selectedSize, selectedColor)
+    onClose() // Close the modal after adding to cart
   }
 
   return (
@@ -208,6 +255,30 @@ export default function QuickViewModal({
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
               >
+                {/* Badges - positioned like product cards */}
+                <div className="absolute top-2 left-2 flex flex-col items-start gap-1 z-20">
+                  {/* Out of Stock Badge - Show first if product is out of stock */}
+                  {!currentVariant.inStock && (
+                    <span className="bg-red-600 text-white px-2 py-1 text-xs font-semibold uppercase rounded-md inline-block shadow-lg">
+                      Out of Stock
+                    </span>
+                  )}
+                  {badges.filter(badge => badge !== 'promotion').slice(0, 2).map((badge, idx) => (
+                    <span
+                      key={idx}
+                      className={`${getBadgeColor(badge)} text-white px-2 py-1 text-xs font-semibold uppercase rounded-md inline-block shadow-lg`}
+                    >
+                      {getBadgeLabel(badge)}
+                    </span>
+                  ))}
+                  {/* Percent-off badge - show if there's a discount (prioritize this over promotion badge) */}
+                  {percentOffBadge !== null && percentOffBadge !== undefined && (
+                    <span className="bg-brand-blue-500 text-white px-2 py-1 text-xs font-semibold rounded-md inline-block shadow-lg">
+                      -{percentOffBadge}%
+                    </span>
+                  )}
+                </div>
+
                 {mediaItems[currentImageIndex]?.type === 'model3d' ? (
                   <Model3DViewer
                     src={mediaItems[currentImageIndex].src}
@@ -352,6 +423,18 @@ export default function QuickViewModal({
                     View Details
                   </Link>
                 </div>
+                {/* SKU */}
+                {currentVariant.sku && (
+                  <p className="text-xs text-brand-gray-500 mb-2">
+                    SKU: {currentVariant.sku}
+                  </p>
+                )}
+                {/* Short Description */}
+                {currentVariant.shortDescription && (
+                  <p className="text-sm text-brand-gray-600 mb-3 leading-relaxed">
+                    {currentVariant.shortDescription}
+                  </p>
+                )}
                 {currentVariant.rating !== undefined && (
                   <div className="flex items-center gap-2 mb-3">
                     <div className="flex items-center">
@@ -383,14 +466,25 @@ export default function QuickViewModal({
                   <span className="text-2xl font-semibold text-brand-black">
                     ${currentVariant.price.toFixed(2)}
                   </span>
-                  {currentVariant.originalPrice && currentVariant.originalPrice > currentVariant.price && (
+                  {hasDiscount && currentVariant.originalPrice && (
                     <span className="text-base text-brand-gray-400 line-through">
                       ${currentVariant.originalPrice.toFixed(2)}
+                    </span>
+                  )}
+                  {percentOffBadge !== null && percentOffBadge !== undefined && (
+                    <span className="px-2 py-0.5 bg-brand-blue-100 text-brand-blue-700 text-xs font-medium rounded-md">
+                      Save {percentOffBadge}%
                     </span>
                   )}
                 </div>
                 {currentVariant.storeAvailable && (
                   <p className="text-sm text-green-600 font-medium mt-1">Available for pickup in store</p>
+                )}
+                {/* Promotional Message */}
+                {currentVariant.promotionalMessage && (
+                  <p className="text-sm text-green-600 font-medium mt-2">
+                    {currentVariant.promotionalMessage}
+                  </p>
                 )}
               </div>
 
@@ -481,18 +575,41 @@ export default function QuickViewModal({
         {/* Fixed Bottom Actions */}
         <div className="flex-shrink-0 border-t border-brand-gray-200 p-4 sm:p-4 md:p-6 bg-white rounded-b-none sm:rounded-b-2xl safe-area-inset-bottom">
           <div className="flex flex-col sm:flex-row gap-3">
-            <button
-              onClick={handleAddToCart}
-              className="w-full sm:flex-1 bg-brand-blue-500 text-white px-6 py-3.5 sm:py-3 text-sm font-medium hover:bg-brand-blue-600 active:bg-brand-blue-700 transition-all duration-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-blue-500 shadow-sm touch-manipulation"
-            >
-              Add to cart
-            </button>
-            <button
-              onClick={() => onAddToWishlist(currentVariant)}
-              className="w-full sm:flex-1 bg-white text-brand-black border border-brand-gray-300 px-6 py-3.5 sm:py-3 text-sm font-medium hover:bg-brand-gray-50 active:bg-brand-gray-100 transition-all duration-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-blue-500 shadow-sm touch-manipulation"
-            >
-              Buy it now
-            </button>
+            {!currentVariant.inStock ? (
+              onNotify ? (
+                <button
+                  onClick={() => {
+                    onNotify(currentVariant)
+                    onClose()
+                  }}
+                  className="w-full sm:flex-1 bg-white text-brand-black border border-brand-gray-300 px-6 py-3.5 sm:py-3 text-sm font-medium hover:bg-brand-gray-50 active:bg-brand-gray-100 transition-all duration-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-blue-500 shadow-sm touch-manipulation"
+                >
+                  Notify me
+                </button>
+              ) : (
+                <button
+                  disabled
+                  className="w-full sm:flex-1 bg-brand-gray-300 text-brand-gray-500 px-6 py-3.5 sm:py-3 text-sm font-medium rounded-lg cursor-not-allowed"
+                >
+                  Out of Stock
+                </button>
+              )
+            ) : (
+              <>
+                <button
+                  onClick={handleAddToCart}
+                  className="w-full sm:flex-1 bg-brand-blue-500 text-white px-6 py-3.5 sm:py-3 text-sm font-medium hover:bg-brand-blue-600 active:bg-brand-blue-700 transition-all duration-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-blue-500 shadow-sm touch-manipulation"
+                >
+                  Add to cart
+                </button>
+                <button
+                  onClick={() => onAddToWishlist(currentVariant)}
+                  className="w-full sm:flex-1 bg-white text-brand-black border border-brand-gray-300 px-6 py-3.5 sm:py-3 text-sm font-medium hover:bg-brand-gray-50 active:bg-brand-gray-100 transition-all duration-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-blue-500 shadow-sm touch-manipulation"
+                >
+                  Buy it now
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

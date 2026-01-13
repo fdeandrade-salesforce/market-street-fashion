@@ -6,6 +6,7 @@ interface ProductGridProps {
   title?: string
   products: Product[]
   columns?: 2 | 3 | 4
+  onUnifiedAction?: (product: Product) => void
   onAddToCart?: (product: Product) => void
   onQuickView?: (product: Product) => void
   onAddToWishlist?: (product: Product) => void
@@ -17,6 +18,7 @@ export default function ProductGrid({
   title, 
   products, 
   columns = 4,
+  onUnifiedAction,
   onAddToCart,
   onQuickView,
   onAddToWishlist,
@@ -43,6 +45,7 @@ export default function ProductGrid({
           <ProductCard
             key={product.id}
             product={product}
+            onUnifiedAction={onUnifiedAction}
             onAddToCart={onAddToCart}
             onQuickView={onQuickView}
             onAddToWishlist={onAddToWishlist}

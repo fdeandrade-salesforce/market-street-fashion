@@ -14,6 +14,7 @@ import { getWishlist, removeFromWishlist } from '../lib/wishlist'
 import { addToCart } from '../lib/cart'
 import Toast from './Toast'
 import QuickViewModal from './QuickViewModal'
+import NotifyMeModal from './NotifyMeModal'
 
 interface ShippingGroup {
   groupId: string
@@ -234,6 +235,7 @@ export default function MyAccountPage() {
   const [showShareWishlistModal, setShowShareWishlistModal] = useState(false)
   const [sharingWishlistId, setSharingWishlistId] = useState<string | null>(null)
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null)
+  const [notifyMeProduct, setNotifyMeProduct] = useState<Product | null>(null)
   const [wishlistProducts, setWishlistProducts] = useState<Product[]>([])
   const [wishlists, setWishlists] = useState<Wishlist[]>([])
   const [showCreateWishlistModal, setShowCreateWishlistModal] = useState(false)
@@ -913,13 +915,35 @@ export default function MyAccountPage() {
 
   const curatedProducts: Product[] = getFeaturedProducts().slice(0, 5)
 
-  const handleCuratedAddToCart = (product: Product, size?: string, color?: string) => {
-    console.log('Add to cart:', product.id, { size, color })
-    // Add to cart logic here
+  // Helper function to check if product has variants
+  const hasVariants = (product: Product): boolean => {
+    if (product.size && product.size.length > 1) return true
+    if (product.colors && product.colors.length > 1) return true
+    if (product.variants && product.variants > 0) return true
+    return false
   }
 
-  const handleCuratedQuickView = (product: Product) => {
-    setQuickViewProduct(product)
+  // Unified handler for Quick View/Quick Add
+  const handleCuratedUnifiedAction = (product: Product) => {
+    // Check if product is out of stock first
+    if (!product.inStock) {
+      setNotifyMeProduct(product)
+      return
+    }
+
+    if (hasVariants(product)) {
+      // Product has variants - open modal for variant selection
+      setQuickViewProduct(product)
+    } else {
+      // No variants - add to cart directly
+      addToCart(product, 1)
+      showToastMessage(`${product.name} added to cart`, 'success')
+    }
+  }
+
+  const handleNotifyMe = (email: string) => {
+    console.log(`Notify ${email} when ${notifyMeProduct?.name} is available`)
+    showToastMessage(`We'll notify you when ${notifyMeProduct?.name} is available`, 'success')
   }
 
   const handleCuratedAddToWishlist = (product: Product) => {
@@ -1126,22 +1150,26 @@ export default function MyAccountPage() {
                   }
                   
                   return (
-                    <Link
+                    <div
                       key={item.id}
-                      href={item.href || '#'}
-                      onClick={() => {
-                        // Close mobile menu when item is clicked (on mobile only)
-                        if (window.innerWidth < 1024) {
-                          setIsMobileMenuCollapsed(true)
-                        }
-                      }}
                       className={`group w-full flex items-center ${isMobileMenuCollapsed ? 'justify-center lg:justify-between' : 'justify-between'} px-4 py-3 rounded-lg text-left transition-colors relative ${
                         activeSection === item.id
                           ? 'bg-brand-blue-50 text-brand-blue-600 hover:bg-brand-blue-100'
                           : 'text-brand-black hover:bg-brand-gray-50'
                       }`}
-                      title={isMobileMenuCollapsed ? item.label : undefined}
                     >
+                      <Link
+                        href={item.href || '#'}
+                        onClick={() => {
+                          // Close mobile menu when item is clicked (on mobile only)
+                          if (window.innerWidth < 1024) {
+                            setIsMobileMenuCollapsed(true)
+                          }
+                        }}
+                        className="absolute inset-0 z-10"
+                        title={isMobileMenuCollapsed ? item.label : undefined}
+                        aria-label={item.label}
+                      />
                       <div className={`flex items-center ${isMobileMenuCollapsed ? 'lg:gap-3' : 'gap-3'}`}>
                         <span className={`transition-colors relative ${isMobileMenuCollapsed && item.count !== undefined ? 'lg:static' : ''}`}>
                           {renderIcon(item.icon)}
@@ -1165,7 +1193,7 @@ export default function MyAccountPage() {
                           {item.count}
                         </span>
                       )}
-                    </Link>
+                    </div>
                   )
                 })}
                 </nav>
@@ -1991,10 +2019,8 @@ export default function MyAccountPage() {
                       <ProductCard
                         key={product.id}
                         product={product}
-                        onAddToCart={handleCuratedAddToCart}
-                        onQuickView={handleCuratedQuickView}
+                        onUnifiedAction={handleCuratedUnifiedAction}
                         onAddToWishlist={handleCuratedAddToWishlist}
-                        showQuickAdd={true}
                       />
                     ))}
                   </div>
@@ -6008,8 +6034,22 @@ export default function MyAccountPage() {
           allProducts={getAllProducts()}
           isOpen={!!quickViewProduct}
           onClose={() => setQuickViewProduct(null)}
-          onAddToCart={handleCuratedAddToCart}
+          onAddToCart={(product, size, color) => {
+            addToCart(product, 1, size, color)
+            showToastMessage(`${product.name} added to cart`, 'success')
+          }}
           onAddToWishlist={handleCuratedAddToWishlist}
+          onNotify={(product) => setNotifyMeProduct(product)}
+        />
+      )}
+
+      {/* Notify Me Modal */}
+      {notifyMeProduct && (
+        <NotifyMeModal
+          product={notifyMeProduct}
+          isOpen={!!notifyMeProduct}
+          onClose={() => setNotifyMeProduct(null)}
+          onNotify={handleNotifyMe}
         />
       )}
     </div>

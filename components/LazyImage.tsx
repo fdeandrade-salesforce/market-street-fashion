@@ -59,7 +59,7 @@ export default function LazyImage({
   return (
     <div
       ref={containerRef}
-      className={`relative ${className}`}
+      className={`relative w-full h-full ${className}`}
       style={aspectRatio ? { aspectRatio } : undefined}
     >
       {/* Skeleton Placeholder */}
@@ -78,9 +78,9 @@ export default function LazyImage({
           alt={alt}
           onLoad={handleLoad}
           onError={handleError}
-          className={`transition-opacity duration-300 ${
+          className={`w-full h-full transition-opacity duration-300 ${
             isLoaded ? 'opacity-100' : 'opacity-0'
-          } ${className}`}
+          }`}
           style={{ objectFit }}
         />
       )}

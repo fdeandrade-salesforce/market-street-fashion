@@ -17,6 +17,8 @@ import ReturnsWarrantyModal from './ReturnsWarrantyModal'
 import PayPalModal from './PayPalModal'
 import SizeGuideModal from './SizeGuideModal'
 import { addToCart } from '../lib/cart'
+import QuickViewModal from './QuickViewModal'
+import NotifyMeModal from './NotifyMeModal'
 
 // Media item type for gallery
 interface MediaItem {
@@ -269,6 +271,42 @@ export default function ProductDetailPage({
   const [showPayPalModal, setShowPayPalModal] = useState(false)
   const [showFulfillmentModal, setShowFulfillmentModal] = useState(false)
   const [showReturnsWarrantyModal, setShowReturnsWarrantyModal] = useState(false)
+  const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null)
+  const [notifyMeProduct, setNotifyMeProduct] = useState<Product | null>(null)
+
+  // Helper function to check if product has variants
+  const hasVariants = (product: Product): boolean => {
+    if (product.size && product.size.length > 1) return true
+    if (product.colors && product.colors.length > 1) return true
+    if (product.variants && product.variants > 0) return true
+    return false
+  }
+
+  // Unified handler for Quick View/Quick Add
+  const handleUnifiedAction = (product: Product) => {
+    // Check if product is out of stock first
+    if (!product.inStock) {
+      setNotifyMeProduct(product)
+      return
+    }
+
+    if (hasVariants(product)) {
+      // Product has variants - open modal for variant selection
+      setQuickViewProduct(product)
+    } else {
+      // No variants - add to cart directly
+      addToCart(product, 1)
+    }
+  }
+
+  const handleNotifyMe = (email: string) => {
+    console.log(`Notify ${email} when ${notifyMeProduct?.name} is available`)
+  }
+
+  const handleAddToWishlist = (product: Product) => {
+    // Wishlist functionality can be added here
+    console.log('Add to wishlist:', product.id)
+  }
 
   // Share functionality
   const handleShare = async () => {
@@ -340,10 +378,49 @@ export default function ProductDetailPage({
     }] : []),
   ]
   
-  const hasDiscount = currentVariant.originalPrice && currentVariant.originalPrice > currentVariant.price
-  const discountPercentage = hasDiscount
-    ? Math.round(((currentVariant.originalPrice! - currentVariant.price) / currentVariant.originalPrice!) * 100)
-    : null
+  // Use product-level discount if provided, otherwise calculate from price difference
+  const hasDiscount = currentVariant.discountPercentage !== undefined 
+    ? currentVariant.discountPercentage > 0
+    : currentVariant.originalPrice && currentVariant.originalPrice > currentVariant.price
+  
+  const discountPercentage = currentVariant.discountPercentage !== undefined
+    ? currentVariant.discountPercentage
+    : hasDiscount && currentVariant.originalPrice
+      ? Math.round(((currentVariant.originalPrice - currentVariant.price) / currentVariant.originalPrice) * 100)
+      : null
+  
+  // Percent-off badge value (can be different from calculated discount)
+  const percentOffBadge = currentVariant.percentOff !== undefined ? currentVariant.percentOff : discountPercentage
+
+  // Badge logic (same as ProductCard)
+  const getBadgeLabel = (badge: string) => {
+    const labels: Record<string, string> = {
+      'new': 'New',
+      'best-seller': 'Best Seller',
+      'online-only': 'Online Only',
+      'limited-edition': 'Limited Edition',
+      'promotion': 'Sale',
+    }
+    return labels[badge] || badge
+  }
+
+  const getBadgeColor = (badge: string) => {
+    const colors: Record<string, string> = {
+      'new': 'bg-green-600',
+      'best-seller': 'bg-brand-blue-500',
+      'online-only': 'bg-purple-600',
+      'limited-edition': 'bg-orange-600',
+      'promotion': 'bg-brand-blue-500',
+    }
+    return colors[badge] || 'bg-brand-gray-800'
+  }
+
+  const badges = currentVariant.badges || []
+  if (currentVariant.isNew) badges.push('new')
+  if (currentVariant.isBestSeller) badges.push('best-seller')
+  if (currentVariant.isOnlineOnly) badges.push('online-only')
+  if (currentVariant.isLimitedEdition) badges.push('limited-edition')
+  if (hasDiscount) badges.push('promotion')
   
   // State for video playback
   const [isVideoPlaying, setIsVideoPlaying] = useState(false)
@@ -413,6 +490,30 @@ export default function ProductDetailPage({
             <div className="space-y-4">
               {/* Main Image/Video/3D Model Display */}
               <div className="relative">
+                {/* Badges - positioned like product cards */}
+                <div className="absolute top-3 left-3 flex flex-col items-start gap-1.5 z-20">
+                  {/* Out of Stock Badge - Show first if product is out of stock */}
+                  {!currentVariant.inStock && (
+                    <span className="bg-red-600 text-white px-2.5 py-1.5 text-xs font-semibold uppercase rounded-md inline-block shadow-lg">
+                      Out of Stock
+                    </span>
+                  )}
+                  {badges.filter(badge => badge !== 'promotion').slice(0, 2).map((badge, idx) => (
+                    <span
+                      key={idx}
+                      className={`${getBadgeColor(badge)} text-white px-2.5 py-1.5 text-xs font-semibold uppercase rounded-md inline-block shadow-lg`}
+                    >
+                      {getBadgeLabel(badge)}
+                    </span>
+                  ))}
+                  {/* Percent-off badge - show if there's a discount (prioritize this over promotion badge) */}
+                  {percentOffBadge !== null && percentOffBadge !== undefined && (
+                    <span className="bg-brand-blue-500 text-white px-2.5 py-1.5 text-xs font-semibold rounded-md inline-block shadow-lg">
+                      -{percentOffBadge}%
+                    </span>
+                  )}
+                </div>
+
                 {mediaItems[currentImageIndex]?.type === 'model3d' ? (
                   <div className="relative aspect-square bg-brand-gray-100 rounded-2xl overflow-hidden">
                     <Model3DViewer
@@ -548,13 +649,63 @@ export default function ProductDetailPage({
           {/* Right Column - Product Info */}
           <div className="space-y-5">
             {/* Brand & Title Group */}
-            <div>
+            <div className="relative">
               {product.brand && (
                 <p className="text-xs text-brand-gray-500 uppercase tracking-wider mb-1">{product.brand}</p>
               )}
-              <h1 className="text-2xl lg:text-3xl font-medium text-brand-black tracking-tight">
-                {product.name}
-              </h1>
+              <div className="flex items-start justify-between gap-4">
+                <h1 className="text-2xl lg:text-3xl font-medium text-brand-black tracking-tight flex-1">
+                  {product.name}
+                </h1>
+                {/* Wishlist and Share Icons */}
+                <div className="flex items-center gap-2 flex-shrink-0">
+                  <button
+                    onClick={() => handleAddToWishlist(currentVariant)}
+                    className="p-2 rounded-full bg-white/90 hover:bg-white border border-brand-gray-200 hover:border-brand-gray-300 transition-all"
+                    aria-label="Add to wishlist"
+                  >
+                    <svg 
+                      className="w-5 h-5 text-brand-black transition-colors" 
+                      fill="none" 
+                      stroke="currentColor" 
+                      viewBox="0 0 24 24"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={handleShare}
+                    className={`p-2 rounded-full border transition-all ${
+                      shareSuccess 
+                        ? 'bg-green-50 border-green-300' 
+                        : 'bg-white/90 hover:bg-white border-brand-gray-200 hover:border-brand-gray-300'
+                    }`}
+                    aria-label="Share product"
+                  >
+                    {shareSuccess ? (
+                      <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    ) : (
+                      <svg className="w-5 h-5 text-brand-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
+                      </svg>
+                    )}
+                  </button>
+                </div>
+              </div>
+              {/* SKU - Accessible placement */}
+              {currentVariant.sku && (
+                <p className="text-xs text-brand-gray-500 mt-2" aria-label={`Product SKU: ${currentVariant.sku}`}>
+                  <span className="font-medium">SKU:</span> {currentVariant.sku}
+                </p>
+              )}
+              {/* Short Description */}
+              {currentVariant.shortDescription && (
+                <p className="text-sm text-brand-gray-600 mt-2 leading-relaxed">
+                  {currentVariant.shortDescription}
+                </p>
+              )}
             </div>
 
             {/* Rating with Hover Tooltip */}
@@ -670,12 +821,21 @@ export default function ProductDetailPage({
                     <span className="text-base text-brand-gray-400 line-through">
                       ${currentVariant.originalPrice!.toFixed(2)}
                     </span>
-                    <span className="px-2 py-0.5 bg-brand-blue-100 text-brand-blue-700 text-xs font-medium rounded-md">
-                      Save {discountPercentage}%
-                    </span>
+                    {percentOffBadge !== null && percentOffBadge !== undefined && (
+                      <span className="px-2 py-0.5 bg-brand-blue-100 text-brand-blue-700 text-xs font-medium rounded-md">
+                        Save {percentOffBadge}%
+                      </span>
+                    )}
                   </>
                 )}
               </div>
+
+              {/* Promotional Message */}
+              {currentVariant.promotionalMessage && (
+                <p className="text-sm text-green-600 font-medium">
+                  {currentVariant.promotionalMessage}
+                </p>
+              )}
 
               {/* Stock Status with Progress Bar */}
               <div className="space-y-1.5">
@@ -839,11 +999,11 @@ export default function ProductDetailPage({
             </div>
 
             {/* Fulfillment Options - Delivery or Pickup */}
-            <div className="space-y-2">
+            <div className="grid grid-cols-2 gap-2">
               {/* Delivery Option */}
               <button
                 onClick={() => setFulfillmentMethod('delivery')}
-                className={`w-full flex items-start gap-3 p-4 rounded-lg border transition-colors text-left ${
+                className={`flex items-start gap-2 p-3 rounded-lg border transition-colors text-left ${
                   fulfillmentMethod === 'delivery'
                     ? 'border-brand-blue-500 bg-brand-blue-50/30'
                     : 'border-brand-gray-200 hover:border-brand-gray-300'
@@ -852,35 +1012,37 @@ export default function ProductDetailPage({
                 {/* Radio Circle */}
                 <div className="mt-0.5 shrink-0">
                   <div
-                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors ${
                       fulfillmentMethod === 'delivery'
                         ? 'border-brand-blue-500'
                         : 'border-brand-gray-300'
                     }`}
                   >
                     {fulfillmentMethod === 'delivery' && (
-                      <div className="w-2.5 h-2.5 rounded-full bg-brand-blue-500" />
+                      <div className="w-2 h-2 rounded-full bg-brand-blue-500" />
                     )}
                   </div>
                 </div>
 
                 {/* Content */}
-                <div className="flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-medium text-brand-black">Deliver to</span>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation()
-                        // In real app, this would open a zip code modal
-                        const newZip = prompt('Enter zip code:', deliveryZipCode)
-                        if (newZip) setDeliveryZipCode(newZip)
-                      }}
-                      className="text-sm text-brand-blue-500 underline hover:text-brand-blue-600"
-                    >
-                      {deliveryZipCode}
-                    </button>
+                <div className="flex-1 min-w-0">
+                  <div className="flex flex-col">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      <span className="text-xs font-medium text-brand-black">Deliver to</span>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          // In real app, this would open a zip code modal
+                          const newZip = prompt('Enter zip code:', deliveryZipCode)
+                          if (newZip) setDeliveryZipCode(newZip)
+                        }}
+                        className="text-xs text-brand-blue-500 underline hover:text-brand-blue-600"
+                      >
+                        {deliveryZipCode}
+                      </button>
+                    </div>
+                    <p className="text-xs text-brand-gray-600 mt-0.5">3-7 Business days</p>
                   </div>
-                  <p className="text-sm text-brand-gray-600 mt-0.5">Shipping in 3-7 Business days</p>
                 </div>
               </button>
 
@@ -892,7 +1054,7 @@ export default function ProductDetailPage({
                     setShowStoreLocator(true)
                   }
                 }}
-                className={`w-full flex items-start gap-3 p-4 rounded-lg border transition-colors text-left ${
+                className={`flex items-start gap-2 p-3 rounded-lg border transition-colors text-left ${
                   fulfillmentMethod === 'pickup'
                     ? 'border-brand-blue-500 bg-brand-blue-50/30'
                     : 'border-brand-gray-200 hover:border-brand-gray-300'
@@ -901,53 +1063,56 @@ export default function ProductDetailPage({
                 {/* Radio Circle */}
                 <div className="mt-0.5 shrink-0">
                   <div
-                    className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                    className={`w-4 h-4 rounded-full border-2 flex items-center justify-center transition-colors ${
                       fulfillmentMethod === 'pickup'
                         ? 'border-brand-blue-500'
                         : 'border-brand-gray-300'
                     }`}
                   >
                     {fulfillmentMethod === 'pickup' && (
-                      <div className="w-2.5 h-2.5 rounded-full bg-brand-blue-500" />
+                      <div className="w-2 h-2 rounded-full bg-brand-blue-500" />
                     )}
                   </div>
                 </div>
 
                 {/* Content */}
-                <div className="flex-1">
+                <div className="flex-1 min-w-0">
                   {selectedStore ? (
                     <>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm font-medium text-brand-black">Pickup at</span>
-                        <button
-                          onClick={(e) => {
-                            e.stopPropagation()
-                            setShowStoreLocator(true)
-                          }}
-                          className="text-sm text-brand-blue-500 underline hover:text-brand-blue-600"
-                        >
-                          {selectedStore.name}
-                        </button>
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-xs font-medium text-brand-black">Pickup at</span>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setShowStoreLocator(true)
+                            }}
+                            className="text-xs text-brand-blue-500 underline hover:text-brand-blue-600"
+                          >
+                            {selectedStore.name}
+                          </button>
+                        </div>
+                        {selectedStore.pickupTime && (
+                          <p className="text-xs text-brand-gray-600 mt-0.5">{selectedStore.pickupTime}</p>
+                        )}
                       </div>
-                      {selectedStore.pickupTime && (
-                        <p className="text-sm text-brand-gray-600 mt-0.5">{selectedStore.pickupTime}</p>
-                      )}
                     </>
                   ) : (
                     <>
-                      <div className="flex items-center gap-2">
-                        <span className="text-sm text-brand-gray-600">Pickup unavailable at</span>
+                      <div className="flex flex-col">
+                        <div className="flex items-center gap-1.5 flex-wrap">
+                          <span className="text-xs text-brand-gray-600">Pickup unavailable</span>
+                        </div>
                         <button
                           onClick={(e) => {
                             e.stopPropagation()
                             setShowStoreLocator(true)
                           }}
-                          className="text-sm text-brand-blue-500 underline hover:text-brand-blue-600"
+                          className="text-xs text-brand-blue-500 underline hover:text-brand-blue-600 mt-0.5 text-left"
                         >
-                          Burlington Mall
+                          Try another store
                         </button>
                       </div>
-                      <p className="text-sm text-brand-blue-500 mt-0.5">Try another store or select delivery.</p>
                     </>
                   )}
                 </div>
@@ -977,56 +1142,84 @@ export default function ProductDetailPage({
               </div>
             </div>
 
-            {/* Add to Cart Button */}
-            <button
-              onClick={() => {
-                if (currentVariant.inStock) {
-                  addToCart(currentVariant, quantity, selectedSize, selectedColor)
-                }
-              }}
-              disabled={!currentVariant.inStock}
-              className={`w-full py-3.5 px-6 font-medium text-base rounded-lg transition-colors ${
-                currentVariant.inStock
-                  ? 'bg-brand-blue-500 text-white hover:bg-brand-blue-600'
-                  : 'bg-brand-gray-300 text-brand-gray-500 cursor-not-allowed'
-              }`}
-            >
-              Add to cart
-            </button>
-
-            {/* Secondary Actions */}
-            <div className="grid grid-cols-2 gap-3">
-              <button className="py-3 px-4 border border-brand-gray-300 text-brand-black font-medium rounded-lg hover:bg-brand-gray-50 transition-colors flex items-center justify-center gap-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                </svg>
-                Wishlist
-              </button>
-              <button 
-                onClick={handleShare}
-                className={`py-3 px-4 border font-medium rounded-lg transition-colors flex items-center justify-center gap-2 ${
-                  shareSuccess 
-                    ? 'border-green-500 text-green-600 bg-green-50' 
-                    : 'border-brand-gray-300 text-brand-black hover:bg-brand-gray-50'
-                }`}
+            {/* Add to Cart / Notify Me Button */}
+            {!currentVariant.inStock ? (
+              <button
+                onClick={() => setNotifyMeProduct(currentVariant)}
+                className="w-full py-3.5 px-6 font-medium text-base rounded-lg transition-colors bg-white text-brand-black border border-brand-gray-300 hover:bg-brand-gray-50"
               >
-                {shareSuccess ? (
-                  <>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                    </svg>
-                    Copied!
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z" />
-                    </svg>
-                    Share
-                  </>
-                )}
+                Notify me
               </button>
-            </div>
+            ) : (
+              <button
+                onClick={() => {
+                  addToCart(currentVariant, quantity, selectedSize, selectedColor)
+                }}
+                className="w-full py-3.5 px-6 font-medium text-base rounded-lg transition-colors bg-brand-blue-500 text-white hover:bg-brand-blue-600"
+              >
+                Add to cart
+              </button>
+            )}
+
+            {/* Express Checkout Buttons */}
+            {currentVariant.inStock && (
+              <div className="space-y-3 mt-3">
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-brand-gray-200"></div>
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-white px-2 text-brand-gray-500">Or buy with</span>
+                  </div>
+                </div>
+                
+                {/* Apple Pay */}
+                <button
+                  onClick={() => {
+                    // Express checkout - Buy Now flow
+                    console.log('Apple Pay checkout initiated')
+                  }}
+                  className="w-full py-3.5 px-6 font-medium text-base rounded-lg transition-colors bg-black text-white hover:bg-gray-900 flex items-center justify-center gap-2"
+                >
+                  <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.08-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+                  </svg>
+                  <span>Buy with Apple Pay</span>
+                </button>
+
+                {/* Google Pay */}
+                <button
+                  onClick={() => {
+                    // Express checkout - Buy Now flow
+                    console.log('Google Pay checkout initiated')
+                  }}
+                  className="w-full py-3.5 px-6 font-medium text-base rounded-lg transition-colors bg-white text-brand-black border border-brand-gray-300 hover:bg-brand-gray-50 flex items-center justify-center gap-2"
+                >
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
+                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                  </svg>
+                  <span>Buy with Google Pay</span>
+                </button>
+
+                {/* PayPal Express */}
+                <button
+                  onClick={() => {
+                    // Express checkout - Buy Now flow
+                    console.log('PayPal Express checkout initiated')
+                  }}
+                  className="w-full py-3.5 px-6 font-medium text-base rounded-lg transition-colors bg-white text-brand-black border border-brand-gray-300 hover:bg-brand-gray-50 flex items-center justify-center gap-2"
+                >
+                  <svg className="w-5 h-5" viewBox="0 0 24 24" fill="none">
+                    <path d="M7.076 21.337H2.47a.641.641 0 0 1-.633-.74L4.944.901C5.026.382 5.474 0 5.998 0h7.46c2.57 0 4.578.543 5.69 1.81 1.01 1.15 1.304 2.42 1.012 4.287-.023.143-.047.288-.077.437-.983 5.05-4.349 6.797-8.647 6.797h-2.19c-.524 0-.968.382-1.05.9l-1.12 7.106zm14.146-14.42a.805.805 0 0 0-.777-.637h-3.855c-.663 0-1.226.493-1.333 1.136l-.02.123-.09.571-.056.359c-.09.57.33 1.097.9 1.097h2.78c.73 0 1.33-.558 1.412-1.283.011-.09.018-.18.02-.27.04-.617-.05-1.13-.281-1.442z" fill="#003087"/>
+                    <path d="M9.557 8.218a.805.805 0 0 0-.777-.637H4.925c-.663 0-1.226.493-1.333 1.136l-.02.123-.09.571-.056.359c-.09.57.33 1.097.9 1.097h2.78c.73 0 1.33-.558 1.412-1.283.011-.09.018-.18.02-.27.04-.617-.05-1.13-.281-1.442z" fill="#009CDE"/>
+                  </svg>
+                  <span>Buy with PayPal</span>
+                </button>
+              </div>
+            )}
 
             {/* PayPal Pay in 4 */}
             <div className="text-sm text-brand-gray-600">
@@ -1042,6 +1235,60 @@ export default function ProductDetailPage({
               >
                 Learn more
               </button>
+            </div>
+
+            {/* Free Shipping, Returns & Warranty Info */}
+            <div className="space-y-3 pt-4 border-t border-brand-gray-200">
+              {/* Free Shipping Notice */}
+              <div className="bg-brand-blue-50 border border-brand-blue-200 rounded-lg p-3">
+                <div className="flex items-start gap-2">
+                  <svg className="w-4 h-4 text-brand-blue-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                  </svg>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-brand-blue-800">Free Shipping</p>
+                    <p className="text-xs text-brand-blue-600 mt-0.5">Orders over $50 ship free worldwide</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Returns & Warranty Notice */}
+              <div className="bg-brand-gray-50 border border-brand-gray-200 rounded-lg p-3">
+                <div className="flex items-start gap-2">
+                  <svg className="w-4 h-4 text-brand-gray-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                  </svg>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-brand-black">30-Day Returns & 1 Year Warranty</p>
+                    <p className="text-xs text-brand-gray-600 mt-0.5">Returns accepted within 30 days. Full warranty coverage included.</p>
+                    <button 
+                      onClick={() => setShowReturnsWarrantyModal(true)}
+                      className="text-xs text-brand-blue-500 hover:underline mt-1"
+                    >
+                      View Policies
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Fulfillment Info */}
+              <div className="bg-brand-gray-50 border border-brand-gray-200 rounded-lg p-3">
+                <div className="flex items-start gap-2">
+                  <svg className="w-4 h-4 text-brand-gray-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                  </svg>
+                  <div className="flex-1">
+                    <p className="text-sm font-medium text-brand-black">Estimated Delivery</p>
+                    <p className="text-xs text-brand-gray-600 mt-0.5">Sep 15-16 • Shipping options available</p>
+                    <button 
+                      onClick={() => setShowFulfillmentModal(true)}
+                      className="text-xs text-brand-blue-500 hover:underline mt-1"
+                    >
+                      Learn More
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -1076,38 +1323,6 @@ export default function ProductDetailPage({
               </div>
             </div>
 
-            {/* Free Shipping Banner */}
-            <div className="bg-brand-blue-50 border border-brand-blue-200 rounded-lg p-4">
-              <p className="text-sm font-medium text-brand-blue-800">Free Shipping</p>
-              <p className="text-xs text-brand-blue-600">Orders over $50 ship free worldwide.</p>
-              <p className="text-xs text-brand-blue-600">Returns accepted within 30 days.</p>
-            </div>
-
-            {/* Fulfillment Info */}
-            <div className="grid grid-cols-2 gap-6 py-4 border-t border-brand-gray-200">
-              <div>
-                <h4 className="text-sm font-medium text-brand-black mb-1">Fulfillment</h4>
-                <p className="text-xs text-brand-gray-600">Estimated delivery: Sep 15-16</p>
-                <p className="text-xs text-brand-gray-600">Shipping options: $5.99</p>
-                <button 
-                  onClick={() => setShowFulfillmentModal(true)}
-                  className="text-xs text-brand-blue-500 hover:underline"
-                >
-                  Learn More
-                </button>
-              </div>
-              <div>
-                <h4 className="text-sm font-medium text-brand-black mb-1">Returns & Warranty</h4>
-                <p className="text-xs text-brand-gray-600">30-Day Returns</p>
-                <p className="text-xs text-brand-gray-600">Warranty: 1 year</p>
-                <button 
-                  onClick={() => setShowReturnsWarrantyModal(true)}
-                  className="text-xs text-brand-blue-500 hover:underline"
-                >
-                  View Policies
-                </button>
-              </div>
-            </div>
           </div>
 
           {/* Right - Structured Content Accordions (Sticky) */}
@@ -1165,8 +1380,8 @@ export default function ProductDetailPage({
                 <ProductCard
                   key={prod.id}
                   product={prod}
-                  onAddToCart={(product) => addToCart(product, 1)}
-                  showQuickAdd
+                  onUnifiedAction={handleUnifiedAction}
+                  onAddToWishlist={handleAddToWishlist}
                 />
               ))}
             </div>
@@ -1185,8 +1400,8 @@ export default function ProductDetailPage({
                 <ProductCard
                   key={prod.id}
                   product={prod}
-                  onAddToCart={(product) => addToCart(product, 1)}
-                  showQuickAdd
+                  onUnifiedAction={handleUnifiedAction}
+                  onAddToWishlist={handleAddToWishlist}
                 />
               ))}
             </div>
@@ -1205,8 +1420,8 @@ export default function ProductDetailPage({
                 <ProductCard
                   key={prod.id}
                   product={prod}
-                  onAddToCart={(product) => addToCart(product, 1)}
-                  showQuickAdd
+                  onUnifiedAction={handleUnifiedAction}
+                  onAddToWishlist={handleAddToWishlist}
                 />
               ))}
             </div>
@@ -1439,6 +1654,29 @@ export default function ProductDetailPage({
       )}
 
       <Footer />
+
+      {/* Quick View Modal */}
+      {quickViewProduct && (
+        <QuickViewModal
+          product={quickViewProduct}
+          allProducts={allProducts}
+          isOpen={!!quickViewProduct}
+          onClose={() => setQuickViewProduct(null)}
+          onAddToCart={(product, size, color) => addToCart(product, 1, size, color)}
+          onAddToWishlist={handleAddToWishlist}
+          onNotify={(product) => setNotifyMeProduct(product)}
+        />
+      )}
+
+      {/* Notify Me Modal */}
+      {notifyMeProduct && (
+        <NotifyMeModal
+          product={notifyMeProduct}
+          isOpen={!!notifyMeProduct}
+          onClose={() => setNotifyMeProduct(null)}
+          onNotify={handleNotifyMe}
+        />
+      )}
     </div>
   )
 }
