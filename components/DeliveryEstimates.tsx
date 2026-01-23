@@ -4,9 +4,23 @@ import React, { useState, useEffect } from 'react'
 
 type DeliveryStatus = 'default' | 'invalid' | 'loading' | 'error' | 'success'
 
+/**
+ * Shipping cost domain model
+ * Explicitly distinguishes between free, paid, and unavailable shipping
+ */
+type ShippingCost =
+  | { type: 'free' }
+  | { type: 'paid'; amount: number } // amount in USD
+  | { type: 'unavailable' } // Shipping not available to this location
+
+/**
+ * Delivery estimate result
+ * Contains delivery time and shipping cost information
+ */
 interface DeliveryResult {
-  deliveryText: string
-  shippingCostText: string
+  deliveryText: string // e.g., "3 business days"
+  shippingCost: ShippingCost
+  shippingCostText: string // Formatted display text
 }
 
 export interface DeliveryEstimateState {
@@ -26,7 +40,31 @@ export function validateZip(zip: string): boolean {
   return /^\d{5}$/.test(zip)
 }
 
-// API fetch function with mock mode support and ZIP-specific scenarios
+/**
+ * ZIP-specific delivery scenario configuration
+ * Each scenario defines business days and shipping cost explicitly
+ */
+type ZipScenario =
+  | { type: 'error' } // API error for this ZIP
+  | { type: 'success'; businessDays: number; shippingCost: ShippingCost } // Success with explicit values
+
+/**
+ * Helper function to format shipping cost for display
+ */
+function formatShippingCost(shippingCost: ShippingCost): string {
+  switch (shippingCost.type) {
+    case 'free':
+      return 'Free'
+    case 'paid':
+      return `$${shippingCost.amount.toFixed(2)}`
+    case 'unavailable':
+      return 'Not available'
+  }
+}
+
+/**
+ * API fetch function with mock mode support and ZIP-specific scenarios
+ */
 async function fetchDeliveryEstimates(
   zip: string,
   mockMode?: 'error' | 'success'
@@ -38,13 +76,16 @@ async function fetchDeliveryEstimates(
   // Simulate API delay
   await new Promise((resolve) => setTimeout(resolve, 1000))
 
-  // ZIP-specific scenarios
-  const zipScenarios: Record<string, { type: 'error' | 'success'; businessDays?: number; shippingCost?: number }> = {
+  // ZIP-specific scenarios with explicit shipping cost types
+  // Demonstrates all three shipping states: free, paid, and unavailable
+  const zipScenarios: Record<string, ZipScenario> = {
     '94121': { type: 'error' }, // Always returns error
-    '94122': { type: 'success', businessDays: 5, shippingCost: 5.99 }, // 5 days, $5.99
-    '94123': { type: 'success', businessDays: 3, shippingCost: 0 }, // 3 days, Free
+    '94122': { type: 'success', businessDays: 5, shippingCost: { type: 'paid', amount: 5.99 } }, // 5 days, $5.99 (paid)
+    '94123': { type: 'success', businessDays: 3, shippingCost: { type: 'free' } }, // 3 days, Free
     '94124': { type: 'error' }, // Always returns error
-    '94125': { type: 'success', businessDays: 4, shippingCost: 0 }, // 4 days, Free
+    '94125': { type: 'success', businessDays: 4, shippingCost: { type: 'free' } }, // 4 days, Free
+    // Note: To test unavailable shipping, you can add:
+    // '94126': { type: 'success', businessDays: 7, shippingCost: { type: 'unavailable' } },
   }
 
   // Check if we have a specific scenario for this ZIP
@@ -64,17 +105,21 @@ async function fetchDeliveryEstimates(
   if (scenario && scenario.type === 'success') {
     return {
       deliveryText: `${scenario.businessDays} business days`,
-      shippingCostText: scenario.shippingCost === 0 ? 'Free' : `$${scenario.shippingCost.toFixed(2)}`,
+      shippingCost: scenario.shippingCost,
+      shippingCostText: formatShippingCost(scenario.shippingCost),
     }
   }
 
   // Default: random success response for other ZIPs
   const businessDays = Math.floor(Math.random() * 5) + 3 // 3-7 days
-  const shippingCost = Math.random() > 0.5 ? 0 : 5.99 // Free or $5.99
+  const shippingCost: ShippingCost = Math.random() > 0.5 
+    ? { type: 'free' } 
+    : { type: 'paid', amount: 5.99 }
 
   return {
     deliveryText: `${businessDays} business days`,
-    shippingCostText: shippingCost === 0 ? 'Free' : `$${shippingCost.toFixed(2)}`,
+    shippingCost,
+    shippingCostText: formatShippingCost(shippingCost),
   }
 }
 
@@ -319,7 +364,24 @@ export default function DeliveryEstimates({ initialZip = '', onZipChange, onResu
                 Estimated delivery: <span className="font-semibold">{result.deliveryText}</span>
               </p>
               <p className="text-sm font-medium text-green-800">
-                Shipping cost: <span className="font-semibold">{result.shippingCostText}</span>
+                Shipping cost:{' '}
+                <span
+                  className={`font-semibold ${
+                    result.shippingCost.type === 'free'
+                      ? 'text-green-700'
+                      : result.shippingCost.type === 'paid'
+                      ? 'text-green-800'
+                      : 'text-orange-700'
+                  }`}
+                >
+                  {result.shippingCostText}
+                </span>
+                {result.shippingCost.type === 'free' && (
+                  <span className="ml-1.5 text-xs text-green-600">✓</span>
+                )}
+                {result.shippingCost.type === 'unavailable' && (
+                  <span className="ml-1.5 text-xs text-orange-600">⚠</span>
+                )}
               </p>
             </div>
           </div>

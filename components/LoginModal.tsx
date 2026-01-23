@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { login, User } from '../lib/auth'
 
 interface LoginModalProps {
   isOpen: boolean
@@ -33,17 +34,52 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
   const handleSignIn = (e: React.FormEvent) => {
     e.preventDefault()
     console.log('Sign in:', { email, password, rememberMe })
-    // TODO: Implement actual sign in logic
+    
+    // Mock login - in production, this would call an API
+    // For demo purposes, we'll create a mock user based on email
+    const emailParts = email.split('@')
+    const firstName = emailParts[0].split('.')[0] || emailParts[0]
+    const lastName = emailParts[0].split('.')[1] || 'User'
+    
+    const mockUser: User = {
+      id: `user_${Date.now()}`,
+      firstName: firstName.charAt(0).toUpperCase() + firstName.slice(1),
+      lastName: lastName.charAt(0).toUpperCase() + lastName.slice(1),
+      email: email,
+      loyaltyStatus: 'Gold',
+      loyaltyPoints: 2450,
+      emailVerified: false,
+      phoneVerified: false,
+    }
+    
+    // Save user to localStorage
+    login(mockUser, rememberMe)
+    
     onClose()
-    // Navigate to account page after sign in
-    router.push('/account')
+    // Stay on the same page after sign in
   }
 
   const handleRegister = (e: React.FormEvent) => {
     e.preventDefault()
     console.log('Register:', { firstName, lastName, email, password })
-    // TODO: Implement actual registration logic
+    
+    // Mock registration - in production, this would call an API
+    const mockUser: User = {
+      id: `user_${Date.now()}`,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      loyaltyStatus: 'Bronze',
+      loyaltyPoints: 0,
+      emailVerified: false,
+      phoneVerified: false,
+    }
+    
+    // Save user to localStorage
+    login(mockUser, false)
+    
     onClose()
+    // Stay on the same page after registration
   }
 
   const handleSocialLogin = (provider: string) => {

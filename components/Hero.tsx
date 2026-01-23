@@ -21,17 +21,18 @@ interface HeroProps {
 // Default slides if none provided
 const defaultSlides: Slide[] = [
   {
+    title: 'Geometric Elegance',
+    subtitle: 'Discover our curated selection of minimalist design pieces',
+    video: '/about us resources/player video.mp4',
+    image: '/images/hero/hero-geometric.jpg',
+    ctaText: 'Explore Now',
+    ctaLink: '/shop',
+  },
+  {
     title: 'Pure Form. Timeless Design.',
     subtitle: 'Explore the NEXT collection of sculptural objects crafted for modern living',
     image: '/images/hero/hero-main.png',
     ctaText: 'Shop Collection',
-    ctaLink: '/shop',
-  },
-  {
-    title: 'Geometric Elegance',
-    subtitle: 'Discover our curated selection of minimalist design pieces',
-    image: '/images/hero/hero-geometric.jpg',
-    ctaText: 'Explore Now',
     ctaLink: '/shop',
   },
   {

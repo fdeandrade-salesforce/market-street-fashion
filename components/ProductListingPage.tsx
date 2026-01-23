@@ -77,6 +77,7 @@ export default function ProductListingPage({
 }: ProductListingPageProps) {
   const [showFilters, setShowFilters] = useState(false)
   const [sortBy, setSortBy] = useState<SortOption>('newest')
+  const [cardSize, setCardSize] = useState<'small' | 'big'>('big')
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     availability: true,
     price: true,
@@ -168,7 +169,35 @@ export default function ProductListingPage({
 
   // Toggle filter sidebar visibility
   const handleToggleFilters = () => {
-    setShowFilters((prev) => !prev)
+    const isMobile = window.innerWidth < 1024 // lg breakpoint
+    const willShowFilters = !showFilters
+    
+    if (willShowFilters && isMobile) {
+      // Close all filter sections on mobile to keep it compact
+      setExpandedSections({
+        availability: false,
+        price: false,
+        color: false,
+        size: false,
+      })
+      
+      // Show filters first
+      setShowFilters(true)
+      
+      // Then smoothly scroll to filters section after a brief delay
+      setTimeout(() => {
+        const filtersElement = document.querySelector('[data-filters-section]')
+        if (filtersElement) {
+          const offsetTop = filtersElement.getBoundingClientRect().top + window.pageYOffset - 20 // 20px offset from top
+          window.scrollTo({
+            top: offsetTop,
+            behavior: 'smooth',
+          })
+        }
+      }, 100)
+    } else {
+      setShowFilters(willShowFilters)
+    }
   }
 
   // Apply filters and sorting
@@ -491,7 +520,7 @@ export default function ProductListingPage({
   return (
     <div className="min-h-screen bg-white">
       {/* Beautiful Header Section */}
-      <div className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden">
+      <div className="relative h-[250px] md:h-[300px] lg:h-[350px] overflow-hidden">
         <div className="absolute inset-0">
           <LazyImage
             src={getHeaderImage()}
@@ -503,7 +532,7 @@ export default function ProductListingPage({
         </div>
         
         <div className="relative h-full flex items-end">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-12 md:pb-16">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-8 md:pb-10">
             <div className="max-w-2xl">
               <div className="inline-block mb-4">
                 <span className="text-xs md:text-sm text-white/80 uppercase tracking-widest font-medium">
@@ -535,49 +564,17 @@ export default function ProductListingPage({
         </nav>
 
         {/* Toolbar - Filters and Sort */}
-        <div className="flex items-center justify-between mb-6">
-          <button
-            onClick={handleToggleFilters}
-            className={`btn flex items-center gap-2 ${
-              showFilters 
-                ? 'btn-primary' 
-                : 'btn-secondary'
-            }`}
-            aria-label="Toggle filters"
-            aria-expanded={showFilters}
-            aria-pressed={showFilters}
-          >
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
-              />
-            </svg>
-            <span className="text-sm font-medium uppercase tracking-wide">Filters</span>
-            {activeFiltersCount > 0 && (
-              <span className="inline-flex items-center justify-center min-w-[1.5rem] h-5 px-2 bg-brand-blue-500 text-white text-xs font-semibold rounded-full">
-                {activeFiltersCount}
-              </span>
-            )}
-          </button>
-
-          <div className="flex items-center space-x-3">
-            <label className="text-sm text-brand-gray-600 uppercase tracking-wide">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 sm:gap-0 mb-6">
+          {/* Sort and Grid Size Controls - First on mobile, right side on desktop */}
+          <div className="flex items-center justify-between sm:justify-end gap-2 sm:gap-3 flex-wrap sm:flex-nowrap order-1 sm:order-2">
+            <label className="text-sm text-brand-gray-600 uppercase tracking-wide whitespace-nowrap">
               Sort by:
             </label>
-            <div className="relative">
+            <div className="relative flex-1 sm:flex-initial min-w-[140px] sm:min-w-0">
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as SortOption)}
-                className="appearance-none border border-brand-gray-300 px-4 py-2 pr-10 text-sm text-brand-black bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue-500 uppercase tracking-wide rounded-lg cursor-pointer"
+                className="appearance-none border border-brand-gray-300 px-3 sm:px-4 py-2 pr-8 sm:pr-10 text-sm text-brand-black bg-white focus:outline-none focus:ring-2 focus:ring-brand-blue-500 uppercase tracking-wide rounded-lg cursor-pointer w-full"
               >
                 <option value="relevance">Relevance</option>
                 <option value="newest">Newest</option>
@@ -587,7 +584,7 @@ export default function ProductListingPage({
                 <option value="name-asc">Name: A to Z</option>
                 <option value="name-desc">Name: Z to A</option>
               </select>
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+              <div className="absolute right-2 sm:right-3 top-1/2 -translate-y-1/2 pointer-events-none">
                 <svg
                   className="w-4 h-4 text-brand-gray-400"
                   fill="none"
@@ -603,12 +600,102 @@ export default function ProductListingPage({
                 </svg>
               </div>
             </div>
+            
+            {/* Card Size Toggle */}
+            <div className="flex items-center border border-brand-gray-300 rounded-lg overflow-hidden flex-shrink-0">
+              <button
+                onClick={() => setCardSize('big')}
+                className={`px-2 sm:px-3 py-2 transition-colors ${
+                  cardSize === 'big'
+                    ? 'bg-brand-blue-500 text-white'
+                    : 'bg-white text-brand-gray-600 hover:bg-brand-gray-50'
+                }`}
+                aria-label="Big cards view"
+                title="Big cards"
+              >
+                {/* Large grid icon - 2x2 with bigger squares */}
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <rect x="3" y="3" width="8" height="8" strokeWidth="2" rx="1" />
+                  <rect x="13" y="3" width="8" height="8" strokeWidth="2" rx="1" />
+                  <rect x="3" y="13" width="8" height="8" strokeWidth="2" rx="1" />
+                  <rect x="13" y="13" width="8" height="8" strokeWidth="2" rx="1" />
+                </svg>
+              </button>
+              <button
+                onClick={() => setCardSize('small')}
+                className={`px-2 sm:px-3 py-2 transition-colors ${
+                  cardSize === 'small'
+                    ? 'bg-brand-blue-500 text-white'
+                    : 'bg-white text-brand-gray-600 hover:bg-brand-gray-50'
+                }`}
+                aria-label="Small cards view"
+                title="Small cards"
+              >
+                {/* Small grid icon - 3x3 with smaller squares */}
+                <svg
+                  className="w-4 h-4"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <rect x="2" y="2" width="5" height="5" strokeWidth="1.5" rx="0.5" />
+                  <rect x="9.5" y="2" width="5" height="5" strokeWidth="1.5" rx="0.5" />
+                  <rect x="17" y="2" width="5" height="5" strokeWidth="1.5" rx="0.5" />
+                  <rect x="2" y="9.5" width="5" height="5" strokeWidth="1.5" rx="0.5" />
+                  <rect x="9.5" y="9.5" width="5" height="5" strokeWidth="1.5" rx="0.5" />
+                  <rect x="17" y="9.5" width="5" height="5" strokeWidth="1.5" rx="0.5" />
+                  <rect x="2" y="17" width="5" height="5" strokeWidth="1.5" rx="0.5" />
+                  <rect x="9.5" y="17" width="5" height="5" strokeWidth="1.5" rx="0.5" />
+                  <rect x="17" y="17" width="5" height="5" strokeWidth="1.5" rx="0.5" />
+                </svg>
+              </button>
+            </div>
           </div>
+
+          {/* Filters Button - Second on mobile, left side on desktop */}
+          <button
+            onClick={handleToggleFilters}
+            className={`btn flex items-center gap-2 w-full sm:w-auto justify-center sm:justify-start order-2 sm:order-1 ${
+              showFilters 
+                ? 'btn-primary' 
+                : 'btn-secondary'
+            }`}
+            aria-label="Toggle filters"
+            aria-expanded={showFilters}
+            aria-pressed={showFilters}
+          >
+            <svg
+              className="w-5 h-5 flex-shrink-0"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"
+              />
+            </svg>
+            <span className="text-sm font-medium uppercase tracking-wide whitespace-nowrap">Filters</span>
+            {activeFiltersCount > 0 && (
+              <span className="inline-flex items-center justify-center min-w-[1.5rem] h-5 px-2 bg-brand-blue-500 text-white text-xs font-semibold rounded-full">
+                {activeFiltersCount}
+              </span>
+            )}
+          </button>
         </div>
 
         <div className={`flex flex-col lg:flex-row transition-all duration-300 ${showFilters ? 'gap-8' : 'lg:gap-0'}`}>
           {/* Filters Sidebar */}
           <aside
+            data-filters-section
             className={`flex-shrink-0 transition-all duration-300 ease-in-out ${
               showFilters 
                 ? 'block opacity-100 translate-x-0 w-full lg:w-64 lg:max-w-64' 
@@ -1011,10 +1098,14 @@ export default function ProductListingPage({
             {/* Products Grid */}
             {paginatedProducts.length > 0 ? (
               <>
-                <div className={`grid grid-cols-2 gap-6 [grid-auto-flow:dense] transition-all duration-300 ${
-                  showFilters 
-                    ? 'lg:grid-cols-3 xl:grid-cols-3' 
-                    : 'lg:grid-cols-3 xl:grid-cols-4'
+                <div className={`grid [grid-auto-flow:dense] transition-all duration-300 ${
+                  cardSize === 'small'
+                    ? showFilters
+                      ? 'grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4'
+                      : 'grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4'
+                    : showFilters
+                      ? 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6'
+                      : 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
                 }`}>
                   {(() => {
                     // Build a flat array of all grid items (products + content blocks) in order
@@ -1064,28 +1155,40 @@ export default function ProductListingPage({
                       if (item.type === 'content') {
                         const contentSlot = item.data
                         const getColumnSpan = (columns?: 1 | 2 | 3 | 4 | 'full') => {
-                          if (columns === 'full') {
-                            // Full-width: span all columns (dense flow will handle placement)
-                            return showFilters 
-                              ? 'col-span-2 lg:col-span-3 xl:col-span-3'
-                              : 'col-span-2 lg:col-span-3 xl:col-span-4'
-                          }
-                          if (!columns || columns === 1) {
+                          if (cardSize === 'small') {
+                            // Small cards: more columns available
+                            if (columns === 'full' || columns === 4) {
+                              return 'col-span-3 md:col-span-4 lg:col-span-5 xl:col-span-6'
+                            }
+                            if (!columns || columns === 1) {
+                              return 'col-span-1'
+                            }
+                            if (columns === 2) {
+                              return 'col-span-2 md:col-span-2 lg:col-span-2 xl:col-span-2'
+                            }
+                            if (columns === 3) {
+                              return 'col-span-3 md:col-span-3 lg:col-span-3 xl:col-span-3'
+                            }
+                            return 'col-span-1'
+                          } else {
+                            // Big cards: original logic
+                            if (columns === 'full' || columns === 4) {
+                              // Full-width: span all columns (dense flow will handle placement)
+                              return showFilters 
+                                ? 'col-span-2 lg:col-span-3 xl:col-span-3'
+                                : 'col-span-2 lg:col-span-3 xl:col-span-4'
+                            }
+                            if (!columns || columns === 1) {
+                              return 'col-span-1'
+                            }
+                            if (columns === 2) {
+                              return 'col-span-2 lg:col-span-2 xl:col-span-2'
+                            }
+                            if (columns === 3) {
+                              return 'col-span-2 lg:col-span-3 xl:col-span-3'
+                            }
                             return 'col-span-1'
                           }
-                          if (columns === 2) {
-                            return 'col-span-2 lg:col-span-2 xl:col-span-2'
-                          }
-                          if (columns === 3) {
-                            return 'col-span-2 lg:col-span-3 xl:col-span-3'
-                          }
-                          if (columns === 4) {
-                            // Full-width: span all columns (dense flow will handle placement)
-                            return showFilters 
-                              ? 'col-span-2 lg:col-span-3 xl:col-span-3'
-                              : 'col-span-2 lg:col-span-3 xl:col-span-4'
-                          }
-                          return 'col-span-1'
                         }
 
                         return (

@@ -1,18 +1,42 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
+import { getCurrentUser, User } from '../lib/auth'
 
 interface AccountDropdownProps {
   onOpenLogin: () => void
+  onLogout: () => void
 }
 
-export default function AccountDropdown({ onOpenLogin }: AccountDropdownProps) {
+export default function AccountDropdown({ onOpenLogin, onLogout }: AccountDropdownProps) {
   const [isOpen, setIsOpen] = useState(false)
+  const [user, setUser] = useState<User | null>(null)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
+  // Load user state on mount and listen for changes
   useEffect(() => {
+    const loadUser = () => {
+      setUser(getCurrentUser())
+    }
+    
+    loadUser()
+
+    // Listen for login/logout events
+    const handleLogin = () => {
+      loadUser()
+    }
+    
+    const handleLogout = () => {
+      loadUser()
+    }
+
+    window.addEventListener('userLoggedIn', handleLogin)
+    window.addEventListener('userLoggedOut', handleLogout)
+
     return () => {
+      window.removeEventListener('userLoggedIn', handleLogin)
+      window.removeEventListener('userLoggedOut', handleLogout)
       if (timeoutRef.current) {
         clearTimeout(timeoutRef.current)
       }
@@ -32,30 +56,56 @@ export default function AccountDropdown({ onOpenLogin }: AccountDropdownProps) {
     }, 150)
   }
 
-  const handleClick = () => {
+  const handleSignInClick = () => {
     setIsOpen(false)
     onOpenLogin()
   }
 
-  const menuItems = [
+  const handleLogoutClick = () => {
+    setIsOpen(false)
+    onLogout()
+  }
+
+  const getInitials = (firstName: string, lastName: string): string => {
+    return `${firstName.charAt(0)}${lastName.charAt(0)}`.toUpperCase()
+  }
+
+  const getLoyaltyStatusColor = (status?: string) => {
+    switch (status) {
+      case 'Platinum':
+        return 'bg-purple-100 text-purple-700'
+      case 'Gold':
+        return 'bg-yellow-100 text-yellow-700'
+      case 'Silver':
+        return 'bg-gray-100 text-gray-700'
+      case 'Bronze':
+        return 'bg-orange-100 text-orange-700'
+      default:
+        return 'bg-gray-100 text-gray-700'
+    }
+  }
+
+  const loggedInMenuItems = [
     {
-      section: 'Your Lists',
+      section: 'YOUR LISTS',
       items: [
         { label: 'Wishlist', href: '/account/wishlist', icon: 'heart' },
         { label: 'Saved Items', href: '/account/wishlist', icon: 'bookmark' },
       ],
     },
     {
-      section: 'Your Account',
+      section: 'YOUR ACCOUNT',
       items: [
         { label: 'Overview', href: '/account/overview', icon: 'overview' },
-        { label: 'Orders', href: '/account/order-history', icon: 'package' },
+        { label: 'Order History', href: '/account/order-history', icon: 'package' },
         { label: 'Account Details', href: '/account/account-details', icon: 'settings' },
         { label: 'Address Book', href: '/account/addresses', icon: 'map-pin' },
         { label: 'Payment Methods', href: '/account/payment', icon: 'payment' },
       ],
     },
   ]
+
+  const guestMenuItems: Array<{ section: string; items: Array<{ label: string; href: string; icon: string }> }> = []
 
   const getIcon = (iconName: string) => {
     switch (iconName) {
@@ -103,6 +153,18 @@ export default function AccountDropdown({ onOpenLogin }: AccountDropdownProps) {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
           </svg>
         )
+      case 'help':
+        return (
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+        )
+      case 'logout':
+        return (
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+        )
       default:
         return null
     }
@@ -117,7 +179,6 @@ export default function AccountDropdown({ onOpenLogin }: AccountDropdownProps) {
     >
       {/* Account Button */}
       <button
-        onClick={handleClick}
         className="p-2 text-brand-black hover:text-brand-gray-600 transition-colors"
         aria-label="Account"
       >
@@ -134,52 +195,141 @@ export default function AccountDropdown({ onOpenLogin }: AccountDropdownProps) {
             animation: 'menuSlideDown 0.15s ease-out forwards'
           }}
         >
-          {/* Header - Sign In CTA */}
-          <div className="p-4 bg-brand-gray-50 border-b border-brand-gray-200">
-            <p className="text-sm text-brand-gray-600 mb-3">
-              Sign in for the best experience
-            </p>
-            <button
-              onClick={handleClick}
-              className="w-full py-2.5 px-4 bg-brand-blue-500 text-white text-sm font-medium rounded-lg hover:bg-brand-blue-600 transition-colors shadow-sm"
-            >
-              Sign In
-            </button>
-            <p className="text-xs text-brand-gray-500 mt-2 text-center">
-              New customer?{' '}
-              <button 
-                onClick={handleClick}
-                className="text-brand-blue-500 hover:underline"
-              >
-                Create account
-              </button>
-            </p>
-          </div>
-
-          {/* Menu Sections */}
-          <div className="py-2">
-            {menuItems.map((section, idx) => (
-              <div key={section.section}>
-                <p className="px-4 py-2 text-xs font-semibold text-brand-gray-400 uppercase tracking-wider">
-                  {section.section}
-                </p>
-                {section.items.map((item) => (
-                  <a
-                    key={item.label}
-                    href={item.href}
-                    className="flex items-center gap-3 px-4 py-2.5 text-sm text-brand-black hover:bg-brand-gray-50 transition-colors"
-                    onClick={() => setIsOpen(false)}
-                  >
-                    <span className="text-brand-gray-500">{getIcon(item.icon)}</span>
-                    {item.label}
-                  </a>
-                ))}
-                {idx < menuItems.length - 1 && (
-                  <div className="my-2 border-t border-brand-gray-100" />
+          {user ? (
+            // Logged In State
+            <>
+              {/* User Info Header */}
+              <div className="p-4 bg-brand-gray-50 border-b border-brand-gray-200">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-12 h-12 rounded-full bg-brand-blue-500 flex items-center justify-center text-white font-semibold text-sm">
+                    {getInitials(user.firstName, user.lastName)}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="text-sm font-semibold text-brand-black truncate">
+                        {user.firstName} {user.lastName}
+                      </h3>
+                      {user.loyaltyStatus && (
+                        <span className={`px-2 py-0.5 rounded text-xs font-medium whitespace-nowrap ${getLoyaltyStatusColor(user.loyaltyStatus)}`}>
+                          {user.loyaltyStatus} Member
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-xs text-brand-gray-600 truncate">
+                      {user.email}
+                    </p>
+                  </div>
+                </div>
+                {(!user.emailVerified || !user.phoneVerified) && (
+                  <div className="flex gap-3 text-xs">
+                    {!user.emailVerified && (
+                      <button className="flex items-center gap-1 text-brand-blue-500 hover:underline">
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        Verify Email
+                      </button>
+                    )}
+                    {!user.phoneVerified && (
+                      <button className="flex items-center gap-1 text-brand-blue-500 hover:underline">
+                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        Verify Phone
+                      </button>
+                    )}
+                  </div>
                 )}
               </div>
-            ))}
-          </div>
+
+              {/* Menu Sections */}
+              <div className="py-2">
+                {loggedInMenuItems.map((section, idx) => (
+                  <div key={section.section}>
+                    <p className="px-4 py-2 text-xs font-semibold text-brand-gray-400 uppercase tracking-wider">
+                      {section.section}
+                    </p>
+                    {section.items.map((item) => (
+                      <a
+                        key={item.label}
+                        href={item.href}
+                        className="flex items-center gap-3 px-4 py-2.5 text-sm text-brand-black hover:bg-brand-gray-50 transition-colors"
+                        onClick={(e) => {
+                          setIsOpen(false)
+                          // Allow navigation for logged-in users
+                        }}
+                      >
+                        <span className="text-brand-gray-500">{getIcon(item.icon)}</span>
+                        {item.label}
+                      </a>
+                    ))}
+                    {idx < loggedInMenuItems.length - 1 && (
+                      <div className="my-2 border-t border-brand-gray-100" />
+                    )}
+                  </div>
+                ))}
+                
+                {/* Help Center */}
+                <div className="my-2 border-t border-brand-gray-100" />
+                <a
+                  href="/customer-service"
+                  className="flex items-center gap-3 px-4 py-2.5 text-sm text-brand-black hover:bg-brand-gray-50 transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <span className="text-brand-gray-500">{getIcon('help')}</span>
+                  Help Center
+                </a>
+              </div>
+
+              {/* Log Out Button */}
+              <div className="p-4 border-t border-brand-gray-200">
+                <button
+                  onClick={handleLogoutClick}
+                  className="w-full flex items-center justify-center gap-2 py-2.5 px-4 border border-brand-blue-500 text-brand-blue-500 text-sm font-medium rounded-lg hover:bg-brand-blue-50 transition-colors"
+                >
+                  <span className="text-brand-blue-500">{getIcon('logout')}</span>
+                  Log Out
+                </button>
+              </div>
+            </>
+          ) : (
+            // Guest State
+            <>
+              {/* Sign In CTA Header */}
+              <div className="p-4 bg-brand-gray-50 border-b border-brand-gray-200">
+                <p className="text-sm text-brand-gray-600 mb-3">
+                  Sign in for the best experience
+                </p>
+                <button
+                  onClick={handleSignInClick}
+                  className="w-full py-2.5 px-4 bg-brand-blue-500 text-white text-sm font-medium rounded-lg hover:bg-brand-blue-600 transition-colors shadow-sm"
+                >
+                  Sign In
+                </button>
+                <p className="text-xs text-brand-gray-500 mt-2 text-center">
+                  New customer?{' '}
+                  <button 
+                    onClick={handleSignInClick}
+                    className="text-brand-blue-500 hover:underline"
+                  >
+                    Create account
+                  </button>
+                </p>
+              </div>
+
+              {/* Help Center */}
+              <div className="py-2">
+                <a
+                  href="/customer-service"
+                  className="flex items-center gap-3 px-4 py-2.5 text-sm text-brand-black hover:bg-brand-gray-50 transition-colors"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <span className="text-brand-gray-500">{getIcon('help')}</span>
+                  Help Center
+                </a>
+              </div>
+            </>
+          )}
         </div>
       )}
     </div>

@@ -1,15 +1,18 @@
 'use client'
 
 import React, { useState, useRef, useEffect } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import SearchModal from './SearchModal'
 import AgentSidebar from './AgentSidebar'
 import AccountDropdown from './AccountDropdown'
 import LoginModal from './LoginModal'
+import LogoutConfirmationModal from './LogoutConfirmationModal'
 import MiniCart, { CartItem } from './MiniCart'
 import Toast from './Toast'
 import { getCart, updateCartQuantity, removeFromCart, addToCart } from '../lib/cart'
 import { getAllProducts } from '../lib/products'
+import { logout } from '../lib/auth'
 
 interface ExtendedCartItem extends CartItem {
   fulfillmentMethod?: 'pickup' | 'delivery'
@@ -130,15 +133,19 @@ const navigationItems: NavItem[] = [
     featuredLabel: 'Complete Sets',
     featuredLink: '/accessories/sets',
   },
+  { label: 'New Releases', href: '/new-releases' },
   { label: 'Sale', href: '/sale', className: 'text-brand-blue-500' },
 ]
 
 export default function Navigation() {
+  const router = useRouter()
+  const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isAgentOpen, setIsAgentOpen] = useState(false)
   const [isLoginOpen, setIsLoginOpen] = useState(false)
+  const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false)
   const [isCartOpen, setIsCartOpen] = useState(false)
   const [cartItems, setCartItems] = useState<ExtendedCartItem[]>([])
   const [cartCount, setCartCount] = useState(0)
@@ -342,7 +349,10 @@ export default function Navigation() {
             </button>
             
             {/* Account Dropdown */}
-            <AccountDropdown onOpenLogin={() => setIsLoginOpen(true)} />
+            <AccountDropdown 
+              onOpenLogin={() => setIsLoginOpen(true)} 
+              onLogout={() => setIsLogoutConfirmOpen(true)}
+            />
             
             {/* Cart Button */}
             <button 
@@ -598,6 +608,23 @@ export default function Navigation() {
           })
           
           setCartItems(updatedItems)
+        }}
+      />
+
+      {/* Logout Confirmation Modal */}
+      <LogoutConfirmationModal
+        isOpen={isLogoutConfirmOpen}
+        onClose={() => setIsLogoutConfirmOpen(false)}
+        onConfirm={() => {
+          logout()
+          setIsLogoutConfirmOpen(false)
+          setToastMessage('You have been signed out')
+          setShowToast(true)
+          
+          // Redirect to homepage if logging out from account pages
+          if (pathname?.startsWith('/account')) {
+            router.push('/')
+          }
         }}
       />
 

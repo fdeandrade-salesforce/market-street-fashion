@@ -6,6 +6,7 @@ export default function Footer() {
       'Women',
       'Men',
       'Accessories',
+      'New Releases',
       'Sale',
     ],
     'Help': [
@@ -21,34 +22,67 @@ export default function Footer() {
       'Sustainability',
       'Press',
     ],
-    'Legal': [
-      'Accessibility Statement',
-      'Privacy Policy',
-      'Terms of Use',
-      'Your Privacy Choices',
-    ],
   }
 
   return (
     <footer className="bg-white border-t border-brand-gray-200 mt-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
               <h3 className="text-sm font-semibold mb-4 text-brand-black">
                 {category}
               </h3>
               <ul className="space-y-2">
-                {links.map((link) => (
-                  <li key={link}>
-                    <a
-                      href="#"
-                      className="text-sm text-brand-gray-600 hover:text-brand-black transition-colors"
-                    >
-                      {link}
-                    </a>
-                  </li>
-                ))}
+                {links.map((link) => {
+                  let href = '#'
+                  if (link === 'About Market Street') {
+                    href = '/about'
+                  } else if (link === 'Women') {
+                    href = '/women'
+                  } else if (link === 'Men') {
+                    href = '/men'
+                  } else if (link === 'Accessories') {
+                    href = '/accessories'
+                  } else if (link === 'New Releases') {
+                    href = '/new-releases'
+                  } else if (link === 'Sale') {
+                    href = '/sale'
+                  } else if (link === 'Accessibility Statement') {
+                    href = '/accessibility'
+                  } else if (link === 'Privacy Policy') {
+                    href = '/privacy'
+                  } else if (link === 'Your Privacy Choices') {
+                    href = '/privacy-choices'
+                  } else if (link === 'Careers') {
+                    href = '/careers'
+                  } else if (link === 'Sustainability') {
+                    href = '/sustainability'
+                  } else if (link === 'Press') {
+                    href = '/press'
+                  } else if (link === 'Customer Service') {
+                    href = '/customer-service'
+                  } else if (link === 'Size Guide') {
+                    href = '/size-guide'
+                  } else if (link === 'Shipping & Returns') {
+                    href = '/shipping-returns'
+                  } else if (link === 'Payment Methods') {
+                    href = '/payment-methods'
+                  } else if (link === 'Contact Us') {
+                    href = '/contact'
+                  }
+                  
+                  return (
+                    <li key={link}>
+                      <a
+                        href={href}
+                        className="text-sm text-brand-gray-600 hover:text-brand-black transition-colors"
+                      >
+                        {link}
+                      </a>
+                    </li>
+                  )
+                })}
               </ul>
             </div>
           ))}
@@ -57,22 +91,25 @@ export default function Footer() {
         {/* Logo and address */}
         <div className="mt-12 pt-8 border-t border-brand-gray-200">
           <div className="flex flex-col gap-6">
-            {/* Top row: Logo, links, social */}
+            {/* Top row: Logo with links, social */}
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-              <div className="flex items-center gap-2">
-                <img 
-                  src="/images/logo.svg" 
-                  alt="Market Street" 
-                  className="h-8 w-auto"
-                />
-              </div>
-              
-              <div className="flex items-center gap-4 text-sm text-brand-gray-600">
-                <a href="#" className="hover:text-brand-black transition-colors">Accessibility Statement</a>
-                <a href="#" className="hover:text-brand-black transition-colors">Privacy Policy</a>
-                <a href="#" className="hover:text-brand-black transition-colors">Your Privacy Choices</a>
+              {/* Left: Logo and links horizontally */}
+              <div className="flex items-center gap-6">
+                <div className="flex items-center gap-2">
+                  <img 
+                    src="/images/logo.svg" 
+                    alt="Market Street" 
+                    className="h-8 w-auto"
+                  />
+                </div>
+                <div className="flex items-center gap-4 text-sm text-brand-gray-600">
+                  <a href="/accessibility" className="hover:text-brand-black transition-colors">Accessibility Statement</a>
+                  <a href="/privacy" className="hover:text-brand-black transition-colors">Privacy Policy</a>
+                  <a href="/privacy-choices" className="hover:text-brand-black transition-colors">Your Privacy Choices</a>
+                </div>
               </div>
 
+              {/* Right: Social icons */}
               <div className="flex items-center gap-4">
                 {/* YouTube */}
                 <a href="#" className="text-brand-gray-600 hover:text-brand-black transition-colors">
@@ -101,13 +138,13 @@ export default function Footer() {
                 © Market Street 1818 Cornwall Ave, Vancouver BC V5J 1C7
               </div>
               <div className="flex items-center gap-4">
-                <a href="#" className="hover:text-brand-black transition-colors flex items-center gap-1">
+                <a href="/privacy" className="hover:text-brand-black transition-colors flex items-center gap-1">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                   </svg>
                   Privacy Policy
                 </a>
-                <a href="#" className="hover:text-brand-black transition-colors flex items-center gap-1">
+                <a href="/terms" className="hover:text-brand-black transition-colors flex items-center gap-1">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                   </svg>

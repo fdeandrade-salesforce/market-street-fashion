@@ -12,6 +12,7 @@ import { Product } from './ProductListingPage'
 import { getFeaturedProducts, getAllProducts, getProductById } from '../lib/products'
 import { getWishlist, removeFromWishlist } from '../lib/wishlist'
 import { addToCart } from '../lib/cart'
+import { getCurrentUser, User } from '../lib/auth'
 import Toast from './Toast'
 import QuickViewModal from './QuickViewModal'
 import NotifyMeModal from './NotifyMeModal'
@@ -143,19 +144,112 @@ export default function MyAccountPage() {
   const [activeSection, setActiveSection] = useState(getActiveSectionFromPath())
   const wishlistCount = 23 // Total items in default wishlist
   
+  // Get logged-in user data
+  const [user, setUser] = useState<User | null>(null)
+  
   // Update active section when pathname changes
   useEffect(() => {
     setActiveSection(getActiveSectionFromPath())
   }, [pathname])
+  
+  // Load user data on mount and listen for changes
+  useEffect(() => {
+    const loadUser = () => {
+      setUser(getCurrentUser())
+    }
+    
+    loadUser()
 
-  // Mock data
-  const userName = 'John'
-  const userLastName = 'Doe'
-  const userEmail = 'john.doe@example.com'
-  const userPhone = '+1 (555) 123-4567'
+    // Listen for login/logout events
+    const handleLogin = () => {
+      loadUser()
+    }
+    
+    const handleLogout = () => {
+      loadUser()
+    }
+
+    window.addEventListener('userLoggedIn', handleLogin)
+    window.addEventListener('userLoggedOut', handleLogout)
+
+    return () => {
+      window.removeEventListener('userLoggedIn', handleLogin)
+      window.removeEventListener('userLoggedOut', handleLogout)
+    }
+  }, [])
+
+  // Use logged-in user data or fallback to mock data
+  const userName = user?.firstName || 'John'
+  const userLastName = user?.lastName || 'Doe'
+  const userEmail = user?.email || 'john.doe@example.com'
+  const userPhone = user?.phone || '+1 (555) 123-4567'
   const ordersCount = 350
   const loyaltyPoints = 2450
-  const loyaltyStatus = 'Gold' as 'Bronze' | 'Silver' | 'Gold' | 'Platinum'
+  const loyaltyStatus = (user?.loyaltyStatus || 'Gold') as 'Bronze' | 'Silver' | 'Gold' | 'Platinum'
+  
+  // Helper function for loyalty status badge colors
+  const getLoyaltyStatusColor = (status?: string) => {
+    switch (status) {
+      case 'Platinum':
+        return 'bg-purple-100 text-purple-700'
+      case 'Gold':
+        return 'bg-yellow-100 text-yellow-700'
+      case 'Silver':
+        return 'bg-gray-100 text-gray-700'
+      case 'Bronze':
+        return 'bg-orange-100 text-orange-700'
+      default:
+        return 'bg-gray-100 text-gray-700'
+    }
+  }
+  
+  // Helper function for loyalty status background gradient
+  const getLoyaltyStatusGradient = (status?: string) => {
+    switch (status) {
+      case 'Platinum':
+        return 'from-purple-50 to-purple-100 border-purple-200'
+      case 'Gold':
+        return 'from-yellow-50 to-yellow-100 border-yellow-200'
+      case 'Silver':
+        return 'from-gray-50 to-gray-100 border-gray-200'
+      case 'Bronze':
+        return 'from-orange-50 to-orange-100 border-orange-200'
+      default:
+        return 'from-gray-50 to-gray-100 border-gray-200'
+    }
+  }
+  
+  // Helper function for loyalty status icon background
+  const getLoyaltyStatusIconBg = (status?: string) => {
+    switch (status) {
+      case 'Platinum':
+        return 'bg-purple-500'
+      case 'Gold':
+        return 'bg-yellow-500'
+      case 'Silver':
+        return 'bg-gray-500'
+      case 'Bronze':
+        return 'bg-orange-500'
+      default:
+        return 'bg-gray-500'
+    }
+  }
+  
+  // Helper function for loyalty status progress bar color
+  const getLoyaltyStatusProgressColor = (status?: string) => {
+    switch (status) {
+      case 'Platinum':
+        return 'bg-purple-500'
+      case 'Gold':
+        return 'bg-yellow-500'
+      case 'Silver':
+        return 'bg-gray-500'
+      case 'Bronze':
+        return 'bg-orange-500'
+      default:
+        return 'bg-gray-500'
+    }
+  }
   
   // Profile completion data
   const profileCompletion = {
@@ -263,6 +357,22 @@ export default function MyAccountPage() {
     anniversary: '',
     weddingDay: '',
   })
+  
+  // Update personalInfoForm when user data changes (only when not editing)
+  useEffect(() => {
+    if (user && !isEditingPersonalInfo) {
+      setPersonalInfoForm(prev => ({
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        phone: user.phone || prev.phone || '+1 (555) 123-4567',
+        dateOfBirth: prev.dateOfBirth || '15/05/1990',
+        gender: prev.gender || 'Prefer not to say',
+        anniversary: prev.anniversary || '',
+        weddingDay: prev.weddingDay || '',
+      }))
+    }
+  }, [user, isEditingPersonalInfo])
 
   const [interestsForm, setInterestsForm] = useState({
     designStyles: ['Minimalist', 'Geometric'],
@@ -1238,7 +1348,7 @@ export default function MyAccountPage() {
                           {userName} {userLastName}
                         </h1>
                         {loyaltyStatus && (
-                          <span className="px-3 py-1 bg-brand-blue-100 text-brand-blue-700 text-sm font-semibold rounded-full">
+                          <span className={`px-3 py-1 text-sm font-semibold rounded ${getLoyaltyStatusColor(loyaltyStatus)}`}>
                             {loyaltyStatus} Member
                           </span>
                         )}
@@ -2242,7 +2352,7 @@ export default function MyAccountPage() {
                             <div className="px-0 py-2 text-sm text-brand-black flex-1">{personalInfoForm.email}</div>
                           )}
                           {!isEditingPersonalInfo && (
-                            profileCompletion.emailVerified ? (
+                            (user?.emailVerified || profileCompletion.emailVerified) ? (
                               <div className="flex items-center gap-1.5 text-green-600 flex-shrink-0">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -2289,7 +2399,7 @@ export default function MyAccountPage() {
                             </div>
                           )}
                           {!isEditingPersonalInfo && (
-                            profileCompletion.phoneVerified ? (
+                            (user?.phoneVerified || profileCompletion.phoneVerified) ? (
                               <div className="flex items-center gap-1.5 text-green-600 flex-shrink-0">
                                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
@@ -4708,21 +4818,23 @@ export default function MyAccountPage() {
 
                 {/* Current Tier Badge */}
                 <div className="bg-white border border-brand-gray-200 rounded-xl shadow-sm p-6">
-                  <div className="flex items-center gap-4 p-4 bg-gradient-to-r from-brand-blue-50 to-brand-blue-100 border border-brand-blue-200 rounded-lg">
-                    <div className="w-16 h-16 bg-brand-blue-500 rounded-full flex items-center justify-center flex-shrink-0">
+                  <div className={`flex items-center gap-4 p-4 bg-gradient-to-r border rounded-lg ${getLoyaltyStatusGradient(loyaltyStatus)}`}>
+                    <div className={`w-16 h-16 rounded-full flex items-center justify-center flex-shrink-0 ${getLoyaltyStatusIconBg(loyaltyStatus)}`}>
                       <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
                         <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                       </svg>
                     </div>
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className="text-lg font-semibold text-brand-black">{loyaltyStatus} Member</span>
-                        <span className="px-2 py-0.5 bg-brand-blue-500 text-white text-xs font-semibold rounded">Active</span>
+                        <span className={`px-2 py-0.5 text-xs font-semibold rounded ${getLoyaltyStatusColor(loyaltyStatus)}`}>
+                          {loyaltyStatus} Member
+                        </span>
+                        <span className="px-2 py-0.5 bg-brand-gray-500 text-white text-xs font-semibold rounded">Active</span>
                       </div>
                       <p className="text-sm text-brand-gray-600 mb-2">{loyaltyPoints.toLocaleString()} points</p>
                       <div className="w-full bg-brand-gray-200 rounded-full h-2">
                         <div 
-                          className="bg-brand-blue-500 h-2 rounded-full transition-all duration-300"
+                          className={`h-2 rounded-full transition-all duration-300 ${getLoyaltyStatusProgressColor(loyaltyStatus)}`}
                           style={{ width: `${Math.min((loyaltyPoints / 5000) * 100, 100)}%` }}
                         />
                       </div>

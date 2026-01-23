@@ -927,3 +927,35 @@ export function getNewArrivals(): Product[] {
 export function getSaleProducts(): Product[] {
   return productCatalog.filter(p => p.originalPrice && p.originalPrice > p.price)
 }
+
+// TODO: Replace with real "new releases" sorting once product data supports createdAt/releaseDate fields
+// Currently using deterministic fallback: products with isNew flag, then sorted by id for stability
+export function getNewReleases(limit?: number): Product[] {
+  const newProducts = productCatalog.filter(p => p.isNew)
+  // Fallback: if no isNew products, use a stable subset sorted by id
+  const fallback = newProducts.length === 0 
+    ? productCatalog.slice().sort((a, b) => a.id.localeCompare(b.id)).slice(0, 12)
+    : newProducts
+  return limit ? fallback.slice(0, limit) : fallback
+}
+
+export function getNewReleasesByCategory(category: string, limit?: number): Product[] {
+  const categoryMappings: Record<string, string[]> = {
+    'Women': ['Geometric', 'Abstract', 'Premium'],
+    'Men': ['Modular', 'Sets'],
+    'Accessories': ['Geometric', 'Abstract', 'Modular'],
+  }
+  
+  const allowedCategories = categoryMappings[category] || []
+  const categoryProducts = allowedCategories.length > 0
+    ? productCatalog.filter(p => allowedCategories.includes(p.category))
+    : productCatalog
+  
+  // Prefer isNew products, fallback to stable subset
+  const newProducts = categoryProducts.filter(p => p.isNew)
+  const fallback = newProducts.length === 0
+    ? categoryProducts.slice().sort((a, b) => a.id.localeCompare(b.id)).slice(0, limit || 12)
+    : newProducts
+  
+  return limit ? fallback.slice(0, limit) : fallback
+}
