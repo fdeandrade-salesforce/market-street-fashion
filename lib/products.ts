@@ -59,7 +59,8 @@ const productCatalog: Product[] = [
     id: 'pure-cube-gray',
     name: 'Pure Cube',
     brand: 'Market Street',
-    price: 49.00,
+    price: 75.00,
+    originalPrice: 89.00,
     image: '/images/products/pure-cube-gray-1.png',
     images: [
       '/images/products/pure-cube-gray-1.png',

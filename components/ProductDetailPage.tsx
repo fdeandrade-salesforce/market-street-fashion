@@ -9,6 +9,7 @@ import Footer from './Footer'
 import AnnouncementBar from './AnnouncementBar'
 import ImageZoom from './ImageZoom'
 import ReviewSection from './ReviewSection'
+import QASection from './QASection'
 import StoreLocatorModal from './StoreLocatorModal'
 import LazyImage from './LazyImage'
 import Model3DViewer from './Model3DViewer'
@@ -231,7 +232,7 @@ export default function ProductDetailPage({
   const [quantity, setQuantity] = useState(1)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   
-  // Find variant products by matching product name (same logic as QuickViewModal)
+  // Find variant products by matching product name (same logic as ProductCard)
   const variantProducts = useMemo(() => {
     if (!allProducts.length || !product.colors || product.colors.length <= 1) {
       return {}
@@ -239,17 +240,18 @@ export default function ProductDetailPage({
     
     const variants: Record<string, Product> = {}
     
-    // Find products with the same base name but different colors
-    const baseName = product.name.replace(/\s+(White|Black|Gray|Charcoal|Silver|Ivory|Natural|Ware)$/i, '')
-    
+    // Find products with the same name but different colors
     allProducts.forEach((p) => {
-      if (p.color && p.name.startsWith(baseName)) {
+      if (p.name === product.name && p.color && product.colors?.includes(p.color)) {
         variants[p.color] = p
       }
     })
     
     return variants
-  }, [allProducts, product])
+  }, [allProducts, product.name, product.colors])
+  
+  // Track if user has explicitly selected a color (different from initial)
+  const [hasSelectedColor, setHasSelectedColor] = useState(false)
   
   // Get current variant based on selected color
   const currentVariant = useMemo(() => {
@@ -258,6 +260,45 @@ export default function ProductDetailPage({
     }
     return product
   }, [selectedColor, variantProducts, product])
+  
+  // Track when user selects a color
+  useEffect(() => {
+    if (selectedColor && selectedColor !== (product.color || product.colors?.[0])) {
+      setHasSelectedColor(true)
+    }
+  }, [selectedColor, product.color, product.colors])
+  
+  // Calculate price range across all variants
+  const priceRange = useMemo(() => {
+    if (!product.colors || product.colors.length <= 1) {
+      return null
+    }
+
+    // Collect all variant prices
+    const prices: Set<number> = new Set()
+    
+    // Add price for each color variant
+    product.colors.forEach((color) => {
+      const variantProduct = variantProducts[color]
+      if (variantProduct && variantProduct.price) {
+        prices.add(variantProduct.price)
+      } else {
+        // If no variant product exists for this color, use base product price
+        prices.add(product.price)
+      }
+    })
+
+    const priceArray = Array.from(prices)
+    const minPrice = Math.min(...priceArray)
+    const maxPrice = Math.max(...priceArray)
+
+    // Return range only if prices differ
+    if (minPrice !== maxPrice) {
+      return { min: minPrice, max: maxPrice }
+    }
+
+    return null
+  }, [product, variantProducts])
   
   // Reset image index when variant changes
   useEffect(() => {
@@ -815,18 +856,28 @@ export default function ProductDetailPage({
             <div className="space-y-3">
               {/* Price */}
               <div className="flex items-center gap-3">
-                <span className="text-2xl font-semibold text-brand-black">
-                  ${currentVariant.price.toFixed(2)}
-                </span>
-                {hasDiscount && (
+                {/* Show price range only on initial load (no color selection made yet) */}
+                {/* Show individual variant price when any color is selected */}
+                {priceRange && !hasSelectedColor ? (
+                  <span className="text-2xl font-semibold text-brand-black">
+                    ${priceRange.min.toFixed(2)} - ${priceRange.max.toFixed(2)}
+                  </span>
+                ) : (
                   <>
-                    <span className="text-base text-brand-gray-400 line-through">
-                      ${currentVariant.originalPrice!.toFixed(2)}
+                    <span className="text-2xl font-semibold text-brand-black">
+                      ${currentVariant.price.toFixed(2)}
                     </span>
-                    {percentOffBadge !== null && percentOffBadge !== undefined && (
-                      <span className="px-2 py-0.5 bg-brand-blue-100 text-brand-blue-700 text-xs font-medium rounded-md">
-                        Save {percentOffBadge}%
-                      </span>
+                    {hasDiscount && currentVariant.originalPrice && (
+                      <>
+                        <span className="text-base text-brand-gray-400 line-through">
+                          ${currentVariant.originalPrice.toFixed(2)}
+                        </span>
+                        {percentOffBadge !== null && percentOffBadge !== undefined && (
+                          <span className="px-2 py-0.5 bg-brand-blue-100 text-brand-blue-700 text-xs font-medium rounded-md">
+                            Save {percentOffBadge}%
+                          </span>
+                        )}
+                      </>
                     )}
                   </>
                 )}
@@ -920,6 +971,7 @@ export default function ProductDetailPage({
                             router.push(`/product/${variantProduct.id}`)
                           } else {
                             setSelectedColor(color)
+                            setHasSelectedColor(true)
                           }
                         }}
                         className={`px-3 py-2 text-sm border transition-colors rounded-lg capitalize ${
@@ -1365,6 +1417,19 @@ export default function ProductDetailPage({
               </div>
             </Accordion>
           </div>
+        </div>
+
+        {/* Q&A Section */}
+        <div id="qa-section">
+          <QASection
+            productId={currentVariant.id}
+            productName={currentVariant.name}
+            productCategory={product.category}
+            productSubcategory={product.subcategory}
+            productBrand={product.brand}
+            hasSizes={!!(product.size && product.size.length > 0)}
+            hasColors={!!(product.colors && product.colors.length > 0)}
+          />
         </div>
 
         {/* Reviews Section */}

@@ -216,9 +216,11 @@ export default function Navigation() {
       // Open minicart with animation
       setIsCartOpen(true)
       // Dispatch event with item ID for animation
-      window.dispatchEvent(new CustomEvent('itemAddedToMiniCart', { 
-        detail: { itemId: item.id }
-      }))
+      if (typeof window !== 'undefined') {
+        window.dispatchEvent(new CustomEvent('itemAddedToMiniCart', { 
+          detail: { itemId: item.id }
+        }))
+      }
       // Show brief toast message (minicart will also show the product)
       setToastMessage(`${product.name} added to cart`)
       setShowToast(true)
@@ -251,14 +253,19 @@ export default function Navigation() {
       }
     }
 
-    window.addEventListener('cartUpdated', handleCartUpdate as EventListener)
-    window.addEventListener('itemAddedToCart', handleItemAdded as EventListener)
-    window.addEventListener('minicartHover', handleMinicartHover as EventListener)
+    // Guard for SSR - window not available during server-side rendering
+    if (typeof window !== 'undefined') {
+      window.addEventListener('cartUpdated', handleCartUpdate as EventListener)
+      window.addEventListener('itemAddedToCart', handleItemAdded as EventListener)
+      window.addEventListener('minicartHover', handleMinicartHover as EventListener)
+    }
     
     return () => {
-      window.removeEventListener('cartUpdated', handleCartUpdate as EventListener)
-      window.removeEventListener('itemAddedToCart', handleItemAdded as EventListener)
-      window.removeEventListener('minicartHover', handleMinicartHover as EventListener)
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('cartUpdated', handleCartUpdate as EventListener)
+        window.removeEventListener('itemAddedToCart', handleItemAdded as EventListener)
+        window.removeEventListener('minicartHover', handleMinicartHover as EventListener)
+      }
       if (autoCloseTimeoutRef.current) {
         clearTimeout(autoCloseTimeoutRef.current)
       }
@@ -530,7 +537,9 @@ export default function Navigation() {
         onCheckout={() => {
           setIsCartOpen(false)
           // TODO: Navigate to checkout page
-          window.location.href = '/checkout'
+          if (typeof window !== 'undefined') {
+            window.location.href = '/checkout'
+          }
         }}
         onContinueShopping={() => {
           setIsCartOpen(false)
@@ -538,7 +547,9 @@ export default function Navigation() {
         onViewCart={() => {
           setIsCartOpen(false)
           // TODO: Navigate to full cart page
-          window.location.href = '/cart'
+          if (typeof window !== 'undefined') {
+            window.location.href = '/cart'
+          }
         }}
         onAddUpsellToCart={(product) => {
           addToCart(product, 1)
