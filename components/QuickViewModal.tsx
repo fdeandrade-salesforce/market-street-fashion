@@ -38,7 +38,7 @@ export default function QuickViewModal({
   const [selectedColor, setSelectedColor] = useState<string>(product.color || product.colors?.[0] || '')
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
 
-  // Find variant products by matching product name
+  // Find variant products by matching product name, category, and subcategory
   const variantProducts = useMemo(() => {
     if (!allProducts.length || !product.colors || product.colors.length <= 1) {
       return {}
@@ -46,15 +46,20 @@ export default function QuickViewModal({
     
     const variants: Record<string, Product> = {}
     
-    // Find products with the same name but different colors
+    // Find products with the same name, category, subcategory, but different colors
     allProducts.forEach((p) => {
-      if (p.name === product.name && p.color) {
+      if (
+        p.name === product.name && 
+        p.category === product.category &&
+        p.subcategory === product.subcategory &&
+        p.color
+      ) {
         variants[p.color] = p
       }
     })
     
     return variants
-  }, [allProducts, product.name, product.colors])
+  }, [allProducts, product.name, product.category, product.subcategory, product.colors])
 
   // Get current variant based on selected color
   const currentVariant = useMemo(() => {

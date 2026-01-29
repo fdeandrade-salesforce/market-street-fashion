@@ -9,8 +9,8 @@ interface AgentSidebarProps {
 
 const quickActions = [
   'Best sellers under $100',
-  'Top rated sculptures',
-  'Suggest pieces for minimalist living room',
+  'New arrivals this week',
+  'Suggest outfits for a casual day',
 ]
 
 export default function AgentSidebar({ isOpen, onClose }: AgentSidebarProps) {
@@ -44,7 +44,7 @@ export default function AgentSidebar({ isOpen, onClose }: AgentSidebarProps) {
     setTimeout(() => {
       setMessages(prev => [...prev, { 
         role: 'agent', 
-        text: "I'd be happy to help you find the perfect piece! Based on your interest, I'd recommend checking out our Signature Form collection. Would you like me to show you some options?" 
+        text: "I'd be happy to help you find the perfect piece! Based on your interest, I'd recommend checking out our new arrivals collection. Would you like me to show you some options?" 
       }])
     }, 1000)
   }
@@ -97,7 +97,7 @@ export default function AgentSidebar({ isOpen, onClose }: AgentSidebarProps) {
               {/* Hero Image */}
               <div className="aspect-[4/3] bg-brand-gray-100 rounded-xl overflow-hidden mb-6">
                 <img
-                  src="/images/products/signature-form-white-1.png"
+                  src="/images/products/women-ribbed-tank-top-1/1.jpg"
                   alt="Personal Assistant"
                   className="w-full h-full object-cover"
                 />
@@ -106,8 +106,8 @@ export default function AgentSidebar({ isOpen, onClose }: AgentSidebarProps) {
               {/* Welcome Message */}
               <h3 className="text-xl font-semibold text-brand-black mb-3">Hello There!</h3>
               <p className="text-sm text-brand-gray-600 mb-6 leading-relaxed">
-                Welcome to your personal shopper assistant. I specialize in sculptural objects and minimalist design. 
-                Whether you need the perfect piece for your space or a gift recommendation, I&apos;ll help you find it. 
+                Welcome to your personal shopper assistant. I specialize in fashion and style. 
+                Whether you need the perfect outfit, styling advice, or gift recommendations, I&apos;ll help you find it. 
                 What brings you here today?
               </p>
               

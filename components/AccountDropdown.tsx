@@ -179,7 +179,7 @@ export default function AccountDropdown({ onOpenLogin, onLogout }: AccountDropdo
     >
       {/* Account Button */}
       <button
-        className="p-2 text-brand-black hover:text-brand-gray-600 transition-colors"
+        className="p-2 text-white hover:text-brand-gray-300 transition-colors"
         aria-label="Account"
       >
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

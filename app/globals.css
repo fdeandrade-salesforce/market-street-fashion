@@ -9,74 +9,109 @@
   }
 
   * {
-    @apply border-brand-gray-200;
+    @apply border-brand-gray-300;
+    border-color: rgba(0, 0, 0, 0.08); /* Subtle black borders */
   }
 
   body {
     @apply bg-white text-brand-black antialiased;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    font-family: var(--font-sen), 'Sen', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
       'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
+  /* Modern High-Fashion Typography Hierarchy - Strong, Confident */
   h1, h2, h3, h4, h5, h6 {
-    @apply font-normal tracking-tight;
+    @apply font-display;
+    font-family: var(--font-sen), 'Sen', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  }
+  
+  h1 {
+    @apply text-h1 font-semibold;
+  }
+  
+  h2 {
+    @apply text-h2 font-semibold;
+  }
+  
+  h3 {
+    @apply text-h3 font-medium;
+  }
+  
+  h4 {
+    @apply text-h4 font-medium;
+  }
+  
+  h5 {
+    @apply text-h5 font-medium;
+  }
+  
+  h6 {
+    @apply text-h6 font-medium;
+  }
+  
+  body {
+    @apply font-body text-body;
   }
 }
 
 @layer components {
-  /* Button Variants - Blue Accent Design with Rounded Corners */
+  /* Button Variants - Modern High-Fashion Black/White Design with Sharp Edges */
   .btn {
-    @apply px-6 py-3 font-medium text-sm transition-all duration-300 rounded-lg;
-    @apply focus:outline-none focus:ring-2 focus:ring-offset-2;
+    @apply px-6 py-3 font-medium text-sm tracking-wide transition-all duration-300;
+    @apply focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-brand-black;
   }
 
   .btn-primary {
-    @apply bg-brand-blue-500 text-white hover:bg-brand-blue-600 focus:ring-brand-blue-500 rounded-lg shadow-sm;
+    @apply bg-brand-black text-brand-white hover:bg-brand-black-charcoal focus:ring-brand-black;
   }
 
   .btn-secondary {
-    @apply bg-white text-brand-black border border-brand-gray-300 hover:bg-brand-gray-50 focus:ring-brand-blue-500 rounded-lg shadow-sm;
+    @apply bg-brand-white text-brand-black border border-brand-black hover:bg-brand-gray-50 focus:ring-brand-black;
+    border-width: 1px;
   }
 
   .btn-ghost {
-    @apply bg-transparent text-brand-black hover:bg-brand-gray-100 focus:ring-brand-blue-500 rounded-lg;
+    @apply bg-transparent text-brand-black hover:bg-brand-gray-50 focus:ring-brand-black;
   }
 
   .btn-outline {
-    @apply bg-transparent text-brand-blue-500 border border-brand-blue-500 hover:bg-brand-blue-50 focus:ring-brand-blue-500 rounded-lg shadow-sm;
+    @apply bg-transparent text-brand-black border border-brand-black hover:bg-brand-gray-50 focus:ring-brand-black;
+    border-width: 1px;
   }
 
-  /* Product Card Component */
+  /* Product Card Component - Sharp, Editorial */
   .product-card {
-    @apply bg-white cursor-pointer transition-all duration-300 rounded-lg overflow-hidden;
+    @apply bg-white cursor-pointer transition-all duration-300 overflow-hidden;
   }
 
   .product-card:hover {
-    @apply shadow-lg;
+    @apply shadow-editorial;
   }
 
   .product-image {
-    @apply w-full aspect-[3/4] bg-brand-gray-100 overflow-hidden relative rounded-lg;
+    @apply w-full aspect-[3/4] bg-brand-gray-100 overflow-hidden relative;
   }
 
-  .product-image img {
-    @apply w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 rounded-lg;
+  .product-image img,
+  .product-image video {
+    @apply w-full h-full object-cover transition-transform duration-500 group-hover:scale-105;
   }
 
-  /* Navigation Component */
+  /* Navigation Component - Modern High-Fashion Typography */
   .nav-link {
-    @apply text-sm font-medium text-brand-black hover:text-brand-gray-600 transition-colors duration-200;
+    @apply text-nav font-medium text-brand-black hover:text-brand-gray-600 transition-colors duration-200;
   }
 
   .nav-link-active {
-    @apply text-brand-black border-b-2 border-brand-blue-500;
+    @apply text-brand-black border-b border-brand-black;
+    border-width: 1px;
   }
 
-  /* Announcement Bar */
+  /* Announcement Bar - Subtle, Editorial */
   .announcement-bar {
-    @apply bg-brand-blue-100 text-brand-blue-900 text-sm py-2 px-4;
+    @apply bg-brand-gray-50 text-brand-black text-sm py-2 px-4;
   }
 
   /* Quantity Input - Hide spinner controls */
@@ -88,6 +123,44 @@
 
   input[type="number"] {
     -moz-appearance: textfield;
+  }
+
+  /* Unified Gutter System - Single Source of Truth */
+  /* Target gutters: Mobile 16px, Tablet 24px, Desktop 32px, Large Desktop 40px */
+  .layout-gutter {
+    @apply px-4 sm:px-6 lg:px-8 xl:px-10;
+    /* Mobile: 16px, Tablet: 24px, Desktop: 32px, Large Desktop: 40px */
+  }
+
+  /* Commerce Container - Full width with gutters only (no max-width) */
+  /* Use for: Home, PLP, PDP, Cart, Account, Commerce grids */
+  .layout-commerce {
+    @apply layout-gutter mx-auto;
+    /* Full width, no max-width constraint */
+  }
+
+  /* Editorial Container - Max-width for readability, same gutters */
+  /* Use for: About, Sustainability, Legal pages, Text-heavy content */
+  .layout-editorial {
+    @apply layout-gutter max-w-7xl mx-auto;
+    /* Same gutters, but constrained width for readability */
+  }
+
+  /* Legacy aliases for backward compatibility (will be removed in future) */
+  .page-container {
+    @apply layout-gutter mx-auto;
+  }
+
+  .page-container-content {
+    @apply layout-editorial;
+  }
+
+  .page-container-full {
+    @apply layout-commerce;
+  }
+
+  .hero-container {
+    @apply layout-commerce;
   }
 }
 
@@ -180,15 +253,15 @@ html {
 @keyframes anchorPulse {
   0% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0.1);
   }
   50% {
     transform: scale(1.02);
-    box-shadow: 0 0 0 8px rgba(59, 130, 246, 0);
+    box-shadow: 0 0 0 8px rgba(0, 0, 0, 0);
   }
   100% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+    box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
   }
 }
 

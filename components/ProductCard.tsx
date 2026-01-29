@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation'
 import { Product } from './ProductListingPage'
 import LazyImage from './LazyImage'
 import { getAllProducts } from '../lib/products'
+import { getColorHex } from '../lib/color-utils'
 
 interface ProductCardProps {
   product: Product
@@ -26,11 +27,12 @@ export default function ProductCard({
 }: ProductCardProps) {
   const router = useRouter()
   const [hoveredColor, setHoveredColor] = useState<string | null>(null)
+  const [isCardHovered, setIsCardHovered] = useState(false)
 
   // Get all products to find color variants
   const allProducts = useMemo(() => getAllProducts(), [])
 
-  // Find variant products by matching product name and color
+  // Find variant products by matching product name, category, and subcategory
   const variantProducts = useMemo(() => {
     if (!product.colors || product.colors.length <= 1) {
       return {}
@@ -38,15 +40,21 @@ export default function ProductCard({
     
     const variants: Record<string, Product> = {}
     
-    // Find products with the same name but different colors
+    // Find products with the same name, category, subcategory, but different colors
     allProducts.forEach((p) => {
-      if (p.name === product.name && p.color && product.colors?.includes(p.color)) {
+      if (
+        p.name === product.name && 
+        p.category === product.category &&
+        p.subcategory === product.subcategory &&
+        p.color && 
+        product.colors?.includes(p.color)
+      ) {
         variants[p.color] = p
       }
     })
     
     return variants
-  }, [allProducts, product.name, product.colors])
+  }, [allProducts, product.name, product.category, product.subcategory, product.colors])
 
   // Get current variant based on hovered color
   const currentDisplayVariant = useMemo(() => {
@@ -56,10 +64,32 @@ export default function ProductCard({
     return product
   }, [hoveredColor, variantProducts, product])
 
-  // Get current image based on hovered color
-  const currentImage = useMemo(() => {
-    return currentDisplayVariant.images?.[0] || currentDisplayVariant.image
-  }, [currentDisplayVariant])
+  // Get current media (image or video) based on hovered color and card hover state
+  const currentMedia = useMemo(() => {
+    const images = currentDisplayVariant.images || []
+    const videos = (currentDisplayVariant as any).videos || []
+    
+    // If card is hovered, try to show second media item
+    if (isCardHovered) {
+      // Check if there's a second video
+      if (videos.length > 0) {
+        return { src: videos[0], type: 'video' as const }
+      }
+      // Check if second image exists
+      if (images.length > 1) {
+        const secondMedia = images[1]
+        // Check if it's a video file
+        if (secondMedia && (secondMedia.endsWith('.mp4') || secondMedia.endsWith('.webm') || secondMedia.endsWith('.mov'))) {
+          return { src: secondMedia, type: 'video' as const }
+        }
+        return { src: secondMedia, type: 'image' as const }
+      }
+    }
+    
+    // Default: show first image
+    const firstImage = images[0] || currentDisplayVariant.image
+    return { src: firstImage, type: 'image' as const }
+  }, [currentDisplayVariant, isCardHovered])
 
   // Check if current display variant (hovered or default) is out of stock
   const isCurrentlyOutOfStock = !currentDisplayVariant.inStock
@@ -157,17 +187,34 @@ export default function ProductCard({
   }, [product, variantProducts])
 
   return (
-    <div className="product-card group">
+    <div 
+      className="product-card group"
+      onMouseEnter={() => setIsCardHovered(true)}
+      onMouseLeave={() => setIsCardHovered(false)}
+    >
       <div className="product-image relative">
-        <div className="relative w-full h-full">
-          <LazyImage
-            src={currentImage}
-            alt={product.name}
-            className={`${
-              isCurrentlyOutOfStock ? 'opacity-50' : ''
-            }`}
-            objectFit="cover"
-          />
+        <div className="relative w-full h-full overflow-hidden">
+          {currentMedia.type === 'video' ? (
+            <video
+              src={currentMedia.src}
+              className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-105 ${
+                isCurrentlyOutOfStock ? 'opacity-50' : ''
+              }`}
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+          ) : (
+            <LazyImage
+              src={currentMedia.src}
+              alt={product.name}
+              className={`${
+                isCurrentlyOutOfStock ? 'opacity-50' : ''
+              }`}
+              objectFit="cover"
+            />
+          )}
         </div>
         <Link 
           href={`/product/${product.id}`} 
@@ -226,20 +273,20 @@ export default function ProductCard({
                 e.stopPropagation()
                 onAddToWishlist(product)
               }}
-              className={`p-2 rounded-full transition-all ${
+              className={`p-1.5 rounded-full transition-all ${
                 isInWishlist 
                   ? 'bg-red-50 opacity-100' 
-                  : 'bg-white/90 hover:bg-white opacity-0 group-hover:opacity-100'
+                  : 'bg-white/70 hover:bg-white opacity-0 group-hover:opacity-100'
               }`}
               aria-label={isInWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
             >
               <svg 
-                className={`w-5 h-5 transition-colors ${isInWishlist ? 'text-red-500 fill-current' : 'text-brand-black'}`} 
-                fill={isInWishlist ? 'currentColor' : 'none'} 
+                className={`w-4 h-4 transition-colors ${isInWishlist ? 'text-red-500 fill-current' : 'text-brand-gray-500'}`} 
+                fill={isInWishlist ? 'currentColor' : 'none'}
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
               >
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
               </svg>
             </button>
           )}
@@ -366,18 +413,7 @@ export default function ProductCard({
                         : 'border-brand-gray-300 hover:border-brand-gray-400'
                   }`}
                   style={{
-                    backgroundColor: color.toLowerCase() === 'white' ? '#fff' : 
-                                    color.toLowerCase() === 'black' ? '#000' :
-                                    color.toLowerCase() === 'red' ? '#ef4444' :
-                                    color.toLowerCase() === 'blue' ? '#3b82f6' :
-                                    color.toLowerCase() === 'green' ? '#22c55e' :
-                                    color.toLowerCase() === 'yellow' ? '#eab308' :
-                                    color.toLowerCase() === 'pink' ? '#ec4899' :
-                                    color.toLowerCase() === 'purple' ? '#a855f7' :
-                                    color.toLowerCase() === 'orange' ? '#f97316' :
-                                    color.toLowerCase() === 'brown' ? '#a16207' :
-                                    color.toLowerCase() === 'gray' ? '#6b7280' :
-                                    color.toLowerCase() === 'beige' ? '#f5f5dc' : '#ccc',
+                    backgroundColor: getColorHex(color),
                   }}
                   title={color}
                   aria-label={`View ${product.name} in ${color}`}

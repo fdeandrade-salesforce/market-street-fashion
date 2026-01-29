@@ -13,7 +13,7 @@ export default function SizeGuidePage() {
       <Navigation />
 
       <main className="flex-1">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="layout-commerce py-8">
           {/* Breadcrumbs */}
           <nav className="flex items-center gap-2 text-sm text-brand-gray-500 mb-6" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-brand-blue-500 transition-colors">

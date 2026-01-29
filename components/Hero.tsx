@@ -21,34 +21,34 @@ interface HeroProps {
 // Default slides if none provided
 const defaultSlides: Slide[] = [
   {
-    title: 'Geometric Elegance',
-    subtitle: 'Discover our curated selection of minimalist design pieces',
-    video: '/about us resources/player video.mp4',
-    image: '/images/hero/hero-geometric.jpg',
-    ctaText: 'Explore Now',
-    ctaLink: '/shop',
+    title: 'The New Season',
+    subtitle: 'A new collection shaped by contrast, proportion, and modern attitude. Introducing key pieces for the season ahead.',
+    video: '/resources/hero banner/01.mp4?v=2',
+    ctaText: 'Discover the Collection',
+    ctaLink: '/women?filter=new',
   },
   {
-    title: 'Pure Form. Timeless Design.',
-    subtitle: 'Explore the NEXT collection of sculptural objects crafted for modern living',
-    image: '/images/hero/hero-main.png',
-    ctaText: 'Shop Collection',
-    ctaLink: '/shop',
+    title: 'The Modern Wardrobe',
+    subtitle: 'Elevated silhouettes, refined textures, and a bold approach to everyday dressing. Designed to move with you.',
+    video: '/resources/hero banner/02.mp4',
+    image: '/resources/hero banner/02.mp4',
+    ctaText: 'Shop the Edit',
+    ctaLink: '/women',
   },
   {
-    title: 'Modern Living',
-    subtitle: 'Transform your space with our premium collection',
-    video: '/videos/hero-background.mp4',
-    image: '/images/hero/store-background-banner.jpg',
-    ctaText: 'Shop Collection',
-    ctaLink: '/shop',
+    title: 'After Hours',
+    subtitle: 'Statement pieces and refined layers designed for nights out, late moments, and everything in between.',
+    video: '/resources/hero banner/03.mp4',
+    image: '/resources/hero banner/03.mp4',
+    ctaText: 'Explore the Collection',
+    ctaLink: '/women',
   },
   {
-    title: 'The NEXT Collection',
-    subtitle: 'Where art meets function in perfect harmony',
-    image: '/images/hero/hero-collection.png',
-    ctaText: 'Discover More',
-    ctaLink: '/shop',
+    title: 'New Perspectives',
+    subtitle: 'A curated drop of standout pieces that redefine contemporary fashion. Confident. Expressive. Uncompromising.',
+    image: '/resources/hero banner/04.png',
+    ctaText: 'Shop Now',
+    ctaLink: '/women',
   },
 ]
 
@@ -173,7 +173,7 @@ export default function Hero({
 
   return (
     <section 
-      className="relative h-[400px] md:h-[500px] lg:h-[600px] overflow-hidden"
+      className="relative h-[400px] md:h-[500px] lg:h-[700px] xl:h-[85vh] overflow-hidden"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
@@ -196,6 +196,7 @@ export default function Hero({
             {/* Video Background */}
             {slide.video && (
               <video
+                key={slide.video}
                 ref={(el) => {
                   videoRefs.current[index] = el
                 }}
@@ -206,7 +207,7 @@ export default function Hero({
                 className="absolute inset-0 w-full h-full object-cover"
                 poster={slide.image}
               >
-                <source src={slide.video} type="video/mp4" />
+                <source src={`${slide.video}${slide.video.includes('?') ? '&' : '?'}v=2`} type="video/mp4" />
               </video>
             )}
             
@@ -240,17 +241,17 @@ export default function Hero({
                   transform: `translateX(${offset * 100}%)`,
                 }}
               >
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-                  <div className="max-w-xl">
-                    <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 tracking-tight">
+                <div className="layout-commerce w-full">
+                  <div className="max-w-2xl mx-auto text-center">
+                    <h1 className="text-3xl md:text-4xl lg:text-6xl xl:text-7xl font-bold text-white mb-4 lg:mb-6 tracking-tight">
                       {slide.title}
                     </h1>
                     {slide.subtitle && (
-                      <p className="text-base md:text-lg text-white/90 mb-8 font-normal">
+                      <p className="text-base md:text-lg lg:text-xl xl:text-2xl text-white/90 mb-8 lg:mb-10 font-normal">
                         {slide.subtitle}
                       </p>
                     )}
-                    <div>
+                    <div className="flex justify-center">
                       <Button variant="primary" size="lg" href={slide.ctaLink || '#'}>
                         {slide.ctaText || 'Shop Now'}
                       </Button>

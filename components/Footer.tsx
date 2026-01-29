@@ -5,7 +5,7 @@ export default function Footer() {
     'Shop': [
       'Women',
       'Men',
-      'Accessories',
+      'Kids',
       'New Releases',
       'Sale',
     ],
@@ -25,8 +25,8 @@ export default function Footer() {
   }
 
   return (
-    <footer className="bg-white border-t border-brand-gray-200 mt-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
+    <footer className="bg-white border-t border-brand-gray-200">
+      <div className="layout-commerce py-12 md:py-16">
         <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
@@ -42,8 +42,8 @@ export default function Footer() {
                     href = '/women'
                   } else if (link === 'Men') {
                     href = '/men'
-                  } else if (link === 'Accessories') {
-                    href = '/accessories'
+                  } else if (link === 'Kids') {
+                    href = '/kids'
                   } else if (link === 'New Releases') {
                     href = '/new-releases'
                   } else if (link === 'Sale') {
@@ -99,7 +99,7 @@ export default function Footer() {
                   <img 
                     src="/images/logo.svg" 
                     alt="Market Street" 
-                    className="h-8 w-auto"
+                    className="h-8 w-auto brightness-0"
                   />
                 </div>
                 <div className="flex items-center gap-4 text-sm text-brand-gray-600">

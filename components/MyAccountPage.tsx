@@ -156,63 +156,59 @@ function OrderDetailContent({ orderNumber, showToastMessage }: { orderNumber: st
           orderNumber: 'INV001',
           status: 'Partially Delivered',
           method: 'Credit Card',
-          amount: '$54.00',
+          amount: '$520.93',
           orderDate: 'Sep 12, 2024',
           items: [
             {
-              image: '/images/products/pure-cube-white-1.png',
-              name: 'Pure Cube',
+              image: '/images/products/women-ribbed-tank-top-1/1.jpg',
+              name: 'Ribbed Tank Top',
               id: 'item-1',
               quantity: 3,
-              color: 'Grey',
-              size: 'XL',
-              price: 15.00,
-              originalPrice: 20.00,
+              color: 'Black',
+              size: 'M',
+              price: 102.83,
               store: 'Market Street San Francisco',
               shippingGroup: 'shipment-1',
             },
             {
-              image: '/images/products/steady-prism-1.png',
-              name: 'Steady Prism',
+              image: '/images/products/women-oversized-blazer-2/1.jpg',
+              name: 'Oversized Blazer',
               id: 'item-2',
               quantity: 2,
-              color: 'Grey',
-              size: 'XL',
-              price: 15.00,
-              originalPrice: 20.00,
+              color: 'Navy',
+              size: 'M',
+              price: 116.39,
               store: 'Market Street New York',
               shippingGroup: 'shipment-1',
             },
             {
-              image: '/images/products/soft-sphere-1.png',
-              name: 'Soft Sphere',
+              image: '/images/products/women-wide-leg-trousers-3/1.jpg',
+              name: 'Wide Leg Trousers',
               id: 'item-3',
               quantity: 1,
-              color: 'Grey',
-              size: 'XL',
-              price: 15.00,
-              originalPrice: 20.00,
+              color: 'Black',
+              size: 'M',
+              price: 129.94,
               store: 'Market Street San Francisco',
               shippingGroup: 'shipment-2',
             },
             {
-              image: '/images/products/solid-cylinder-1.png',
-              name: 'Solid Cylinder',
+              image: '/images/products/women-silk-midi-dress-4/1.jpg',
+              name: 'Silk Midi Dress',
               id: 'item-4',
               quantity: 4,
-              color: 'Grey',
-              size: 'XL',
-              price: 15.00,
-              originalPrice: 20.00,
+              color: 'White',
+              size: 'M',
+              price: 143.50,
               store: 'Market Street New York',
               shippingGroup: 'shipment-2',
             },
           ],
-          subtotal: 60.00,
+          subtotal: 492.66,
           promotions: -10.00,
           shipping: 0.00,
-          tax: 4.00,
-          total: 54.00,
+          tax: 38.27,
+          total: 520.93,
           paymentInfo: 'VISA Ending in 1234',
           shippingAddress: 'John Doe, 415 Mission Street, 94105, San Francisco, CA, United States',
           shippingGroups: [
@@ -249,24 +245,24 @@ function OrderDetailContent({ orderNumber, showToastMessage }: { orderNumber: st
           orderNumber: 'INV002',
           status: 'In Transit',
           method: 'Credit Card',
-          amount: '$43.00',
+          amount: '$225.66',
           orderDate: 'Sep 10, 2024',
           items: [
             {
-              image: '/images/products/pure-cube-white-1.png',
-              name: 'Pure Cube',
+              image: '/images/products/women-cropped-cardigan-5/1.jpg',
+              name: 'Cropped Cardigan',
               id: 'item-1',
               quantity: 2,
               color: 'White',
-              size: 'One Size',
-              price: 15.00,
+              size: 'M',
+              price: 157.05,
             },
           ],
-          subtotal: 30.00,
+          subtotal: 314.10,
           promotions: 0,
           shipping: 10.00,
-          tax: 3.00,
-          total: 43.00,
+          tax: 25.13,
+          total: 349.23,
           paymentInfo: 'VISA Ending in 5678',
           shippingAddress: 'Jane Smith, 123 Main St, 10001, New York, NY, United States',
           shippingMethod: 'Standard Shipping',
@@ -283,17 +279,17 @@ function OrderDetailContent({ orderNumber, showToastMessage }: { orderNumber: st
           orderNumber: 'INV003',
           status: 'Ready for Pickup',
           method: 'Credit Card',
-          amount: '$48.38',
+          amount: '$582.07',
           orderDate: 'Sep 14, 2024',
           items: [
             {
-              image: '/images/products/pure-cube-white-1.png',
-              name: 'Pure Cube',
+              image: '/images/products/women-ribbed-tank-top-1/1.jpg',
+              name: 'Ribbed Tank Top',
               id: 'item-1',
               quantity: 1,
-              color: 'White',
-              size: 'One Size',
-              price: 15.00,
+              color: 'Black',
+              size: 'S',
+              price: 102.83,
               originalPrice: 20.00,
             },
             {
@@ -1058,7 +1054,7 @@ function OrderDetailContent({ orderNumber, showToastMessage }: { orderNumber: st
                 <div className="p-4 bg-brand-gray-50 border border-brand-gray-200 rounded-lg">
                   <h3 className="text-sm font-semibold text-brand-black mb-2">Refund Information</h3>
                   <p className="text-sm text-brand-gray-700">
-                    If your order hasn't shipped yet, you'll receive a full refund to your original payment method within 5-7 business days.
+                    If your order hasn&apos;t shipped yet, you&apos;ll receive a full refund to your original payment method within 5-7 business days.
                   </p>
                 </div>
 
@@ -1247,13 +1243,15 @@ export default function MyAccountPage() {
     return match ? match[1] : null
   }
   
-  const [activeSection, setActiveSection] = useState(getActiveSectionFromPath())
+  // Initialize with default to prevent hydration mismatch
+  // Will be updated in useEffect after mount
+  const [activeSection, setActiveSection] = useState('overview')
   const wishlistCount = 23 // Total items in default wishlist
   
   // Get logged-in user data
   const [user, setUser] = useState<User | null>(null)
   
-  // Update active section when pathname changes
+  // Update active section when pathname changes (runs on both mount and navigation)
   useEffect(() => {
     const newSection = getActiveSectionFromPath()
     setActiveSection(newSection)
@@ -1266,6 +1264,7 @@ export default function MyAccountPage() {
       setIsSidebarCollapsed(true)
     }
     // For all other navigation, preserve the current collapsed state (handled by localStorage)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname])
   
   // Load user data on mount and listen for changes
@@ -1478,18 +1477,23 @@ export default function MyAccountPage() {
   const [isMobileMenuCollapsed, setIsMobileMenuCollapsed] = useState(true)
   
   // Desktop sidebar collapse state - persisted during navigation using localStorage
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(() => {
-    // Initialize from localStorage if available, otherwise check if we're on an order detail page
+  // Initialize with false to prevent hydration mismatch, will be updated in useEffect
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false)
+  
+  // Initialize sidebar state from localStorage and pathname after mount
+  useEffect(() => {
     if (typeof window !== 'undefined') {
       const saved = localStorage.getItem('myAccountSidebarCollapsed')
       if (saved !== null) {
-        return saved === 'true'
+        setIsSidebarCollapsed(saved === 'true')
+      } else {
+        // If no saved preference, auto-collapse on order detail pages
+        const isOrderDetailPage = Boolean(pathname && pathname.match(/\/order\/[^/]+/))
+        setIsSidebarCollapsed(isOrderDetailPage)
       }
-      // If no saved preference, auto-collapse on order detail pages
-      return window.location.pathname.match(/\/order\/[^/]+/) !== null
     }
-    return false
-  })
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []) // Run once on mount only
   
   // Persist sidebar state to localStorage whenever it changes
   useEffect(() => {
@@ -1594,14 +1598,14 @@ export default function MyAccountPage() {
   }, [activeSection, pathname])
 
   const [interestsForm, setInterestsForm] = useState({
-    designStyles: ['Minimalist', 'Geometric'],
-    roomTypes: ['Living Room', 'Office'],
-    materials: ['Ceramic'],
+    designStyles: ['Minimalist', 'Contemporary'],
+    roomTypes: ['Casual', 'Formal'],
+    materials: ['Cotton', 'Wool'],
     aesthetics: ['Modern'],
   })
 
   const [preferencesForm, setPreferencesForm] = useState({
-    productCategories: ['Geometric', 'Sets'],
+    productCategories: ['Women', 'Men'],
     shoppingPreferences: 'unisex' as 'womens' | 'mens' | 'unisex',
   })
 
@@ -1648,63 +1652,59 @@ export default function MyAccountPage() {
       orderNumber: 'INV001', 
       status: 'Partially Delivered', 
       method: 'Credit Card', 
-      amount: '$54.00',
+      amount: '$520.93',
       orderDate: 'Sep 10, 2024',
       items: [
         { 
-          image: '/images/products/pure-cube-white-1.png', 
-          name: 'Pure Cube', 
+          image: '/images/products/women-ribbed-tank-top-1/1.jpg', 
+          name: 'Ribbed Tank Top', 
           id: 'item-1', 
           quantity: 3,
-          color: 'Grey',
-          size: 'XL',
-          price: 15.00,
-          originalPrice: 20.00,
+          color: 'Black',
+          size: 'M',
+          price: 102.83,
           store: 'Market Street San Francisco',
           shippingGroup: 'sf-store-address1',
         },
         { 
-          image: '/images/products/steady-prism-1.png', 
-          name: 'Steady Prism', 
+          image: '/images/products/women-oversized-blazer-2/1.jpg', 
+          name: 'Oversized Blazer', 
           id: 'item-2', 
           quantity: 2,
-          color: 'Grey',
-          size: 'XL',
-          price: 15.00,
-          originalPrice: 20.00,
+          color: 'Navy',
+          size: 'M',
+          price: 116.39,
           store: 'Market Street San Francisco',
           shippingGroup: 'sf-store-address1',
         },
         { 
-          image: '/images/products/soft-sphere-1.png', 
-          name: 'Soft Sphere', 
+          image: '/images/products/women-wide-leg-trousers-3/1.jpg', 
+          name: 'Wide Leg Trousers', 
           id: 'item-3', 
           quantity: 1,
-          color: 'Grey',
-          size: 'XL',
-          price: 15.00,
-          originalPrice: 20.00,
+          color: 'Black',
+          size: 'M',
+          price: 129.94,
           store: 'Market Street San Francisco',
           shippingGroup: 'sf-store-address2',
         },
         { 
-          image: '/images/products/solid-cylinder-1.png', 
-          name: 'Solid Cylinder', 
+          image: '/images/products/women-silk-midi-dress-4/1.jpg', 
+          name: 'Silk Midi Dress', 
           id: 'item-4', 
           quantity: 4,
-          color: 'Grey',
-          size: 'XL',
-          price: 15.00,
-          originalPrice: 20.00,
+          color: 'White',
+          size: 'M',
+          price: 143.50,
           store: 'Market Street New York',
           shippingGroup: 'ny-store-address1',
         },
       ],
-      subtotal: 60.00,
+      subtotal: 492.66,
       promotions: -10.00,
       shipping: 0.00,
-      tax: 4.00,
-      total: 54.00,
+      tax: 38.27,
+      total: 520.93,
       paymentInfo: 'VISA Ending in 1234',
       shippingAddress: 'John Doe, 415 Mission Street, 94105, San Francisco, CA, United States',
       shippingMethod: 'Free | Standard Shipping',
@@ -1754,24 +1754,24 @@ export default function MyAccountPage() {
       orderNumber: 'INV002', 
       status: 'In Transit', 
       method: 'Credit Card', 
-      amount: '$43.00',
+      amount: '$349.23',
       orderDate: 'Sep 12, 2024',
       items: [
         { 
-          image: '/images/products/pure-cube-white-1.png', 
-          name: 'Pure Cube', 
+          image: '/images/products/women-cropped-cardigan-5/1.jpg', 
+          name: 'Cropped Cardigan', 
           id: 'item-1', 
           quantity: 2,
           color: 'White',
-          size: 'One Size',
-          price: 15.00,
+          size: 'M',
+          price: 157.05,
         },
       ],
-      subtotal: 30.00,
+      subtotal: 314.10,
       promotions: 0.00,
       shipping: 10.00,
-      tax: 3.00,
-      total: 43.00,
+      tax: 25.13,
+      total: 349.23,
       paymentInfo: 'VISA Ending in 5678',
       shippingAddress: 'Jane Smith, 123 Main St, 10001, New York, NY, United States',
       shippingMethod: 'Standard Shipping',
@@ -1788,39 +1788,37 @@ export default function MyAccountPage() {
       orderNumber: 'INV003', 
       status: 'Ready for Pickup', 
       method: 'Credit Card', 
-      amount: '$48.38',
+      amount: '$582.07',
       orderDate: 'Sep 14, 2024',
       items: [
         { 
-          image: '/images/products/pure-cube-white-1.png', 
-          name: 'Pure Cube', 
+          image: '/images/products/women-leather-ankle-boots-6/1.jpg', 
+          name: 'Leather Ankle Boots', 
           id: 'item-1', 
           quantity: 1,
-          color: 'White',
-          size: 'One Size',
-          price: 15.00,
-          originalPrice: 20.00,
+          color: 'Black',
+          size: '7',
+          price: 170.61,
           store: 'Market Street San Francisco',
           shippingGroup: 'pickup-sf',
         },
         { 
-          image: '/images/products/steady-prism-1.png', 
-          name: 'Steady Prism', 
+          image: '/images/products/women-oversized-t-shirt-7/1.jpg', 
+          name: 'Oversized T-Shirt', 
           id: 'item-2', 
           quantity: 2,
-          color: 'Grey',
-          size: 'One Size',
-          price: 15.00,
-          originalPrice: 20.00,
+          color: 'Navy',
+          size: 'M',
+          price: 184.17,
           store: 'Market Street San Francisco',
           shippingGroup: 'pickup-sf',
         },
       ],
-      subtotal: 45.00,
+      subtotal: 538.95,
       promotions: 0.00,
       shipping: 0.00,
-      tax: 3.38,
-      total: 48.38,
+      tax: 43.12,
+      total: 582.07,
       paymentInfo: 'VISA Ending in 5678',
       shippingAddress: 'John Doe, 415 Mission Street, 94105, San Francisco, CA, United States',
       isBOPIS: true,
@@ -1849,39 +1847,37 @@ export default function MyAccountPage() {
       orderNumber: 'INV004', 
       status: 'Cancelled', 
       method: 'Credit Card', 
-      amount: '$95.92',
+      amount: '$1,123.20',
       orderDate: 'Sep 8, 2024',
       items: [
         { 
-          image: '/images/products/pure-cube-gray-1.png', 
-          name: 'Pure Cube', 
+          image: '/images/products/women-high-waisted-jeans-8/1.jpg', 
+          name: 'High-Waisted Jeans', 
           id: 'item-1', 
           quantity: 2,
-          color: 'Gray',
+          color: 'Black',
           size: 'M',
-          price: 49.00,
-          originalPrice: 49.00,
+          price: 197.72,
           store: 'Market Street San Francisco',
           shippingGroup: 'canceled-group', // A dummy group for canceled items
         },
         { 
-          image: '/images/products/fine-cone-1.png', 
-          name: 'Fine Cone', 
+          image: '/images/products/women-knit-midi-skirt-9/1.jpg', 
+          name: 'Knit Midi Skirt', 
           id: 'item-2', 
           quantity: 3,
-          color: 'Black', // Assuming a color for Fine Cone
-          size: 'L',
-          price: 39.00,
-          originalPrice: 39.00,
+          color: 'Navy',
+          size: 'M',
+          price: 41.28,
           store: 'Market Street New York',
           shippingGroup: 'canceled-group',
         },
       ],
-      subtotal: 88.00,
+      subtotal: 497.68,
       promotions: 0.00,
       shipping: 0.00,
-      tax: 7.92,
-      total: 95.92,
+      tax: 39.81,
+      total: 537.49,
       paymentInfo: 'VISA Ending in 3456',
       shippingAddress: 'John Doe, 415 Mission Street, 94105, San Francisco, CA, United States',
       shippingMethod: 'Free | Standard Shipping',
@@ -1895,33 +1891,33 @@ export default function MyAccountPage() {
       orderNumber: 'INV005', 
       status: 'Delivered', 
       method: 'Credit Card', 
-      amount: '$405.00',
+      amount: '$2,847.15',
       orderDate: 'Sep 1, 2024',
       items: [
-        { image: '/images/products/fine-cone-1.png', name: 'Fine Cone', id: 'inv005-item-1', quantity: 1, price: 39.00 },
-        { image: '/images/products/soft-sphere-1.png', name: 'Soft Sphere', id: 'inv005-item-2', quantity: 1, price: 15.00, originalPrice: 20.00 },
-        { image: '/images/products/solid-cylinder-1.png', name: 'Solid Cylinder', id: 'inv005-item-3', quantity: 1, price: 15.00, originalPrice: 20.00 },
-        { image: '/images/products/pure-cube-white-1.png', name: 'Pure Cube', id: 'inv005-item-4', quantity: 1, price: 15.00, originalPrice: 20.00, color: 'White', size: 'One Size' },
-        { image: '/images/products/steady-prism-1.png', name: 'Steady Prism', id: 'inv005-item-5', quantity: 1, price: 15.00, originalPrice: 20.00, color: 'Grey', size: 'XL' },
-        { image: '/images/products/pure-cube-white-1.png', name: 'Pure Cube', id: 'inv005-item-6', quantity: 2, price: 15.00, originalPrice: 20.00, color: 'White', size: 'One Size' },
-        { image: '/images/products/soft-sphere-1.png', name: 'Soft Sphere', id: 'inv005-item-7', quantity: 1, price: 15.00, originalPrice: 20.00, color: 'Grey', size: 'XL' },
-        { image: '/images/products/solid-cylinder-1.png', name: 'Solid Cylinder', id: 'inv005-item-8', quantity: 1, price: 15.00, originalPrice: 20.00, color: 'Grey', size: 'XL' },
-        { image: '/images/products/pure-cube-gray-1.png', name: 'Pure Cube', id: 'inv005-item-9', quantity: 1, price: 49.00, color: 'Gray', size: 'M' },
-        { image: '/images/products/fine-cone-1.png', name: 'Fine Cone', id: 'inv005-item-10', quantity: 1, price: 39.00, color: 'Black', size: 'L' },
-        { image: '/images/products/steady-prism-1.png', name: 'Steady Prism', id: 'inv005-item-11', quantity: 2, price: 15.00, originalPrice: 20.00, color: 'Grey', size: 'One Size' },
-        { image: '/images/products/pure-cube-white-1.png', name: 'Pure Cube', id: 'inv005-item-12', quantity: 1, price: 15.00, originalPrice: 20.00, color: 'White', size: 'One Size' },
-        { image: '/images/products/soft-sphere-1.png', name: 'Soft Sphere', id: 'inv005-item-13', quantity: 1, price: 15.00, originalPrice: 20.00, color: 'Grey', size: 'XL' },
-        { image: '/images/products/solid-cylinder-1.png', name: 'Solid Cylinder', id: 'inv005-item-14', quantity: 1, price: 15.00, originalPrice: 20.00, color: 'Grey', size: 'XL' },
-        { image: '/images/products/pure-cube-white-1.png', name: 'Pure Cube', id: 'inv005-item-15', quantity: 1, price: 15.00, originalPrice: 20.00, color: 'White', size: 'One Size' },
-        { image: '/images/products/steady-prism-1.png', name: 'Steady Prism', id: 'inv005-item-16', quantity: 1, price: 15.00, originalPrice: 20.00, color: 'Grey', size: 'XL' },
-        { image: '/images/products/fine-cone-1.png', name: 'Fine Cone', id: 'inv005-item-17', quantity: 1, price: 39.00 },
-        { image: '/images/products/soft-sphere-1.png', name: 'Soft Sphere', id: 'inv005-item-18', quantity: 1, price: 15.00, originalPrice: 20.00 },
+        { image: '/images/products/women-structured-handbag-10/1.jpg', name: 'Structured Handbag', id: 'inv005-item-1', quantity: 1, price: 149.17, color: 'Black', size: 'One Size' },
+        { image: '/images/products/women-satin-slip-dress-11/1.jpg', name: 'Satin Slip Dress', id: 'inv005-item-2', quantity: 1, price: 162.72, color: 'Black', size: 'M' },
+        { image: '/images/products/women-wool-blend-scarf-12/1.jpg', name: 'Wool Blend Scarf', id: 'inv005-item-3', quantity: 1, price: 176.28, color: 'Navy', size: 'One Size' },
+        { image: '/images/products/women-tailored-blazer-13/1.jpg', name: 'Tailored Blazer', id: 'inv005-item-4', quantity: 1, price: 189.83, color: 'Black', size: 'M' },
+        { image: '/images/products/women-ribbed-knit-sweater-14/1.jpg', name: 'Ribbed Knit Sweater', id: 'inv005-item-5', quantity: 1, price: 203.39, color: 'White', size: 'M' },
+        { image: '/images/products/women-pleated-midi-skirt-15/1.jpg', name: 'Pleated Midi Skirt', id: 'inv005-item-6', quantity: 2, price: 54.83, color: 'Black', size: 'M' },
+        { image: '/images/products/women-leather-crossbody-bag-16/1.jpg', name: 'Leather Crossbody Bag', id: 'inv005-item-7', quantity: 1, price: 68.39, color: 'Black', size: 'One Size' },
+        { image: '/images/products/women-oversized-denim-shirt-17/1.jpg', name: 'Oversized Denim Shirt', id: 'inv005-item-8', quantity: 1, price: 81.94, color: 'Navy', size: 'M' },
+        { image: '/images/products/women-wool-blend-coat-18/1.jpg', name: 'Wool Blend Coat', id: 'inv005-item-9', quantity: 1, price: 95.50, color: 'Black', size: 'M' },
+        { image: '/images/products/women-silk-blouse-19/1.jpg', name: 'Silk Blouse', id: 'inv005-item-10', quantity: 1, price: 109.05, color: 'White', size: 'M' },
+        { image: '/images/products/women-wide-leg-jeans-20/1.jpg', name: 'Wide Leg Jeans', id: 'inv005-item-11', quantity: 2, price: 122.61, color: 'Black', size: 'M' },
+        { image: '/images/products/women-knit-cardigan-21/1.jpg', name: 'Knit Cardigan', id: 'inv005-item-12', quantity: 1, price: 136.17, color: 'Beige', size: 'M' },
+        { image: '/images/products/women-leather-loafers-22/1.jpg', name: 'Leather Loafers', id: 'inv005-item-13', quantity: 1, price: 149.72, color: 'Black', size: '7' },
+        { image: '/images/products/women-trench-coat-23/1.jpg', name: 'Trench Coat', id: 'inv005-item-14', quantity: 1, price: 163.28, color: 'Navy', size: 'M' },
+        { image: '/images/products/women-ribbed-bodysuit-24/1.jpg', name: 'Ribbed Bodysuit', id: 'inv005-item-15', quantity: 1, price: 176.83, color: 'Black', size: 'M' },
+        { image: '/images/products/women-midi-wrap-dress-25/1.jpg', name: 'Midi Wrap Dress', id: 'inv005-item-16', quantity: 1, price: 190.39, color: 'White', size: 'M' },
+        { image: '/images/products/women-structured-tote-bag-26/1.jpg', name: 'Structured Tote Bag', id: 'inv005-item-17', quantity: 1, price: 203.94, color: 'Black', size: 'One Size' },
+        { image: '/images/products/women-oversized-shirt-dress-27/1.jpg', name: 'Oversized Shirt Dress', id: 'inv005-item-18', quantity: 1, price: 217.50, color: 'Navy', size: 'M' },
       ],
-      subtotal: 390.00,
+      subtotal: 2475.00,
       promotions: -15.00,
       shipping: 0.00,
-      tax: 30.00,
-      total: 405.00,
+      tax: 196.80,
+      total: 2656.80,
       paymentInfo: 'VISA Ending in 7890',
       shippingAddress: 'John Doe, 415 Mission Street, 94105, San Francisco, CA, United States',
       shippingMethod: 'Free | Standard Shipping',
@@ -2823,7 +2819,7 @@ export default function MyAccountPage() {
       <AnnouncementBar />
       <Navigation />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="layout-commerce py-8">
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
           {/* Left Sidebar - Account Navigation */}
           <aside className={`transition-all duration-300 ease-in-out flex-shrink-0 w-full lg:w-auto ${
@@ -3639,13 +3635,13 @@ export default function MyAccountPage() {
                           onClick={() => {
                             setIsEditingInterestsAndPreferences(false)
                             setInterestsForm({
-                              designStyles: ['Minimalist', 'Geometric'],
-                              roomTypes: ['Living Room', 'Office'],
-                              materials: ['Ceramic'],
+                              designStyles: ['Minimalist', 'Contemporary'],
+                              roomTypes: ['Casual', 'Formal'],
+                              materials: ['Cotton', 'Wool'],
                               aesthetics: ['Modern'],
                             })
                             setPreferencesForm({
-                              productCategories: ['Geometric', 'Sets'],
+                              productCategories: ['Women', 'Men'],
                               shoppingPreferences: 'unisex',
                             })
                             setMeasuresForm({
@@ -3869,7 +3865,7 @@ export default function MyAccountPage() {
                           {measuresForm.ceilingHeight && (
                             <div className="text-sm text-brand-gray-700">
                               <span className="font-medium">Ceiling height: </span>
-                              {measuresForm.ceilingHeight}"
+                              {measuresForm.ceilingHeight}&quot;
                         </div>
                           )}
                           {measuresForm.preferredProductSize && (
@@ -6670,11 +6666,11 @@ export default function MyAccountPage() {
                 <div className="space-y-4">
                   {(() => {
                     const allOptions = interestsModalCategory === 'designStyles' 
-                      ? ['Minimalist', 'Geometric', 'Abstract', 'Modern', 'Contemporary', 'Scandinavian', 'Bauhaus', 'Organic']
+                      ? ['Minimalist', 'Contemporary', 'Classic', 'Modern', 'Casual', 'Formal', 'Streetwear', 'Elegant']
                       : interestsModalCategory === 'roomTypes'
-                      ? ['Living Room', 'Bedroom', 'Office', 'Studio', 'Gallery', 'Kitchen', 'Dining', 'Entryway']
+                      ? ['Casual', 'Formal', 'Business', 'Evening', 'Streetwear', 'Athletic', 'Beach', 'Party']
                       : interestsModalCategory === 'materials'
-                      ? ['Ceramic', 'Metal', 'Wood', 'Glass', 'Stone', 'Resin', 'Concrete', 'Marble']
+                      ? ['Cotton', 'Wool', 'Silk', 'Leather', 'Denim', 'Linen', 'Cashmere', 'Polyester']
                       : ['Minimalist', 'Bold', 'Organic', 'Architectural', 'Sculptural', 'Industrial', 'Elegant', 'Playful']
                     
                     const currentSelected = interestsModalCategory === 'designStyles'
@@ -6790,7 +6786,7 @@ export default function MyAccountPage() {
               {/* Modal Content */}
               <div className="flex-1 overflow-y-auto p-6">
                 <div className="space-y-4">
-                  {['Geometric', 'Abstract', 'Modular', 'Premium', 'Sets'].map((category) => {
+                  {['Women', 'Men', 'Kids', 'Accessories', 'Sale'].map((category) => {
                     const isSelected = preferencesForm.productCategories.includes(category)
                     return (
                       <label
@@ -7645,7 +7641,7 @@ export default function MyAccountPage() {
                     <div>
                       <p className="text-sm font-medium text-brand-blue-800 mb-1">What happens next?</p>
                       <p className="text-xs text-brand-blue-700">
-                        You'll be prompted to use your device's biometric authentication (Face ID, Touch ID, or Windows Hello) or enter your device PIN to create the passkey.
+                        You&apos;ll be prompted to use your device&apos;s biometric authentication (Face ID, Touch ID, or Windows Hello) or enter your device PIN to create the passkey.
                       </p>
                     </div>
                   </div>

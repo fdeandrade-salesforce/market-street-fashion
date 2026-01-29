@@ -256,7 +256,7 @@ export default function NewReleasesPage() {
   const trendingNew = getNewReleases(8)
   const newInWomen = getNewReleasesByCategory('Women', 8)
   const newInMen = getNewReleasesByCategory('Men', 8)
-  const newInAccessories = getNewReleasesByCategory('Accessories', 8)
+  const newInKids = getNewReleasesByCategory('Kids', 8)
 
   // Calculate total products count
   const totalProducts = useMemo(() => {
@@ -312,11 +312,11 @@ export default function NewReleasesPage() {
 
   const navItems = [
     { id: 'all', label: 'All New Releases', href: '/new-releases' },
-    { id: 'just-dropped', label: 'Just Dropped', href: '/shop?filter=new' },
-    { id: 'trending-new', label: 'Trending New', href: '/shop?filter=new&sort=trending' },
+    { id: 'just-dropped', label: 'Just Dropped', href: '/new-releases' },
+    { id: 'trending-new', label: 'Trending New', href: '/new-releases' },
     { id: 'new-in-women', label: 'New in Women', href: '/women?filter=new' },
     { id: 'new-in-men', label: 'New in Men', href: '/men?filter=new' },
-    { id: 'new-in-accessories', label: 'New in Accessories', href: '/accessories?filter=new' },
+    { id: 'new-in-kids', label: 'New in Kids', href: '/kids?filter=new' },
   ]
 
   return (
@@ -329,7 +329,7 @@ export default function NewReleasesPage() {
         <div className="relative h-[250px] md:h-[300px] lg:h-[350px] overflow-hidden">
           <div className="absolute inset-0">
             <LazyImage
-              src="/images/hero/hero-collection.png"
+              src="/resources/support images/Fashion Banner After Hours.png"
               alt="New Releases"
               className="w-full h-full"
               objectFit="cover"
@@ -338,18 +338,18 @@ export default function NewReleasesPage() {
           </div>
           
           <div className="relative h-full flex items-end">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-8 md:pb-10">
+            <div className="layout-commerce w-full pb-8 md:pb-10">
               <div className="max-w-2xl">
                 <div className="inline-block mb-4">
                   <span className="text-xs md:text-sm text-white/80 uppercase tracking-widest font-medium">
                     New Releases
                   </span>
                 </div>
-                <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-light text-white mb-4 tracking-tight leading-tight">
-                  Collection
+                <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold text-white mb-4 tracking-tight leading-tight">
+                  New Arrivals
                 </h1>
                 <p className="text-base md:text-lg text-white/90 font-light max-w-xl">
-                  {totalProducts} {totalProducts === 1 ? 'product' : 'products'} available
+                  Discover the latest styles and trends. {totalProducts} {totalProducts === 1 ? 'product' : 'products'} available
                 </p>
               </div>
             </div>
@@ -357,7 +357,7 @@ export default function NewReleasesPage() {
         </div>
 
         {/* Main Content Layout: Left Rail + Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="layout-commerce py-8">
           {/* Breadcrumbs */}
           <nav className="flex items-center gap-2 text-sm text-brand-gray-500 mb-6">
             {breadcrumbs.map((crumb, idx) => (
@@ -424,10 +424,10 @@ export default function NewReleasesPage() {
               {/* Promotional Banner 1 - Limited Time Offer */}
               <div className="py-8 md:py-12">
                 <PromoBanner
-                  title="New Collection: Latest Releases"
-                  subtitle="LIMITED TIME OFFER"
-                  ctaText="Shop Collection"
-                  ctaLink="/new-releases"
+                  title="New Season Collection"
+                  subtitle="Latest Styles & Trends"
+                  ctaText="Shop New Arrivals"
+                  ctaLink="/women/new-in"
                   variant="gradient"
                   textColor="text-white"
                 />
@@ -464,10 +464,10 @@ export default function NewReleasesPage() {
               {/* Promotional Banner 2 - Free Shipping Offer */}
               <div className="py-8 md:py-12">
                 <PromoBanner
-                  title="Free Shipping on Orders Over $100"
-                  subtitle="SPECIAL OFFER"
-                  ctaText="Shop Now"
-                  ctaLink="/shop"
+                  title="Free Shipping on Orders Over $50"
+                  subtitle="Shop Now"
+                  ctaText="Explore Collection"
+                  ctaLink="/women"
                   variant="primary"
                   textColor="text-white"
                 />
@@ -487,13 +487,13 @@ export default function NewReleasesPage() {
                 />
               )}
 
-              {/* New in Accessories Section */}
-              {newInAccessories.length > 0 && (
+              {/* New in Kids Section */}
+              {newInKids.length > 0 && (
                 <CarouselSection
-                  id="new-in-accessories"
-                  title="New in Accessories"
-                  shopAllLink="/accessories"
-                  products={newInAccessories}
+                  id="new-in-kids"
+                  title="New in Kids"
+                  shopAllLink="/kids"
+                  products={newInKids}
                   onUnifiedAction={handleUnifiedAction}
                   onAddToCartSimple={handleAddToCartSimple}
                   onAddToWishlist={handleAddToWishlist}

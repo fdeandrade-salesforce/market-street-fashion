@@ -9,30 +9,30 @@ interface SearchModalProps {
 }
 
 const recentSearches = [
-  { type: 'history', text: 'geometric sculptures for living room' },
-  { type: 'search', text: 'white minimalist decor' },
-  { type: 'search', text: 'abstract art pieces' },
-  { type: 'search', text: 'modern cube designs' },
+  { type: 'history', text: 'women\'s dresses' },
+  { type: 'search', text: 'men\'s jackets' },
+  { type: 'search', text: 'new arrivals' },
+  { type: 'search', text: 'summer collection' },
 ]
 
 const bestsellers = [
   {
-    id: '1',
-    name: 'Signature Form',
-    price: 89.00,
-    image: '/images/products/signature-form-white-1.png',
+    id: 'women-new-in-5',
+    name: 'Cropped Cardigan',
+    price: 157.05,
+    image: '/images/products/women-cropped-cardigan-5/1.jpg',
   },
   {
-    id: '2',
-    name: 'Pure Cube',
-    price: 65.00,
-    image: '/images/products/pure-cube-white-1.png',
+    id: 'women-new-in-6',
+    name: 'Leather Ankle Boots',
+    price: 170.61,
+    image: '/images/products/women-leather-ankle-boots-6/1.jpg',
   },
   {
-    id: '3',
-    name: 'Soft Sphere',
-    price: 75.00,
-    image: '/images/products/soft-sphere-1.png',
+    id: 'women-new-in-14',
+    name: 'Ribbed Knit Sweater',
+    price: 33.40,
+    image: '/images/products/women-ribbed-knit-sweater-14/1.jpg',
   },
 ]
 
@@ -74,7 +74,7 @@ export default function SearchModal({ isOpen, onClose, onOpenAgent }: SearchModa
       
       {/* Modal Content */}
       <div className="relative bg-white w-full max-h-[80vh] overflow-y-auto shadow-2xl">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="layout-commerce">
           {/* Search Header */}
           <div className="flex items-center gap-4 py-4 border-b border-brand-gray-200">
             {/* Search Icon */}

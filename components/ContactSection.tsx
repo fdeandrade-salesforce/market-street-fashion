@@ -34,7 +34,7 @@ export default function ContactSection() {
 
   return (
     <section className="bg-brand-gray-50 py-16 md:py-24">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="layout-commerce">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
           <div>
             <h3 className="text-h4 md:text-h3 font-medium text-brand-black mb-4">

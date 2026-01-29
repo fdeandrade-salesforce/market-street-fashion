@@ -98,7 +98,7 @@ function generateContextualQuestions(
   }
 
   // Category-specific questions
-  if (category.includes('geometric') || subcategory.includes('cube')) {
+  if (category === 'Women' || category === 'Men' || category === 'Kids') {
     allQuestions.push({
       id: `${productId}-material-1`,
       question: 'What material is this made from?',
@@ -108,7 +108,7 @@ function generateContextualQuestions(
       answers: [
         {
           id: `${productId}-material-1-1`,
-          content: `The ${productName} is crafted from premium materials with a focus on durability and aesthetic appeal. It features a minimalist design that complements any space.`,
+          content: `The ${productName} is crafted from premium materials with a focus on durability and comfort. It features quality construction that ensures long-lasting wear.`,
           author: `${brand} Team`,
           date: 'a month ago',
           isSeller: true,
@@ -118,7 +118,7 @@ function generateContextualQuestions(
     })
   }
 
-  if (category.includes('geometric') || subcategory.includes('prism')) {
+  if (category === 'Women' || category === 'Men' || category === 'Kids') {
     allQuestions.push({
       id: `${productId}-design-1`,
       question: 'How does this look in person?',
@@ -128,7 +128,7 @@ function generateContextualQuestions(
       answers: [
         {
           id: `${productId}-design-1-1`,
-          content: `The ${productName} looks even better in person! The geometric design is very striking and the quality is excellent. It's a beautiful piece that adds elegance to any room.`,
+          content: `The ${productName} looks even better in person! The fit and quality are excellent. It's a beautiful piece that adds style to any outfit.`,
           author: 'David K.',
           date: '2 weeks ago',
           isSeller: false,
@@ -193,9 +193,20 @@ function generateContextualQuestions(
     ],
   })
 
-  // Randomly select 0-3 questions
-  const shuffled = [...allQuestions].sort(() => Math.random() - 0.5)
-  const count = Math.floor(Math.random() * 4) // 0, 1, 2, or 3
+  // Deterministically select 0-3 questions based on productId
+  // Use seeded approach to ensure same questions shown on server and client
+  const seed = productId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
+  const seededRandom = () => {
+    const x = Math.sin(seed) * 10000
+    return x - Math.floor(x)
+  }
+  // Deterministic shuffle using seeded random
+  const shuffled = [...allQuestions].sort((a, b) => {
+    const randA = seededRandom()
+    const randB = seededRandom()
+    return randA - randB
+  })
+  const count = Math.floor(seededRandom() * 4) // 0, 1, 2, or 3
   return shuffled.slice(0, count)
 }
 
@@ -495,7 +506,7 @@ export default function QASection({
 
             {/* Helper Text */}
             <p className="text-xs text-brand-gray-500 mb-4">
-              Start typing your question and we'll check if it was already asked and answered.
+              Start typing your question and we&apos;ll check if it was already asked and answered.
             </p>
 
             {/* Count */}

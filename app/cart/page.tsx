@@ -443,7 +443,7 @@ export default function CartPage() {
 
         {/* Free Shipping Progress */}
         <div className="bg-brand-gray-50 border-b border-brand-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="layout-commerce py-8">
             {calculations.freeShippingRemaining > 0 ? (
               <div className="space-y-2">
                 <p className="text-sm text-brand-black text-center">
@@ -472,7 +472,7 @@ export default function CartPage() {
           </div>
         </div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
+        <div className="layout-commerce py-4 md:py-8">
           {/* Breadcrumbs */}
           <nav className="flex items-center gap-2 text-sm text-brand-gray-500 mb-6" aria-label="Breadcrumb">
             <a href="/" className="hover:text-brand-blue-500 transition-colors">

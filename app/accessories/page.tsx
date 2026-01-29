@@ -23,7 +23,7 @@ export default function AccessoriesPage() {
             title="Complete Your Look"
             subtitle="Styling Tips"
             description="Mix and match our accessories to create unique combinations that reflect your personal style."
-            image="/images/hero/hero-collection.png"
+            image="/resources/support images/Fashion Concept Minimalist Studio.png"
             ctaText="View Guide"
             variant="image-top"
           />
@@ -46,11 +46,11 @@ export default function AccessoriesPage() {
         columns: 2 as const,
         content: (
           <EditorialCard
-            title="Modular Collection"
-            subtitle="Build Your Space"
-            description="Create your perfect arrangement with our modular accessories that adapt to any space."
-            image="/images/products/base-module-1.png"
-            ctaText="Shop Modular"
+            title="Statement Accessories"
+            subtitle="Elevate Your Style"
+            description="Discover bold accessories that add personality and sophistication to any outfit."
+            image="/resources/support images/Zara Prada Frame 1.png"
+            ctaText="Shop Accessories"
             variant="image-background"
           />
         ),

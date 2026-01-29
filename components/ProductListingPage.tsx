@@ -7,6 +7,19 @@ import LazyImage from './LazyImage'
 import StoreLocatorModal from './StoreLocatorModal'
 import NotifyMeModal from './NotifyMeModal'
 import { addToCart } from '../lib/cart'
+import { getColorHex, isSpecialColor } from '../lib/color-utils'
+
+export interface Review {
+  id: string
+  author: string
+  rating: number
+  date: string
+  title: string
+  content: string
+  verified: boolean
+  helpful: number
+  images?: string[]
+}
 
 export interface Product {
   id: string
@@ -25,6 +38,7 @@ export interface Product {
   stockQuantity?: number // Number of units in stock (0-50)
   rating?: number // 0-5
   reviewCount?: number
+  reviews?: Review[] // Product reviews (3-8 per product)
   badges?: ('new' | 'best-seller' | 'online-only' | 'limited-edition' | 'promotion')[]
   isNew?: boolean
   isBestSeller?: boolean
@@ -32,11 +46,17 @@ export interface Product {
   isLimitedEdition?: boolean
   storeAvailable?: boolean // For pickup badges
   variants?: number // Number of additional variants
-  sku?: string // Product SKU
+  sku?: string // Product SKU (unique per variant)
   shortDescription?: string // Short product description
   discountPercentage?: number // Product-level discount percentage
   percentOff?: number // Percent-off badge value
   promotionalMessage?: string // Promotional message (e.g., "Extra 25% Off with code EXTRA25")
+  // Extended fields for PDP
+  description?: string // Long description for PDP
+  materials?: string[] // Material composition
+  careInstructions?: string[] // Care instructions
+  fitNotes?: string // Fit information
+  tags?: string[] // Product tags for filtering
 }
 
 interface FilterState {
@@ -55,6 +75,7 @@ interface ProductListingPageProps {
   category: string
   subcategory?: string
   headerImage?: string
+  description?: string
   enableInfiniteScroll?: boolean
   itemsPerPage?: number
   contentSlots?: {
@@ -72,12 +93,13 @@ export default function ProductListingPage({
   category,
   subcategory,
   headerImage,
+  description,
   enableInfiniteScroll = false,
   itemsPerPage = 24,
   contentSlots,
 }: ProductListingPageProps) {
   const [showFilters, setShowFilters] = useState(false)
-  const [sortBy, setSortBy] = useState<SortOption>('newest')
+  const [sortBy, setSortBy] = useState<SortOption>('relevance')
   const [cardSize, setCardSize] = useState<'small' | 'big'>('big')
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     availability: true,
@@ -285,7 +307,8 @@ export default function ProductListingPage({
 
   // Toggle filter sidebar visibility
   const handleToggleFilters = () => {
-    const isMobile = window.innerWidth < 1024 // lg breakpoint
+    // Guard for SSR - window not available during server-side rendering
+    const isMobile = typeof window !== 'undefined' ? window.innerWidth < 1024 : false // lg breakpoint
     const willShowFilters = !showFilters
     
     if (willShowFilters && isMobile) {
@@ -351,6 +374,37 @@ export default function ProductListingPage({
       return true
     })
 
+    // Calculate relevance/popularity score for products
+    const getRelevanceScore = (product: Product): number => {
+      let score = 0
+      
+      // Best sellers get highest boost
+      if (product.isBestSeller) score += 100
+      
+      // New products get medium boost
+      if (product.isNew) score += 50
+      
+      // Rating contributes (0-5 stars = 0-50 points)
+      score += (product.rating || 0) * 10
+      
+      // Review count contributes (log scale to prevent dominance)
+      score += Math.log10((product.reviewCount || 0) + 1) * 10
+      
+      // Discount/promotion gives slight boost
+      if (product.discountPercentage && product.discountPercentage > 0) {
+        score += 20
+      }
+      
+      // Add deterministic "randomness" based on product ID to simulate natural variation
+      // This creates a hash-like value from the product ID
+      const idHash = product.id.split('').reduce((acc, char) => {
+        return ((acc << 5) - acc) + char.charCodeAt(0)
+      }, 0)
+      score += Math.abs(idHash % 30) // Add 0-29 points of variation
+      
+      return score
+    }
+    
     // Apply sorting
     filtered.sort((a, b) => {
       switch (sortBy) {
@@ -364,10 +418,17 @@ export default function ProductListingPage({
           return b.name.localeCompare(a.name)
         case 'rating':
           return (b.rating || 0) - (a.rating || 0)
-        case 'relevance':
         case 'newest':
+          // For newest, prioritize isNew flag, then by ID (newer IDs typically come later)
+          if (a.isNew && !b.isNew) return -1
+          if (!a.isNew && b.isNew) return 1
+          return b.id.localeCompare(a.id)
+        case 'relevance':
         default:
-          return 0 // Keep original order for newest/relevance
+          // Sort by relevance score (higher = more relevant/popular)
+          const scoreA = getRelevanceScore(a)
+          const scoreB = getRelevanceScore(b)
+          return scoreB - scoreA
       }
     })
 
@@ -609,22 +670,80 @@ export default function ProductListingPage({
     return chips
   }, [filters, priceRange])
 
-  // Get header image based on subcategory
+  // Get header image based on category and subcategory
   const getHeaderImage = () => {
     if (headerImage) return headerImage
     
-    const categoryImages: Record<string, string> = {
-      'Women': '/images/hero/hero-collection.png',
-      'Men': '/images/products/fusion-block-1.png',
-      'Accessories': '/images/products/spiral-accent-1.png',
-      'Geometric': '/images/products/pure-cube-white-1.png',
-      'Abstract': '/images/products/flow-form-i-1.png',
-      'Sets': '/images/products/vertical-set-1.png',
-      'Modular': '/images/products/base-module-1.png',
-      'Premium': '/images/products/signature-form-white-1.png',
+    // Map subcategory names to file naming convention by category
+    const subcategoryMaps: Record<string, Record<string, string>> = {
+      Women: {
+        'New In': 'All Women',
+        'Outerwear': 'Outerwear',
+        'Dresses': 'Dresses',
+        'Tops': 'Tops',
+        'Knitwear': 'Sweaters',
+        'Shirts': 'Tops',
+        'Jeans': 'Denim',
+        'Trousers': 'Trousers',
+        'Skirts': 'Skirts',
+        'Blazers': 'Jackets',
+        'Activewear': 'Tops',
+        'Shoes': 'Bags', // Fallback
+        'Bags': 'Bags',
+        'Accessories': 'Accessories',
+      },
+      Men: {
+        'New In': 'All Men',
+        'Jackets & Blazers': 'Jackets',
+        'T-Shirts': 'Tshirts',
+        'Shirts': 'Shirts',
+        'Suits': 'Suits',
+        'Trousers': 'Pants',
+        'Pants': 'Pants',
+        'Bottoms': 'Bottoms',
+        'Outerwear': 'Outerwear',
+        'Accessories': 'Accessories',
+      },
+      Kids: {
+        'Boys': 'Boys',
+        'Girls': 'Girls',
+        'Boys Tops': 'Tops',
+        'Boys Bottoms': 'Bottoms',
+        'Boys Shoes': 'Shoes',
+        'Boys Accessories': 'Accessories',
+        'Girls Dresses': 'Dresses',
+        'Girls Tops': 'Tops',
+        'Girls Bottoms': 'Bottoms',
+        'Girls Shoes': 'Shoes',
+        'Girls Accessories': 'Accessories',
+      },
     }
     
-    return categoryImages[category] || '/images/hero/hero-collection.png'
+    // Determine the image filename
+    let imageName: string
+    if (subcategory) {
+      const categoryMap = subcategoryMaps[category] || {}
+      const mappedSubcategory = categoryMap[subcategory] || subcategory
+      imageName = `${category}-${mappedSubcategory}.png`
+    } else {
+      // Main category page - use "All {Category}" format (with space)
+      const categoryDisplayName = category === 'Kids' ? 'Kids' : category
+      imageName = `${category}-All ${categoryDisplayName}.png`
+    }
+    
+    // Handle Sale category
+    if (category === 'Sale') {
+      if (subcategory) {
+        imageName = `Sales-${subcategory} Sale.png`
+      } else {
+        imageName = 'Sales-All Sale.png'
+      }
+    }
+    
+    const imagePath = `/resources/plp banners/${imageName}`
+    
+    // Fallback to default if image doesn't exist (will be handled by browser)
+    return imagePath
   }
 
   // Generate breadcrumbs
@@ -659,17 +778,22 @@ export default function ProductListingPage({
         </div>
         
         <div className="relative h-full flex items-end">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-8 md:pb-10">
+          <div className="layout-commerce w-full pb-8 md:pb-10">
             <div className="max-w-2xl">
               <div className="inline-block mb-4">
                 <span className="text-xs md:text-sm text-white/80 uppercase tracking-widest font-medium">
                   {category}
                 </span>
               </div>
-              <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-light text-white mb-4 tracking-tight leading-tight">
-                {subcategory || 'Collection'}
+              <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold text-white mb-4 tracking-tight leading-tight">
+                {subcategory ? `${category}'s ${subcategory}` : `${category}'s Collection`}
               </h1>
-              <p className="text-base md:text-lg text-white/90 font-light max-w-xl">
+              {description && (
+                <p className="text-sm md:text-base text-white/90 font-normal max-w-xl mb-4">
+                  {description}
+                </p>
+              )}
+              <p className="text-base md:text-lg text-white/90 font-normal max-w-xl">
               {filteredAndSortedProducts.length} {filteredAndSortedProducts.length === 1 ? 'product' : 'products'} available
               </p>
             </div>
@@ -677,7 +801,7 @@ export default function ProductListingPage({
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="layout-commerce py-8">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-brand-gray-500 mb-6">
           {breadcrumbs.map((crumb, idx) => (
@@ -1110,25 +1234,8 @@ export default function ProductListingPage({
                         <div className="grid grid-cols-4 gap-3">
                           {availableColors.map((color) => {
                             const count = getColorCount(color)
-                            const colorMap: Record<string, string> = {
-                              blue: '#3b82f6',
-                              black: '#000000',
-                              white: '#ffffff',
-                              red: '#ef4444',
-                              green: '#22c55e',
-                              yellow: '#eab308',
-                              pink: '#ec4899',
-                              purple: '#a855f7',
-                              orange: '#f97316',
-                              brown: '#a16207',
-                              gray: '#6b7280',
-                              grey: '#6b7280',
-                              khaki: '#c3b091',
-                              neon: '#ccff00',
-                            }
-                            const colorLower = color.toLowerCase()
                             const isSelected = filters.colors.includes(color)
-                            const isPrinted = colorLower === 'printed'
+                            const isSpecial = isSpecialColor(color)
                             
                             return (
                               <button
@@ -1136,7 +1243,7 @@ export default function ProductListingPage({
                                 onClick={() => handleColorToggle(color)}
                                 className="flex flex-col items-center gap-2 group"
                               >
-                                {isPrinted ? (
+                                {isSpecial ? (
                                   <div
                                     className={`w-10 h-10 rounded-full border-2 transition-all bg-gradient-to-br from-purple-400 via-blue-400 to-white ${
                                       isSelected
@@ -1151,7 +1258,7 @@ export default function ProductListingPage({
                                         ? 'border-brand-blue-500 ring-2 ring-brand-blue-200'
                                         : 'border-brand-gray-300 group-hover:border-brand-gray-400'
                                     }`}
-                                    style={{ backgroundColor: colorMap[colorLower] || '#cccccc' }}
+                                    style={{ backgroundColor: getColorHex(color) }}
                                   />
                                 )}
                                 <div className="text-center">

@@ -14,7 +14,7 @@ export default function PremiumPage() {
       <ProductListingPage 
         products={products} 
         category="Premium"
-        headerImage="/images/products/signature-form-silver-1.png"
+        headerImage="/resources/support images/Zara Commercial Frame.png"
       />
       <Footer />
     </div>

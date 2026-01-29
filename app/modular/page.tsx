@@ -14,7 +14,7 @@ export default function ModularPage() {
       <ProductListingPage 
         products={products} 
         category="Modular"
-        headerImage="/images/products/base-module-1.png"
+        headerImage="/resources/support images/Fashion Concept Minimalist Studio.png"
       />
       <Footer />
     </div>

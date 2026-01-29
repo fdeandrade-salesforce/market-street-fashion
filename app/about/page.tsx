@@ -15,7 +15,7 @@ export default function AboutPage() {
       <Navigation />
 
       <main className="flex-1">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="layout-commerce py-8">
           {/* Breadcrumbs */}
           <nav className="flex items-center gap-2 text-sm text-brand-gray-500 mb-6" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-brand-blue-500 transition-colors">
@@ -30,21 +30,21 @@ export default function AboutPage() {
             About us
           </h1>
 
-          {/* Section 1: Built for movement. Designed for everyday life. */}
+          {/* Section 1: Style for real life. Fashion that moves with you. */}
           <section className="mb-16 md:mb-24">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
               <div>
                 <h2 className="text-h2 md:text-h1 font-light text-brand-black mb-6 tracking-tight">
-                  Built for movement. Designed for everyday life.
+                  Style for real life. Fashion that moves with you.
                 </h2>
                 <p className="text-body-lg text-brand-gray-700 leading-relaxed mb-4">
-                  Market Street was founded on a simple belief: great design should serve your life, not complicate it. We&apos;re inspired by the rhythm of urban living—the way people move through cities, create spaces, and build routines. Our work begins with understanding how objects fit into real lives, not just how they look in isolation.
+                  Market Street was founded on a simple belief: great fashion should serve your life, not complicate it. We&apos;re inspired by the way people actually live—the morning routines, the work days, the weekend adventures. Our collections begin with understanding how clothes fit into real lives, not just how they look on a runway.
                 </p>
                 <p className="text-body-lg text-brand-gray-700 leading-relaxed mb-4">
-                  Every decision we make—from material selection to form to function—starts with a question: Does this make life better? We design for versatility, durability, and timelessness because we believe the best objects are the ones you reach for daily, the ones that become part of your story without demanding attention.
+                  Every decision we make—from fabric selection to fit to function—starts with a question: Does this make getting dressed easier? We design for versatility, durability, and timelessness because we believe the best pieces are the ones you reach for daily, the ones that become part of your story without demanding attention.
                 </p>
                 <p className="text-body-lg text-brand-gray-700 leading-relaxed">
-                  We&apos;re not just creating products. We&apos;re building a philosophy of thoughtful consumption, where quality and intention replace trends and excess. This is how we&apos;ve always worked, and it&apos;s how we&apos;ll continue to grow.
+                  We&apos;re not just creating clothes. We&apos;re building a philosophy of thoughtful consumption, where quality and intention replace trends and excess. This is how we&apos;ve always worked, and it&apos;s how we&apos;ll continue to grow.
                 </p>
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -77,17 +77,17 @@ export default function AboutPage() {
           {/* Brand Commitment Banner 1 */}
           <div className="mb-16 md:mb-24">
             <PromoBanner
-              title="Accessible Design, Thoughtful Delivery"
+              title="Accessible Style, Thoughtful Design"
               subtitle="Our Commitment"
-              ctaText="Learn More"
-              ctaLink="/shop"
+              ctaText="Shop Collection"
+              ctaLink="/women"
               variant="primary"
             />
           </div>
 
           {/* Video Section */}
           <section className="mb-16 md:mb-24">
-            <div className="w-full max-w-7xl mx-auto">
+            <div className="w-full layout-commerce">
               <div className="relative aspect-video bg-brand-gray-100 rounded-lg overflow-hidden shadow-sm">
                 <video
                   className="w-full h-full object-cover"
@@ -117,7 +117,7 @@ export default function AboutPage() {
                   Our Vision
                 </h3>
                 <p className="text-body text-brand-gray-700 leading-relaxed">
-                  We envision a future where commerce feels natural, where technology serves people instead of complicating their lives, and where every interaction—from discovery to delivery—feels intentional and human. We&apos;re building a brand that evolves with our community, learns from their needs, and creates value that extends far beyond transactions. Our vision is simple: make the experience of finding and living with well-designed objects as effortless as the objects themselves.
+                  We envision a future where fashion feels natural, where style serves people instead of complicating their lives, and where every piece—from discovery to daily wear—feels intentional and effortless. We&apos;re building a brand that evolves with our community, learns from their needs, and creates value that extends far beyond transactions. Our vision is simple: make the experience of finding and wearing great clothes as effortless as the clothes themselves.
                 </p>
               </div>
               <div>
@@ -132,7 +132,7 @@ export default function AboutPage() {
                   Why We Exist
                 </h3>
                 <p className="text-body text-brand-gray-700 leading-relaxed">
-                  We exist because we believe people deserve better than the noise of modern commerce. Too many brands prioritize selling over serving, trends over timelessness, and transactions over trust. We&apos;re here to prove there&apos;s another way—one where thoughtful design, honest communication, and genuine care for our community guide every decision. We exist to build something that lasts, both in what we create and how we create it.
+                  We exist because we believe people deserve better than the noise of fast fashion. Too many brands prioritize selling over serving, trends over timelessness, and transactions over trust. We&apos;re here to prove there&apos;s another way—one where thoughtful design, honest communication, and genuine care for our community guide every decision. We exist to build something that lasts, both in what we create and how we create it.
                 </p>
               </div>
             </div>
@@ -160,18 +160,18 @@ export default function AboutPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
               <div className="border-l-4 border-brand-blue-500 pl-6">
                 <h4 className="text-h6 font-semibold text-brand-black mb-2">
-                  Design with purpose
+                  Style with purpose
                 </h4>
                 <p className="text-body text-brand-gray-700">
-                  Nothing we create is accidental. Every form, function, and interaction serves a clear purpose in making your life better.
+                  Nothing we create is accidental. Every piece, fit, and detail serves a clear purpose in making getting dressed easier and more enjoyable.
                 </p>
               </div>
               <div className="border-l-4 border-brand-blue-500 pl-6">
                 <h4 className="text-h6 font-semibold text-brand-black mb-2">
-                  Technology that disappears
+                  Quality that endures
                 </h4>
                 <p className="text-body text-brand-gray-700">
-                  Innovation should make things easier, not more complex. We build tools that fade into the background so you can focus on what matters.
+                  We choose materials and construction methods that stand the test of time. Our pieces are built to last, so you can invest in fewer, better things.
                 </p>
               </div>
               <div className="border-l-4 border-brand-blue-500 pl-6">
@@ -184,10 +184,10 @@ export default function AboutPage() {
               </div>
               <div className="border-l-4 border-brand-blue-500 pl-6">
                 <h4 className="text-h6 font-semibold text-brand-black mb-2">
-                  Sustainability in motion
+                  Sustainability in practice
                 </h4>
                 <p className="text-body text-brand-gray-700">
-                  We&apos;re committed to responsible sourcing, ethical partnerships, and practices that protect our planet for future generations.
+                  We&apos;re committed to responsible sourcing, ethical manufacturing, and practices that protect our planet and the people who make our clothes.
                 </p>
               </div>
             </div>
@@ -225,10 +225,10 @@ export default function AboutPage() {
                   Our guiding principle is simple: <strong className="font-medium text-brand-black">Make commerce feel natural.</strong> We believe the best brands don&apos;t just sell products—they become part of your story, understand your needs, and grow with you. That&apos;s the future we&apos;re building, one thoughtful interaction at a time.
                 </p>
                 <Link
-                  href="/shop"
+                  href="/women"
                   className="inline-block bg-brand-blue-500 text-white px-8 py-3 text-sm font-medium rounded-lg hover:bg-brand-blue-600 transition-colors"
                 >
-                  EXPLORE OUR WORK
+                  EXPLORE OUR COLLECTION
                 </Link>
               </div>
             </div>

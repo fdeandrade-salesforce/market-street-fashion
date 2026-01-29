@@ -17,7 +17,7 @@ export default function AnnouncementBar({
 
   return (
     <div className="announcement-bar relative">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      <div className="layout-commerce flex items-center justify-between">
         <p className="text-center flex-1">{message}</p>
         {dismissible && (
           <button

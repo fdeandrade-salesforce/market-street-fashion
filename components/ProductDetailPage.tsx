@@ -21,6 +21,7 @@ import { addToCart } from '../lib/cart'
 import QuickViewModal from './QuickViewModal'
 import NotifyMeModal from './NotifyMeModal'
 import DeliveryEstimates, { DeliveryEstimateState } from './DeliveryEstimates'
+import { getColorHex } from '../lib/color-utils'
 
 // Media item type for gallery
 interface MediaItem {
@@ -84,7 +85,7 @@ const mockReviews: Review[] = [
     rating: 4,
     date: 'May 2022',
     title: 'Great design',
-    content: 'Beautiful geometric form that fits perfectly in my living space. The craftsmanship is impeccable. Only giving 4 stars because shipping took a bit longer than expected.',
+    content: 'Beautiful piece that fits perfectly into my wardrobe. The quality and craftsmanship are impeccable. Only giving 4 stars because shipping took a bit longer than expected.',
     verified: true,
     helpful: 18,
   },
@@ -221,9 +222,13 @@ export default function ProductDetailPage({
   product,
   suggestedProducts = [],
   recentlyViewed = [],
-  reviews = mockReviews,
+  reviews: propReviews,
   allProducts = [],
 }: ProductDetailPageProps) {
+  // Use product reviews if available, otherwise use prop reviews, otherwise mock reviews
+  const reviews = product.reviews && product.reviews.length > 0 
+    ? product.reviews 
+    : (propReviews || mockReviews)
   const router = useRouter()
   const [selectedSize, setSelectedSize] = useState<string>(product.size?.[0] || '')
   const [selectedColor, setSelectedColor] = useState<string>(product.color || product.colors?.[0] || '')
@@ -232,7 +237,7 @@ export default function ProductDetailPage({
   const [quantity, setQuantity] = useState(1)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   
-  // Find variant products by matching product name (same logic as ProductCard)
+  // Find variant products by matching product name, category, and subcategory
   const variantProducts = useMemo(() => {
     if (!allProducts.length || !product.colors || product.colors.length <= 1) {
       return {}
@@ -240,15 +245,21 @@ export default function ProductDetailPage({
     
     const variants: Record<string, Product> = {}
     
-    // Find products with the same name but different colors
+    // Find products with the same name, category, subcategory, but different colors
     allProducts.forEach((p) => {
-      if (p.name === product.name && p.color && product.colors?.includes(p.color)) {
+      if (
+        p.name === product.name && 
+        p.category === product.category &&
+        p.subcategory === product.subcategory &&
+        p.color && 
+        product.colors?.includes(p.color)
+      ) {
         variants[p.color] = p
       }
     })
     
     return variants
-  }, [allProducts, product.name, product.colors])
+  }, [allProducts, product.name, product.category, product.subcategory, product.colors])
   
   // Track if user has explicitly selected a color (different from initial)
   const [hasSelectedColor, setHasSelectedColor] = useState(false)
@@ -513,7 +524,7 @@ export default function ProductDetailPage({
       <AnnouncementBar />
       <Navigation />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="layout-commerce py-8">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-brand-gray-500 mb-6">
           {breadcrumbs.map((crumb, idx) => (
@@ -984,15 +995,7 @@ export default function ProductDetailPage({
                           <span
                             className="w-4 h-4 rounded-full border border-brand-gray-300"
                             style={{
-                              backgroundColor:
-                                color.toLowerCase() === 'white' ? '#fff' :
-                                color.toLowerCase() === 'black' ? '#000' :
-                                color.toLowerCase() === 'gray' ? '#6b7280' :
-                                color.toLowerCase() === 'charcoal' ? '#36454F' :
-                                color.toLowerCase() === 'silver' ? '#C0C0C0' :
-                                color.toLowerCase() === 'ivory' ? '#FFFFF0' :
-                                color.toLowerCase() === 'natural' ? '#FAF0E6' :
-                                color.toLowerCase() === 'ware' ? '#D2B48C' : '#ccc',
+                              backgroundColor: getColorHex(color),
                             }}
                           />
                           {color}
@@ -1241,7 +1244,7 @@ export default function ProductDetailPage({
                     // Express checkout - Buy Now flow
                     console.log('Apple Pay checkout initiated')
                   }}
-                  className="w-full py-3.5 px-6 font-medium text-base rounded-lg transition-colors bg-black text-white hover:bg-gray-900 flex items-center justify-center gap-2"
+                  className="w-full py-3.5 px-6 font-medium text-base rounded-lg transition-colors bg-white text-brand-black border border-brand-gray-300 hover:bg-brand-gray-50 flex items-center justify-center gap-2"
                 >
                   <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.08-.4C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09l.01-.01zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
@@ -1465,7 +1468,7 @@ export default function ProductDetailPage({
 
         {/* You May Also Like */}
         {suggestedProducts.length > 4 && (
-          <section className="mt-16 bg-brand-gray-50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8 py-12">
+          <section className="mt-16 bg-brand-gray-50 -mx-4 sm:-mx-6 lg:-mx-8 xl:-mx-10 layout-gutter py-12">
             <div className="text-center mb-8">
               <h2 className="text-2xl font-medium text-brand-black">You may also like</h2>
               <p className="text-sm text-brand-gray-600 mt-1">Description</p>
@@ -1680,12 +1683,7 @@ export default function ProductDetailPage({
                                 : 'border-brand-gray-200 hover:border-brand-gray-400'
                             }`}
                             style={{
-                              backgroundColor:
-                                color.toLowerCase() === 'white' ? '#fff' :
-                                color.toLowerCase() === 'black' ? '#000' :
-                                color.toLowerCase() === 'gray' ? '#6b7280' :
-                                color.toLowerCase() === 'charcoal' ? '#36454F' :
-                                color.toLowerCase() === 'silver' ? '#C0C0C0' : '#ccc',
+                              backgroundColor: getColorHex(color),
                             }}
                             title={color}
                           />

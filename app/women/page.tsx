@@ -20,9 +20,10 @@ export default function WomenPage() {
         columns: 'full' as const,
         content: (
           <PromoBanner
-            title="New Collection: Geometric Forms"
-            subtitle="Limited Time Offer"
-            ctaText="Shop Collection"
+            title="New Season Arrivals"
+            subtitle="Shop the Latest Trends"
+            ctaText="Shop New In"
+            ctaLink="/women/new-in"
             variant="gradient"
           />
         ),
@@ -32,11 +33,12 @@ export default function WomenPage() {
         columns: 2 as const,
         content: (
           <EditorialCard
-            title="Premium Collection"
-            subtitle="Signature Series"
-            description="Discover our curated selection of premium geometric designs crafted for the modern woman."
-            image="/images/hero/hero-collection.png"
-            ctaText="Explore Premium"
+            title="The Essentials"
+            subtitle="Wardrobe Foundations"
+            description="Building blocks for a versatile wardrobe. Classic pieces that work for every occasion."
+            image="/resources/support images/Banner Armario Moderno Sem Texto.png"
+            ctaText="Shop Essentials"
+            ctaLink="/women?filter=essentials"
             variant="image-background"
           />
         ),
@@ -46,9 +48,9 @@ export default function WomenPage() {
         columns: 'full' as const,
         content: (
           <PromoBanner
-            title="Free Shipping on Orders Over $100"
-            subtitle="Special Offer"
-            ctaText="Shop Now"
+            title="Free Shipping on Orders Over $50"
+            subtitle="Shop Now"
+            ctaText="Explore Collection"
             variant="primary"
           />
         ),
@@ -63,6 +65,7 @@ export default function WomenPage() {
       <ProductListingPage 
         products={products} 
         category="Women"
+        description="Discover timeless pieces designed for the modern woman. From everyday essentials to statement pieces, our collection celebrates versatility, quality, and effortless style."
         contentSlots={contentSlots}
       />
       <Footer />

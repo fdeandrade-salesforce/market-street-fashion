@@ -19,7 +19,7 @@ export default function ShopPage() {
         columns: 'full' as const,
         content: (
           <PromoBanner
-            title="Save up to 40% on selected premium suits"
+            title="Save up to 40% on Selected Premium Styles"
             subtitle="Limited Time Offer"
             ctaText="Shop Sale"
             variant="gradient"
@@ -34,7 +34,7 @@ export default function ShopPage() {
             title="Heritage Line"
             subtitle="Exclusive Collection"
             description="Timeless sophistication meets modern craftsmanship"
-            image="/images/hero/hero-collection.png"
+            image="/resources/support images/Zara Prada Frame 2.png"
             ctaText="Shop Now"
             variant="image-background"
           />
@@ -49,7 +49,7 @@ export default function ShopPage() {
       <ProductListingPage 
         products={products} 
         category="Shop"
-        headerImage="/images/hero/hero-collection.png"
+        headerImage="/resources/support images/Zara Prada Frame 3.png"
         contentSlots={contentSlots}
       />
       <Footer />

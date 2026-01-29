@@ -158,7 +158,7 @@ export default function OrderDetailPage({ order }: OrderDetailPageProps) {
       <AnnouncementBar />
       <Navigation />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="layout-commerce py-8">
         {/* Order Confirmation Card */}
         <div className="bg-white border border-brand-gray-200 rounded-xl shadow-sm p-8 mb-8">
           {/* Header Section */}

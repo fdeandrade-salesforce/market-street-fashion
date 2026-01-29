@@ -45,32 +45,36 @@ const navigationItems: NavItem[] = [
     href: '/women',
     children: [
       {
-        title: 'Categories',
+        title: 'Shop by Category',
         items: [
           { label: 'All Women', href: '/women' },
-          { label: 'Geometric', href: '/women/geometric' },
-          { label: 'Abstract', href: '/women/abstract' },
-          { label: 'Spheres', href: '/women/spheres' },
-        ],
-      },
-      {
-        title: 'Top Sellers',
-        items: [
-          { label: 'Signature Form', href: '/women?filter=bestseller' },
-          { label: 'Pure Cube', href: '/women?filter=bestseller' },
-          { label: 'Soft Sphere', href: '/women?filter=bestseller' },
+          { label: 'New In', href: '/women/new-in' },
+          { label: 'Outerwear', href: '/women/outerwear' },
+          { label: 'Dresses', href: '/women/dresses' },
+          { label: 'Tops', href: '/women/tops' },
+          { label: 'Knitwear', href: '/women/knitwear' },
+          { label: 'Shirts', href: '/women/shirts' },
+          { label: 'Jeans', href: '/women/jeans' },
+          { label: 'Trousers', href: '/women/trousers' },
+          { label: 'Skirts', href: '/women/skirts' },
+          { label: 'Blazers', href: '/women/blazers' },
+          { label: 'Activewear', href: '/women/activewear' },
+          { label: 'Shoes', href: '/women/shoes' },
+          { label: 'Bags', href: '/women/bags' },
+          { label: 'Accessories', href: '/women/accessories' },
         ],
       },
       {
         title: 'Collections',
         items: [
           { label: 'New Arrivals', href: '/women?filter=new' },
+          { label: 'Best Sellers', href: '/women?filter=bestseller' },
           { label: 'Limited Edition', href: '/women?filter=limited' },
-          { label: 'Sets & Bundles', href: '/women/sets' },
+          { label: 'Essentials', href: '/women?filter=essentials' },
         ],
       },
     ],
-    featuredImage: '/images/products/signature-form-white-1.png',
+    featuredImage: '/images/hero/hero-collection.png',
     featuredLabel: 'New Arrivals',
     featuredLink: '/women?filter=new',
   },
@@ -79,59 +83,70 @@ const navigationItems: NavItem[] = [
     href: '/men',
     children: [
       {
-        title: 'Categories',
+        title: 'Shop by Category',
         items: [
           { label: 'All Men', href: '/men' },
-          { label: 'Geometric', href: '/men/geometric' },
-          { label: 'Abstract', href: '/men/abstract' },
-          { label: 'Cubes', href: '/men/cubes' },
-        ],
-      },
-      {
-        title: 'Top Sellers',
-        items: [
-          { label: 'Pure Cube Black', href: '/men?filter=bestseller' },
-          { label: 'Fusion Prism', href: '/men?filter=bestseller' },
-          { label: 'Vertical Set', href: '/men?filter=bestseller' },
+          { label: 'New In', href: '/men/new-in' },
+          { label: 'Outerwear', href: '/men/outerwear' },
+          { label: 'Jackets & Blazers', href: '/men/jackets-blazers' },
+          { label: 'Shirts', href: '/men/shirts' },
+          { label: 'T-Shirts', href: '/men/t-shirts' },
+          { label: 'Knitwear', href: '/men/knitwear' },
+          { label: 'Jeans', href: '/men/jeans' },
+          { label: 'Trousers', href: '/men/trousers' },
+          { label: 'Suits', href: '/men/suits' },
+          { label: 'Shoes', href: '/men/shoes' },
+          { label: 'Bags', href: '/men/bags' },
+          { label: 'Accessories', href: '/men/accessories' },
         ],
       },
       {
         title: 'Collections',
         items: [
           { label: 'New Arrivals', href: '/men?filter=new' },
+          { label: 'Best Sellers', href: '/men?filter=bestseller' },
           { label: 'Essentials', href: '/men?filter=essentials' },
           { label: 'Premium', href: '/men/premium' },
         ],
       },
     ],
-    featuredImage: '/images/products/pure-cube-black-1.png',
+    featuredImage: '/images/hero/hero-collection.png',
     featuredLabel: 'New Arrivals',
     featuredLink: '/men?filter=new',
   },
   {
-    label: 'Accessories',
-    href: '/accessories',
+    label: 'Kids',
+    href: '/kids',
     children: [
       {
-        title: 'Categories',
+        title: 'Girls',
         items: [
-          { label: 'All Accessories', href: '/accessories' },
-          { label: 'Stands', href: '/accessories/stands' },
-          { label: 'Display Cases', href: '/accessories/display-cases' },
+          { label: 'All Girls', href: '/kids/girls' },
+          { label: 'New In', href: '/kids/girls/new-in' },
+          { label: 'Outerwear', href: '/kids/girls/outerwear' },
+          { label: 'Dresses', href: '/kids/girls/dresses' },
+          { label: 'Tops', href: '/kids/girls/tops' },
+          { label: 'Bottoms', href: '/kids/girls/bottoms' },
+          { label: 'Shoes', href: '/kids/girls/shoes' },
+          { label: 'Accessories', href: '/kids/girls/accessories' },
         ],
       },
       {
-        title: 'By Material',
+        title: 'Boys',
         items: [
-          { label: 'Wood', href: '/accessories?material=wood' },
-          { label: 'Metal', href: '/accessories?material=metal' },
-          { label: 'Glass', href: '/accessories?material=glass' },
+          { label: 'All Boys', href: '/kids/boys' },
+          { label: 'New In', href: '/kids/boys/new-in' },
+          { label: 'Outerwear', href: '/kids/boys/outerwear' },
+          { label: 'Tops', href: '/kids/boys/tops' },
+          { label: 'Bottoms', href: '/kids/boys/bottoms' },
+          { label: 'Shoes', href: '/kids/boys/shoes' },
+          { label: 'Accessories', href: '/kids/boys/accessories' },
         ],
       },
     ],
-    featuredImage: '/images/products/vertical-set-1.png',
-    featuredLabel: 'Complete Sets',
-    featuredLink: '/accessories/sets',
+    featuredImage: '/images/hero/hero-collection.png',
+    featuredLabel: 'New Arrivals',
+    featuredLink: '/kids?filter=new',
   },
   { label: 'New Releases', href: '/new-releases' },
   { label: 'Sale', href: '/sale', className: 'text-brand-blue-500' },
@@ -142,6 +157,7 @@ export default function Navigation() {
   const pathname = usePathname()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null)
+  const [expandedMobileItems, setExpandedMobileItems] = useState<Set<string>>(new Set())
   const [isSearchOpen, setIsSearchOpen] = useState(false)
   const [isAgentOpen, setIsAgentOpen] = useState(false)
   const [isLoginOpen, setIsLoginOpen] = useState(false)
@@ -297,20 +313,20 @@ export default function Navigation() {
   const activeNavItem = navigationItems.find(item => item.label === activeDropdown)
 
   return (
-    <nav className="relative z-50 bg-white border-b border-brand-gray-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <nav className="sticky top-0 z-50 bg-brand-black border-b border-brand-gray-800">
+      <div className="layout-commerce">
+        <div className="flex items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 flex items-center gap-2">
             <img 
               src="/images/logo.svg" 
               alt="Market Street" 
-              className="h-10 w-auto"
+              className="h-8 w-auto brightness-0 invert"
             />
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-1">
+          {/* Desktop Navigation - Left aligned after logo */}
+          <div className="hidden md:flex items-center space-x-1 ml-6">
             {navigationItems.map((item) => (
               <div
                 key={item.label}
@@ -322,8 +338,8 @@ export default function Navigation() {
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                     activeDropdown === item.label
                       ? 'bg-brand-blue-500 text-white'
-                      : item.className || 'text-brand-black hover:text-brand-gray-600'
-                  }`}
+                      : item.className || 'text-white hover:text-brand-gray-300'
+                  } ${item.className === 'text-brand-blue-500' ? 'hover:text-brand-blue-400' : ''}`}
                 >
                   {item.label}
                 </Link>
@@ -332,11 +348,11 @@ export default function Navigation() {
           </div>
 
           {/* Right Side Actions */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 ml-auto">
             {/* Search Button */}
             <button 
               onClick={() => setIsSearchOpen(true)}
-              className="p-2 text-brand-black hover:text-brand-gray-600 transition-colors"
+              className="p-2 text-white hover:text-brand-gray-300 transition-colors"
               aria-label="Search"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -347,7 +363,7 @@ export default function Navigation() {
             {/* Agent/AI Assistant Button */}
             <button 
               onClick={() => setIsAgentOpen(true)}
-              className="p-2 text-brand-black hover:text-brand-blue-500 transition-colors"
+              className="p-2 text-white hover:text-brand-blue-400 transition-colors"
               aria-label="Personal Assistant"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -364,7 +380,7 @@ export default function Navigation() {
             {/* Cart Button */}
             <button 
               onClick={() => setIsCartOpen(true)}
-              className={`p-2 text-brand-black hover:text-brand-gray-600 transition-all relative ${
+              className={`p-2 text-white hover:text-brand-gray-300 transition-all relative ${
                 cartIconPulse ? 'animate-pulse' : ''
               }`}
               aria-label={`Shopping cart with ${cartCount} items`}
@@ -381,7 +397,7 @@ export default function Navigation() {
               )}
             </button>
             <button
-              className="md:hidden p-2 text-brand-black"
+              className="md:hidden p-2 text-white"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -397,34 +413,64 @@ export default function Navigation() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-brand-gray-200">
-            {navigationItems.map((item) => (
-              <div key={item.label}>
-                <Link
-                  href={item.href}
-                  className={`block py-3 px-4 text-brand-black hover:bg-brand-gray-50 transition-colors font-medium ${item.className || ''}`}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {item.label}
-                </Link>
-                {item.children && (
-                  <div className="pl-8 pb-2">
-                    {item.children.flatMap((column) =>
-                      column.items.map((link) => (
-                        <Link
-                          key={link.label}
-                          href={link.href}
-                          className="block py-2 text-sm text-brand-gray-600 hover:text-brand-black transition-colors"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          {link.label}
-                        </Link>
-                      ))
-                    )}
-                  </div>
-                )}
-              </div>
-            ))}
+          <div className="md:hidden py-4 border-t border-brand-gray-800">
+            {navigationItems.map((item) => {
+              const isExpanded = expandedMobileItems.has(item.label)
+              const hasChildren = item.children && item.children.length > 0
+              
+              return (
+                <div key={item.label}>
+                  {hasChildren ? (
+                    <button
+                      onClick={() => {
+                        const newExpanded = new Set(expandedMobileItems)
+                        if (isExpanded) {
+                          newExpanded.delete(item.label)
+                        } else {
+                          newExpanded.add(item.label)
+                        }
+                        setExpandedMobileItems(newExpanded)
+                      }}
+                      className={`w-full flex items-center justify-between py-3 px-4 text-white hover:bg-brand-gray-900 transition-colors font-medium ${item.className || ''}`}
+                    >
+                      <span>{item.label}</span>
+                      <svg
+                        className={`w-5 h-5 transition-transform duration-200 ${isExpanded ? 'rotate-180' : ''}`}
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </button>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      className={`block py-3 px-4 text-white hover:bg-brand-gray-900 transition-colors font-medium ${item.className || ''}`}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.label}
+                    </Link>
+                  )}
+                  {hasChildren && isExpanded && (
+                    <div className="pl-4 pb-2 bg-brand-gray-900/50">
+                      {item.children?.flatMap((column) =>
+                        column.items.map((link) => (
+                          <Link
+                            key={link.label}
+                            href={link.href}
+                            className="block py-2 px-4 text-sm text-brand-gray-300 hover:text-white transition-colors"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            {link.label}
+                          </Link>
+                        ))
+                      )}
+                    </div>
+                  )}
+                </div>
+              )
+            })}
           </div>
         )}
       </div>
@@ -432,12 +478,12 @@ export default function Navigation() {
       {/* Mega Menu - Full Width, Outside the container */}
       {activeNavItem?.children && (
         <div 
-          className="absolute left-0 right-0 top-full bg-white border-b border-brand-gray-200 shadow-lg overflow-hidden"
+          className="absolute left-0 right-0 top-full bg-brand-black border-b border-brand-gray-800 shadow-lg overflow-hidden"
           onMouseEnter={() => handleMouseEnter(activeNavItem.label)}
           onMouseLeave={handleMouseLeave}
         >
           <div 
-            className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
+            className="layout-commerce py-8"
             style={{
               animation: 'menuSlideDown 0.15s ease-out forwards'
             }}
@@ -458,7 +504,7 @@ export default function Navigation() {
                           <li key={link.label}>
                             <Link
                               href={link.href}
-                              className="text-sm text-brand-black hover:text-brand-blue-500 transition-colors"
+                              className="text-sm text-white hover:text-brand-blue-400 transition-colors"
                               onClick={() => setActiveDropdown(null)}
                             >
                               {link.label}

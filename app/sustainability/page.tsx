@@ -14,7 +14,7 @@ export default function SustainabilityPage() {
       <Navigation />
 
       <main className="flex-1">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="layout-commerce py-8">
           {/* Breadcrumbs */}
           <nav className="flex items-center gap-2 text-sm text-brand-gray-500 mb-6" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-brand-blue-500 transition-colors">
@@ -32,10 +32,10 @@ export default function SustainabilityPage() {
           {/* Introduction */}
           <section className="mb-16 md:mb-24">
             <p className="text-body-lg text-brand-gray-700 leading-relaxed mb-6">
-              At Market Street, sustainability isn&apos;t a trend—it&apos;s a fundamental part of how we operate. We believe that responsible business practices and environmental stewardship go hand in hand with creating exceptional products and experiences.
+              At Market Street, sustainability isn&apos;t a trend—it&apos;s a fundamental part of how we operate. We believe that responsible fashion and environmental stewardship go hand in hand with creating exceptional clothing and experiences.
             </p>
             <p className="text-body-lg text-brand-gray-700 leading-relaxed">
-              Our commitment to sustainability extends across every aspect of our business, from material sourcing and manufacturing to packaging, shipping, and beyond. We&apos;re building a brand that not only serves our customers today but protects the planet for future generations.
+              Our commitment to sustainability extends across every aspect of our business, from fabric sourcing and manufacturing to packaging, shipping, and beyond. We&apos;re building a brand that not only serves our customers today but protects the planet and the people who make our clothes for future generations.
             </p>
           </section>
 
@@ -47,10 +47,10 @@ export default function SustainabilityPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div>
                 <h3 className="text-h5 font-semibold text-brand-black mb-3">
-                  Responsible Materials
+                  Responsible Fabrics
                 </h3>
                 <p className="text-body text-brand-gray-700 leading-relaxed">
-                  We prioritize sustainable, recycled, and responsibly sourced materials in all our products. Our selection process considers environmental impact, durability, and end-of-life recyclability.
+                  We prioritize sustainable, recycled, and responsibly sourced fabrics in all our clothing. Our selection process considers environmental impact, durability, and end-of-life recyclability.
                 </p>
               </div>
               <div>

@@ -84,7 +84,7 @@ export default function Home() {
         <Hero />
 
         {/* Featured Products */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="layout-commerce">
           <ProductGrid
             title="Featured Collection"
             products={featuredProducts}
@@ -97,7 +97,7 @@ export default function Home() {
 
         {/* New Arrivals Section */}
         <div className="bg-brand-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="layout-commerce">
             <ProductGrid
               title="New Arrivals"
               products={newArrivals}
@@ -111,32 +111,31 @@ export default function Home() {
 
         {/* Brand Story Section */}
         <section className="py-16 md:py-24 bg-white">
-          <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="max-w-4xl mx-auto layout-gutter text-center">
             <h2 className="text-3xl md:text-4xl font-normal text-brand-black mb-6 tracking-tight">
-              Step into Elegance
+              Style for Real Life
             </h2>
             <p className="text-lg text-brand-gray-700 leading-relaxed mb-8 font-normal">
-              At Market Street, we believe design should be accessible, innovative, and timeless. 
-              Our collections are crafted for the modern individual who values quality, 
-              form, and lasting beauty.
+              At Market Street, we believe fashion should be effortless, authentic, and accessible. 
+              Our collections are designed for the modern individual who values quality, 
+              versatility, and timeless style.
             </p>
             <p className="text-base text-brand-gray-600 leading-relaxed font-normal">
-              Discover our commitment to creating objects that inspire, 
-              adapt to your space, and stand the test of time.
+              Discover pieces that move with you, adapt to your life, and become the foundation 
+              of a wardrobe that works—every day, everywhere.
             </p>
           </div>
         </section>
 
         {/* Newsletter Section */}
-        <section className="py-16 md:py-24">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-brand-blue-500 text-white py-12 md:py-16 px-8 rounded-3xl">
+        <section className="pt-16 md:pt-24 pb-0">
+          <div className="bg-brand-blue-500 text-white py-12 md:py-16 px-8 rounded-none">
             <div className="text-center">
               <h2 className="text-2xl md:text-3xl font-semibold mb-3 tracking-tight">
-                Stay Updated
+                Join Our Community
               </h2>
               <p className="text-white/80 mb-8 font-normal text-sm">
-                Be the first to know about new collections and exclusive offers.
+                Be the first to discover new arrivals, exclusive offers, and style inspiration.
               </p>
               <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto justify-center">
                 <input
@@ -153,7 +152,6 @@ export default function Home() {
                 </button>
               </form>
             </div>
-          </div>
           </div>
         </section>
       </main>
