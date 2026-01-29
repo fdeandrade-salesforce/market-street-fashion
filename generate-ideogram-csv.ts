@@ -107,13 +107,13 @@ const groupProductsByBase = (products: Product[]): Map<string, Product[]> => {
   }
   
   // Sort variants by color within each group
-  for (const [key, variants] of groups.entries()) {
+  groups.forEach((variants) => {
     variants.sort((a, b) => {
       const colorA = (a.color || '').toLowerCase()
       const colorB = (b.color || '').toLowerCase()
       return colorA.localeCompare(colorB)
     })
-  }
+  })
   
   return groups
 }
@@ -129,7 +129,7 @@ const generateCSV = (): { csv: string; totalRows: number } => {
   rows.push('prompt,visibility,aspect_ratio,magic_prompt')
   
   // Process each product group (base product with all color variants)
-  const sortedGroups = Array.from(productGroups.entries()).sort((a, b) => {
+  const sortedGroups = Array.from(productGroups.keys()).map(key => [key, productGroups.get(key)!] as [string, Product[]]).sort((a, b) => {
     const [nameA, catA, subA] = a[0].split('|')
     const [nameB, catB, subB] = b[0].split('|')
     
@@ -279,7 +279,9 @@ const main = () => {
   }
   
   console.log(`\n📁 Variants by category:`)
-  for (const [category, count] of Array.from(byCategory.entries()).sort()) {
+  const sortedCategories = Array.from(byCategory.keys()).sort()
+  for (const category of sortedCategories) {
+    const count = byCategory.get(category)!
     console.log(`   - ${category}: ${count} variants`)
   }
 }
