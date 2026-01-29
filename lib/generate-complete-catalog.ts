@@ -952,11 +952,12 @@ export const generateCompleteCatalog = (): Product[] => {
     const finalColors = Array.from(new Set([...validColorsFromList, ...allValidColors])).sort()
     
     // Only update if colors array changed
-    if (finalColors.length !== product.colors.length || 
-        !finalColors.every((c, i) => product.colors[i] === c)) {
+    if (finalColors.length !== (product.colors?.length || 0) || 
+        !finalColors.every((c, i) => product.colors?.[i] === c)) {
+      const safeFinalColors = finalColors.filter((c): c is string => Boolean(c))
       return {
         ...product,
-        colors: finalColors.length > 0 ? finalColors : [product.color].filter(Boolean),
+        colors: safeFinalColors.length > 0 ? safeFinalColors : (product.color ? [product.color] : []),
       }
     }
     
