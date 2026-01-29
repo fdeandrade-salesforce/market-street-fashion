@@ -149,7 +149,7 @@ const navigationItems: NavItem[] = [
     featuredLink: '/kids?filter=new',
   },
   { label: 'New Releases', href: '/new-releases' },
-  { label: 'Sale', href: '/sale', className: 'text-brand-blue-500' },
+  { label: 'Sale', href: '/sale', className: 'text-blue-400 hover:text-blue-300' },
 ]
 
 export default function Navigation() {
@@ -321,7 +321,7 @@ export default function Navigation() {
             <img 
               src="/images/logo.svg" 
               alt="Market Street" 
-              className="h-8 w-auto brightness-0 invert"
+              className="h-4 w-auto brightness-0 invert"
             />
           </Link>
 
@@ -339,7 +339,7 @@ export default function Navigation() {
                     activeDropdown === item.label
                       ? 'bg-brand-blue-500 text-white'
                       : item.className || 'text-white hover:text-brand-gray-300'
-                  } ${item.className === 'text-brand-blue-500' ? 'hover:text-brand-blue-400' : ''}`}
+                  }`}
                 >
                   {item.label}
                 </Link>

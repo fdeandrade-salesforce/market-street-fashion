@@ -269,7 +269,7 @@ export default function MiniCart({
     <>
       {/* Overlay */}
       <div
-        className="fixed inset-0 bg-black/40 z-40 transition-opacity"
+        className="fixed inset-0 bg-black/40 z-[100] transition-opacity"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -277,7 +277,7 @@ export default function MiniCart({
       {/* Drawer */}
       <div
         ref={drawerRef}
-        className="fixed right-0 top-0 h-full w-full max-w-md bg-white z-50 flex flex-col shadow-xl"
+        className="fixed right-0 top-0 h-full w-full max-w-md bg-white z-[110] flex flex-col shadow-xl"
         style={{ animation: 'slideInRight 0.3s ease-out' }}
         role="dialog"
         aria-modal="true"
@@ -903,7 +903,7 @@ export default function MiniCart({
                           {/* Badges */}
                           <div className="absolute top-2 left-2 flex flex-col gap-1">
                             {product.isNew && (
-                              <span className="bg-green-500 text-white px-2 py-0.5 text-xs font-semibold uppercase rounded-md">
+                              <span className="bg-gray-600 text-white px-2 py-0.5 text-xs font-semibold uppercase rounded-md">
                                 NEW
                               </span>
                             )}

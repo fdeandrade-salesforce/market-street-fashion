@@ -1,7 +1,8 @@
 'use client'
 
-import React, { useState, useEffect, useMemo } from 'react'
+import React, { useState, useEffect, useMemo, useRef } from 'react'
 import { useRouter } from 'next/navigation'
+import Link from 'next/link'
 import { Product } from './ProductListingPage'
 import ProductCard from './ProductCard'
 import Navigation from './Navigation'
@@ -22,6 +23,7 @@ import QuickViewModal from './QuickViewModal'
 import NotifyMeModal from './NotifyMeModal'
 import DeliveryEstimates, { DeliveryEstimateState } from './DeliveryEstimates'
 import { getColorHex } from '../lib/color-utils'
+import MobileAddToCartButton from './MobileAddToCartButton'
 
 // Media item type for gallery
 interface MediaItem {
@@ -327,6 +329,44 @@ export default function ProductDetailPage({
   const [showReturnsWarrantyModal, setShowReturnsWarrantyModal] = useState(false)
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null)
   const [notifyMeProduct, setNotifyMeProduct] = useState<Product | null>(null)
+  
+  // Mobile Add to Cart button visibility
+  const addToCartSectionRef = useRef<HTMLDivElement>(null)
+  const [showMobileAddToCart, setShowMobileAddToCart] = useState(false)
+
+  // Detect when Add to Cart section is out of viewport (mobile only)
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    const checkVisibility = () => {
+      // Only check on mobile screens
+      if (window.innerWidth >= 768) {
+        setShowMobileAddToCart(false)
+        return
+      }
+
+      if (!addToCartSectionRef.current) {
+        setShowMobileAddToCart(false)
+        return
+      }
+
+      const rect = addToCartSectionRef.current.getBoundingClientRect()
+      const isVisible = rect.top < window.innerHeight && rect.bottom > 0
+      
+      // Show mobile button when Add to Cart section is not visible
+      setShowMobileAddToCart(!isVisible)
+    }
+
+    // Check on mount and scroll
+    checkVisibility()
+    window.addEventListener('scroll', checkVisibility, { passive: true })
+    window.addEventListener('resize', checkVisibility)
+
+    return () => {
+      window.removeEventListener('scroll', checkVisibility)
+      window.removeEventListener('resize', checkVisibility)
+    }
+  }, [])
 
   // Helper function to check if product has variants
   const hasVariants = (product: Product): boolean => {
@@ -460,7 +500,7 @@ export default function ProductDetailPage({
 
   const getBadgeColor = (badge: string) => {
     const colors: Record<string, string> = {
-      'new': 'bg-green-600',
+      'new': 'bg-gray-600',
       'best-seller': 'bg-brand-blue-500',
       'online-only': 'bg-purple-600',
       'limited-edition': 'bg-orange-600',
@@ -494,10 +534,14 @@ export default function ProductDetailPage({
   const stockStatus = getStockStatus()
 
   // Generate breadcrumbs
+  const normalizeUrl = (str: string) => {
+    return str.toLowerCase().replace(/\s+/g, '-')
+  }
+  
   const breadcrumbs = [
-    { label: 'Breadcrumbs', href: '/' },
-    { label: product.category, href: `/${product.category.toLowerCase()}` },
-    { label: product.subcategory, href: `/${product.category.toLowerCase()}/${product.subcategory.toLowerCase()}` },
+    { label: 'Home', href: '/' },
+    { label: product.category, href: `/${normalizeUrl(product.category)}` },
+    { label: product.subcategory, href: `/${normalizeUrl(product.category)}/${normalizeUrl(product.subcategory)}` },
     { label: product.name, href: '#' },
   ]
 
@@ -520,21 +564,28 @@ export default function ProductDetailPage({
   ]
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className={`min-h-screen bg-white ${showMobileAddToCart ? 'pb-20 md:pb-0' : ''}`}>
       <AnnouncementBar />
       <Navigation />
 
       <main className="layout-commerce py-8">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-brand-gray-500 mb-6">
-          {breadcrumbs.map((crumb, idx) => (
-            <React.Fragment key={idx}>
-              {idx > 0 && <span>&gt;</span>}
-              <a href={crumb.href} className="hover:text-brand-blue-500 transition-colors">
-                {crumb.label}
-              </a>
-            </React.Fragment>
-          ))}
+          {breadcrumbs.map((crumb, idx) => {
+            const isLast = idx === breadcrumbs.length - 1
+            return (
+              <React.Fragment key={idx}>
+                {idx > 0 && <span>&gt;</span>}
+                {isLast ? (
+                  <span className="text-brand-black">{crumb.label}</span>
+                ) : (
+                  <Link href={crumb.href} className="hover:text-brand-blue-500 transition-colors">
+                    {crumb.label}
+                  </Link>
+                )}
+              </React.Fragment>
+            )
+          })}
         </nav>
 
         {/* Main Product Section */}
@@ -1207,6 +1258,8 @@ export default function ProductDetailPage({
               </div>
             </div>
 
+            {/* Add to Cart Section - Ref for visibility detection */}
+            <div ref={addToCartSectionRef}>
             {/* Add to Cart / Notify Me Button */}
             {!currentVariant.inStock ? (
               <button
@@ -1301,6 +1354,8 @@ export default function ProductDetailPage({
                 Learn more
               </button>
             </div>
+            </div>
+            {/* End Add to Cart Section Ref */}
 
             {/* Free Shipping, Returns & Warranty Info */}
             <div className="space-y-3 pt-4 border-t border-brand-gray-200">
@@ -1453,7 +1508,7 @@ export default function ProductDetailPage({
               <h2 className="text-2xl font-medium text-brand-black">Complete the look</h2>
               <p className="text-sm text-brand-gray-600 mt-1">Description</p>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {suggestedProducts.slice(0, 4).map((prod) => (
                 <ProductCard
                   key={prod.id}
@@ -1473,7 +1528,7 @@ export default function ProductDetailPage({
               <h2 className="text-2xl font-medium text-brand-black">You may also like</h2>
               <p className="text-sm text-brand-gray-600 mt-1">Description</p>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
               {suggestedProducts.slice(4, 8).map((prod) => (
                 <ProductCard
                   key={prod.id}
@@ -1493,7 +1548,7 @@ export default function ProductDetailPage({
               <h2 className="text-2xl font-medium text-brand-black">Recently viewed</h2>
               <p className="text-sm text-brand-gray-600 mt-1">Description</p>
             </div>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-6">
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
               {recentlyViewed.slice(0, 5).map((prod) => (
                 <ProductCard
                   key={prod.id}
@@ -1750,6 +1805,30 @@ export default function ProductDetailPage({
           onNotify={handleNotifyMe}
         />
       )}
+
+      {/* Mobile Add to Cart Button */}
+      <MobileAddToCartButton
+        product={product}
+        currentVariant={currentVariant}
+        selectedSize={selectedSize}
+        selectedColor={selectedColor}
+        quantity={quantity}
+        onSizeChange={setSelectedSize}
+        onColorChange={(color) => {
+          setSelectedColor(color)
+          setHasSelectedColor(true)
+        }}
+        onQuantityChange={setQuantity}
+        onAddToCart={() => {
+          addToCart(currentVariant, quantity, selectedSize, selectedColor)
+        }}
+        onNotifyMe={() => {
+          setNotifyMeProduct(currentVariant)
+        }}
+        variantProducts={variantProducts}
+        allProducts={allProducts}
+        isVisible={showMobileAddToCart}
+      />
     </div>
   )
 }

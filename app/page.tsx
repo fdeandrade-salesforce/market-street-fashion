@@ -80,8 +80,10 @@ export default function Home() {
       <Navigation />
       
       <main className="flex-1">
-        {/* Hero Section */}
-        <Hero />
+        {/* Hero Section - Full viewport height */}
+        <div className="relative">
+          <Hero />
+        </div>
 
         {/* Featured Products */}
         <div className="layout-commerce">

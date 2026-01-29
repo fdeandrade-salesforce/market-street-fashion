@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useMemo, useRef } from 'react'
+import Link from 'next/link'
 import Navigation from '../../components/Navigation'
 import Footer from '../../components/Footer'
 import AnnouncementBar from '../../components/AnnouncementBar'
@@ -11,7 +12,6 @@ import Toast from '../../components/Toast'
 import { getCart, updateCartQuantity, removeFromCart, addToCart } from '../../lib/cart'
 import { CartItem } from '../../components/MiniCart'
 import { toggleWishlist } from '../../lib/wishlist'
-import Link from 'next/link'
 
 // Extended CartItem with fulfillment options
 interface ExtendedCartItem extends CartItem {
@@ -475,9 +475,9 @@ export default function CartPage() {
         <div className="layout-commerce py-4 md:py-8">
           {/* Breadcrumbs */}
           <nav className="flex items-center gap-2 text-sm text-brand-gray-500 mb-6" aria-label="Breadcrumb">
-            <a href="/" className="hover:text-brand-blue-500 transition-colors">
+            <Link href="/" className="hover:text-brand-blue-500 transition-colors">
               Home
-            </a>
+            </Link>
             <span>&gt;</span>
             <span className="text-brand-black">Cart</span>
           </nav>

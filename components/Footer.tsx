@@ -99,7 +99,7 @@ export default function Footer() {
                   <img 
                     src="/images/logo.svg" 
                     alt="Market Street" 
-                    className="h-8 w-auto brightness-0"
+                    className="h-4 w-auto brightness-0"
                   />
                 </div>
                 <div className="flex items-center gap-4 text-sm text-brand-gray-600">

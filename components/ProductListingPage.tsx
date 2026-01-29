@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useMemo, useEffect, useCallback, useRef, useLayoutEffect } from 'react'
+import Link from 'next/link'
 import ProductCard from './ProductCard'
 import QuickViewModal from './QuickViewModal'
 import LazyImage from './LazyImage'
@@ -747,16 +748,20 @@ export default function ProductListingPage({
   }
 
   // Generate breadcrumbs
+  const normalizeUrl = (str: string) => {
+    return str.toLowerCase().replace(/\s+/g, '-')
+  }
+  
   const breadcrumbs = useMemo(() => {
     const crumbs = [
       { label: 'Home', href: '/' },
-      { label: category, href: `/${category.toLowerCase()}` },
+      { label: category, href: `/${normalizeUrl(category)}` },
     ]
     
     if (subcategory) {
       crumbs.push({
         label: subcategory,
-        href: `/${category.toLowerCase()}/${subcategory.toLowerCase()}`,
+        href: `/${normalizeUrl(category)}/${normalizeUrl(subcategory)}`,
       })
     }
     
@@ -804,14 +809,21 @@ export default function ProductListingPage({
       <div className="layout-commerce py-8">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-brand-gray-500 mb-6">
-          {breadcrumbs.map((crumb, idx) => (
-            <React.Fragment key={idx}>
-              {idx > 0 && <span>&gt;</span>}
-              <a href={crumb.href} className="hover:text-brand-blue-500 transition-colors">
-                {crumb.label}
-              </a>
-            </React.Fragment>
-          ))}
+          {breadcrumbs.map((crumb, idx) => {
+            const isLast = idx === breadcrumbs.length - 1
+            return (
+              <React.Fragment key={idx}>
+                {idx > 0 && <span>&gt;</span>}
+                {isLast ? (
+                  <span className="text-brand-black">{crumb.label}</span>
+                ) : (
+                  <Link href={crumb.href} className="hover:text-brand-blue-500 transition-colors">
+                    {crumb.label}
+                  </Link>
+                )}
+              </React.Fragment>
+            )
+          })}
         </nav>
 
         {/* Toolbar - Filters and Sort */}
@@ -1386,11 +1398,11 @@ export default function ProductListingPage({
                 <div className={`grid [grid-auto-flow:dense] transition-all duration-300 ${
                   cardSize === 'small'
                     ? showFilters
-                      ? 'grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4'
-                      : 'grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4'
+                      ? 'grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2'
+                      : 'grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2'
                     : showFilters
-                      ? 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-6'
-                      : 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6'
+                      ? 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-3'
+                      : 'grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3'
                 }`}>
                   {(() => {
                     // Build a flat array of all grid items (products + content blocks) in order

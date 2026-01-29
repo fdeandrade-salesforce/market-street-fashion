@@ -12,11 +12,12 @@ import { Product } from './ProductListingPage'
 import { getFeaturedProducts, getAllProducts, getProductById } from '../lib/products'
 import { getWishlist, removeFromWishlist } from '../lib/wishlist'
 import { addToCart } from '../lib/cart'
-import { getCurrentUser, User } from '../lib/auth'
+import { getCurrentUser, User, logout } from '../lib/auth'
 import Toast from './Toast'
 import QuickViewModal from './QuickViewModal'
 import NotifyMeModal from './NotifyMeModal'
 import StoreLocatorModal from './StoreLocatorModal'
+import LogoutConfirmationModal from './LogoutConfirmationModal'
 
 interface ShippingGroup {
   groupId: string
@@ -1135,7 +1136,7 @@ function CrossSellSection() {
   return (
     <div className="bg-white border border-brand-gray-200 rounded-xl shadow-sm p-6">
       <h2 className="text-xl font-semibold text-brand-black mb-4">You May Also Like</h2>
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2">
         {crossSellProducts.map((product) => (
           <ProductCard
             key={product.id}
@@ -1250,6 +1251,9 @@ export default function MyAccountPage() {
   
   // Get logged-in user data
   const [user, setUser] = useState<User | null>(null)
+  
+  // Logout confirmation modal state
+  const [isLogoutConfirmOpen, setIsLogoutConfirmOpen] = useState(false)
   
   // Update active section when pathname changes (runs on both mount and navigation)
   useEffect(() => {
@@ -2888,8 +2892,8 @@ export default function MyAccountPage() {
                       <button
                         key={item.id}
                         onClick={() => {
-                          // Handle logout
-                          console.log('Logout clicked')
+                          // Open logout confirmation modal
+                          setIsLogoutConfirmOpen(true)
                         }}
                         className={`w-full grid items-center py-3 rounded-lg text-left transition-all duration-300 text-brand-black hover:bg-brand-gray-50 overflow-hidden px-4 ${
                           isSidebarCollapsed 
@@ -3232,7 +3236,7 @@ export default function MyAccountPage() {
                       View More
                     </button>
                   </div>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
                     {curatedProducts.map((product) => (
                       <ProductCard
                         key={product.id}
@@ -7955,6 +7959,19 @@ export default function MyAccountPage() {
           </div>
         </div>
       )}
+      
+      {/* Logout Confirmation Modal */}
+      <LogoutConfirmationModal
+        isOpen={isLogoutConfirmOpen}
+        onClose={() => setIsLogoutConfirmOpen(false)}
+        onConfirm={() => {
+          logout()
+          setIsLogoutConfirmOpen(false)
+          
+          // Redirect to homepage when logging out from account pages
+          router.push('/')
+        }}
+      />
     </div>
   )
 }

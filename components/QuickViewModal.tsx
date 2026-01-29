@@ -138,7 +138,7 @@ export default function QuickViewModal({
 
   const getBadgeColor = (badge: string) => {
     const colors: Record<string, string> = {
-      'new': 'bg-green-600',
+      'new': 'bg-gray-600',
       'best-seller': 'bg-brand-blue-500',
       'online-only': 'bg-purple-600',
       'limited-edition': 'bg-orange-600',

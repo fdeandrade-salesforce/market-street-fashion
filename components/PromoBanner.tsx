@@ -27,11 +27,11 @@ export default function PromoBanner({
       case 'primary':
         return 'bg-brand-blue-500'
       case 'gradient':
-        return 'bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600'
+        return 'bg-gradient-to-r from-gray-800 via-gray-900 to-black'
       case 'solid':
         return bgColor || 'bg-brand-gray-900'
       default:
-        return 'bg-gradient-to-r from-orange-400 via-orange-500 to-orange-600'
+        return 'bg-gradient-to-r from-gray-800 via-gray-900 to-black'
     }
   }
 

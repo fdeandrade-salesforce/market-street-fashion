@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect, useRef, useMemo } from 'react'
+import Link from 'next/link'
 import Navigation from '../../components/Navigation'
 import AnnouncementBar from '../../components/AnnouncementBar'
 import ProductCard from '../../components/ProductCard'
@@ -179,7 +180,7 @@ function CarouselSection({
         {/* Scrollable Container */}
         <div
           ref={scrollContainerRef}
-          className="flex gap-4 md:gap-6 overflow-x-auto scrollbar-hide scroll-smooth cursor-grab active:cursor-grabbing"
+          className="flex gap-2 md:gap-3 overflow-x-auto scrollbar-hide scroll-smooth cursor-grab active:cursor-grabbing"
           style={{
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
@@ -360,14 +361,21 @@ export default function NewReleasesPage() {
         <div className="layout-commerce py-8">
           {/* Breadcrumbs */}
           <nav className="flex items-center gap-2 text-sm text-brand-gray-500 mb-6">
-            {breadcrumbs.map((crumb, idx) => (
-              <React.Fragment key={idx}>
-                {idx > 0 && <span>&gt;</span>}
-                <a href={crumb.href} className="hover:text-brand-blue-500 transition-colors">
-                  {crumb.label}
-                </a>
-              </React.Fragment>
-            ))}
+            {breadcrumbs.map((crumb, idx) => {
+              const isLast = idx === breadcrumbs.length - 1
+              return (
+                <React.Fragment key={idx}>
+                  {idx > 0 && <span>&gt;</span>}
+                  {isLast ? (
+                    <span className="text-brand-black">{crumb.label}</span>
+                  ) : (
+                    <Link href={crumb.href} className="hover:text-brand-blue-500 transition-colors">
+                      {crumb.label}
+                    </Link>
+                  )}
+                </React.Fragment>
+              )
+            })}
           </nav>
           <div className="flex flex-col lg:flex-row gap-8 py-8">
             {/* Left Rail Navigation */}

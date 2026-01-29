@@ -173,7 +173,8 @@ export default function Hero({
 
   return (
     <section 
-      className="relative h-[400px] md:h-[500px] lg:h-[700px] xl:h-[85vh] overflow-hidden"
+      className="relative h-[100vh] md:h-[500px] lg:h-[700px] xl:h-[85vh] overflow-hidden"
+      style={{ minHeight: '100vh' }}
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
