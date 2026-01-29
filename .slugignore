@@ -1,19 +1,23 @@
 # Exclude large files and directories from Heroku slug
 # Heroku uses this file if using heroku/nodejs buildpack
 
-# Large product images (774MB) - should be served from CDN
-public/images/products/
-
-# Large support images and banners (132MB) - should be served from CDN  
-public/resources/
+# Images are now compressed (~93MB total) and kept in the slug
+# They fit well within the 500MB limit
 
 # Source resources folder (if exists)
 resources/
 
-# Build cache
+# Build cache (removed in heroku-postbuild.sh)
 .next/cache/
 tsconfig.tsbuildinfo
 
 # Development files
 *.md
 !README.md
+
+# Utility scripts (not needed in production)
+generate-ideogram-csv.ts
+compress-images.ts
+find-unused-assets.ts
+remove-unused-assets.ts
+unused-assets.json
