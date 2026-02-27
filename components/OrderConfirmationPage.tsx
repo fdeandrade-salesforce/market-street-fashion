@@ -459,7 +459,7 @@ export default function OrderConfirmationPage({ orderNumber }: OrderConfirmation
       <Navigation />
       
       <main className="flex-1 py-8 md:py-12">
-        <div className="layout-commerce space-y-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
           
           {/* Main Order Card - matches Order Details structure */}
           <div className="bg-white border border-brand-gray-200 rounded-xl shadow-sm p-6">

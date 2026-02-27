@@ -647,7 +647,7 @@ export default function CartPage() {
 
         {/* Free Shipping Progress */}
         <div className="bg-brand-gray-50 border-b border-brand-gray-200">
-          <div className="layout-commerce py-8">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             {calculations.freeShippingRemaining > 0 ? (
               <div className="space-y-2">
                 <p className="text-sm text-brand-black text-center">
@@ -676,7 +676,7 @@ export default function CartPage() {
           </div>
         </div>
 
-        <div className="layout-commerce py-4 md:py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
           {/* Breadcrumbs */}
           <nav className="flex items-center gap-2 text-sm text-brand-gray-500 mb-6" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-brand-blue-500 transition-colors">
@@ -929,7 +929,7 @@ export default function CartPage() {
         {/* New Arrivals Section - Full Width */}
         {newArrivals.length > 0 && (
           <div className="bg-brand-gray-50 mt-12 md:mt-16">
-            <div className="layout-commerce py-12 md:py-16">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
               <div className="mb-8 md:mb-10 text-center">
                 <h2 className="text-2xl md:text-3xl font-semibold text-brand-black tracking-tight mb-2">
                   New Arrivals
@@ -1776,18 +1776,21 @@ function CartSummary({
         </Link>
 
         {/* Payment Method Logos */}
-        <div className="flex items-center justify-center gap-2 pt-2">
-          <div className="w-12 h-8 border border-brand-gray-200 rounded-md overflow-hidden flex items-center justify-center bg-white p-1">
-            <img src="/images/payment/visa.svg" alt="Visa" className="w-full h-full object-contain" />
+        <div className="flex items-center justify-center gap-3 pt-2">
+          <div className="flex items-center">
+            <span className="text-xs text-brand-gray-500 font-semibold">VISA</span>
           </div>
-          <div className="w-12 h-8 border border-brand-gray-200 rounded-md overflow-hidden flex items-center justify-center bg-white p-1">
-            <img src="/images/payment/mastercard.svg" alt="Mastercard" className="w-full h-full object-contain" />
+          <div className="flex items-center">
+            <svg className="w-8 h-5" viewBox="0 0 40 24" fill="none">
+              <circle cx="12" cy="12" r="8" fill="#EB001B" />
+              <circle cx="28" cy="12" r="8" fill="#F79E1B" />
+            </svg>
           </div>
-          <div className="w-12 h-8 border border-brand-gray-200 rounded-md overflow-hidden flex items-center justify-center bg-white p-1">
-            <img src="/images/payment/amex.svg" alt="American Express" className="w-full h-full object-contain" />
+          <div className="flex items-center">
+            <span className="text-xs text-brand-gray-500 font-semibold">AMEX</span>
           </div>
-          <div className="w-12 h-8 border border-brand-gray-200 rounded-md overflow-hidden flex items-center justify-center bg-white p-1">
-            <img src="/images/payment/discover.svg" alt="Discover" className="w-full h-full object-contain" />
+          <div className="flex items-center">
+            <span className="text-xs text-brand-gray-500 font-semibold">DISCOVER</span>
           </div>
         </div>
       </div>

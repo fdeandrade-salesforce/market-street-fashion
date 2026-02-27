@@ -4,25 +4,25 @@
 
 /* ============================================================================
    DESIGN TOKENS - CSS Custom Properties
-   Following Market Street pattern with semantic tokens
+   Following Salesforce Foundations pattern with semantic tokens
    ============================================================================ */
 
 @layer base {
   :root {
     /* -- Border Radius Tokens -- */
-    --radius: 0;
-    --radius-sm: 0;
-    --radius-md: 0;
-    --radius-lg: 0;
-    --radius-xl: 0;
-    --radius-2xl: 0;
-    --radius-3xl: 0;
-    --radius-full: 0;
-    --radius-button: 0;
-    --radius-card: 0;
-    --radius-modal: 0;
-    --radius-badge: 0;
-    --radius-input: 2px;
+    --radius: 0.5rem;
+    --radius-sm: 0.25rem;
+    --radius-md: 0.375rem;
+    --radius-lg: 0.5rem;
+    --radius-xl: 0.75rem;
+    --radius-2xl: 1rem;
+    --radius-3xl: 1.5rem;
+    --radius-full: 9999px;
+    --radius-button: var(--radius-lg);
+    --radius-card: var(--radius-xl);
+    --radius-modal: var(--radius-2xl);
+    --radius-badge: var(--radius-md);
+    --radius-input: var(--radius-lg);
 
     /* -- Core Semantic Colors -- */
     --background: oklch(1 0 0);
@@ -31,7 +31,7 @@
     --card-foreground: oklch(0.13 0 0);
     --popover: oklch(1 0 0);
     --popover-foreground: oklch(0.13 0 0);
-    --primary: oklch(0 0 0);
+    --primary: oklch(0.59 0.2 264);
     --primary-foreground: oklch(1 0 0);
     --secondary: oklch(0.96 0 0);
     --secondary-foreground: oklch(0.13 0 0);
@@ -39,37 +39,37 @@
     --muted-foreground: oklch(0.45 0 0);
     --accent: oklch(0.96 0 0);
     --accent-foreground: oklch(0.13 0 0);
-    --destructive: oklch(0 0 0);
+    --destructive: oklch(0.55 0.22 27);
     --destructive-foreground: oklch(1 0 0);
     --border: oklch(0.91 0 0);
     --input: oklch(0.91 0 0);
-    --ring: oklch(0 0 0);
+    --ring: oklch(0.59 0.2 264);
 
     /* -- Status Colors -- */
-    --success: oklch(0 0 0);
+    --success: oklch(0.55 0.16 145);
     --success-foreground: oklch(1 0 0);
-    --success-light: oklch(0.96 0 0);
-    --warning: oklch(0 0 0);
-    --warning-foreground: oklch(1 0 0);
-    --warning-light: oklch(0.96 0 0);
-    --info: oklch(0 0 0);
+    --success-light: oklch(0.94 0.04 145);
+    --warning: oklch(0.75 0.15 85);
+    --warning-foreground: oklch(0.25 0 0);
+    --warning-light: oklch(0.96 0.04 85);
+    --info: oklch(0.59 0.2 264);
     --info-foreground: oklch(1 0 0);
-    --info-light: oklch(0.96 0 0);
-    --error: oklch(0 0 0);
+    --info-light: oklch(0.95 0.03 264);
+    --error: oklch(0.55 0.22 27);
     --error-foreground: oklch(1 0 0);
-    --error-light: oklch(0.96 0 0);
+    --error-light: oklch(0.95 0.04 27);
 
     /* -- Brand Blue Palette -- */
-    --brand-blue-50: oklch(0.98 0 0);
-    --brand-blue-100: oklch(0.96 0 0);
-    --brand-blue-200: oklch(0.93 0 0);
-    --brand-blue-300: oklch(0.88 0 0);
-    --brand-blue-400: oklch(0.74 0 0);
-    --brand-blue-500: oklch(0 0 0);
-    --brand-blue-600: oklch(0 0 0);
-    --brand-blue-700: oklch(0.1 0 0);
-    --brand-blue-800: oklch(0.26 0 0);
-    --brand-blue-900: oklch(0.13 0 0);
+    --brand-blue-50: oklch(0.97 0.02 264);
+    --brand-blue-100: oklch(0.93 0.04 264);
+    --brand-blue-200: oklch(0.88 0.08 264);
+    --brand-blue-300: oklch(0.78 0.12 264);
+    --brand-blue-400: oklch(0.68 0.16 264);
+    --brand-blue-500: oklch(0.59 0.2 264);
+    --brand-blue-600: oklch(0.52 0.2 264);
+    --brand-blue-700: oklch(0.46 0.18 264);
+    --brand-blue-800: oklch(0.42 0.16 264);
+    --brand-blue-900: oklch(0.38 0.14 264);
 
     /* -- Brand Gray Palette -- */
     --brand-gray-50: oklch(0.98 0 0);
@@ -101,45 +101,45 @@
     --payment-googlepay-gray: oklch(0.96 0 0);
 
     /* -- Star Rating Colors -- */
-    --star-filled: oklch(0.13 0 0);
+    --star-filled: oklch(0.80 0.16 85);
     --star-empty: oklch(0.88 0 0);
 
     /* -- Product Badge Colors -- */
-    --badge-new: oklch(0 0 0);
+    --badge-new: oklch(0.55 0.16 145);
     --badge-new-foreground: oklch(1 0 0);
-    --badge-bestseller: oklch(0 0 0);
+    --badge-bestseller: oklch(0.59 0.2 264);
     --badge-bestseller-foreground: oklch(1 0 0);
-    --badge-online-only: oklch(0.26 0 0);
+    --badge-online-only: oklch(0.55 0.2 300);
     --badge-online-only-foreground: oklch(1 0 0);
-    --badge-limited: oklch(0.1 0 0);
+    --badge-limited: oklch(0.65 0.18 50);
     --badge-limited-foreground: oklch(1 0 0);
-    --badge-sale: oklch(0 0 0);
+    --badge-sale: oklch(0.59 0.2 264);
     --badge-sale-foreground: oklch(1 0 0);
-    --badge-out-of-stock: oklch(0.26 0 0);
+    --badge-out-of-stock: oklch(0.55 0.22 27);
     --badge-out-of-stock-foreground: oklch(1 0 0);
 
     /* -- Loyalty Badge Colors -- */
-    --loyalty-platinum: oklch(0.26 0 0);
-    --loyalty-platinum-light: oklch(0.96 0 0);
-    --loyalty-gold: oklch(0.38 0 0);
-    --loyalty-gold-light: oklch(0.96 0 0);
+    --loyalty-platinum: oklch(0.55 0.2 300);
+    --loyalty-platinum-light: oklch(0.94 0.04 300);
+    --loyalty-gold: oklch(0.75 0.15 85);
+    --loyalty-gold-light: oklch(0.96 0.04 85);
     --loyalty-silver: oklch(0.62 0 0);
     --loyalty-silver-light: oklch(0.96 0 0);
-    --loyalty-bronze: oklch(0.46 0 0);
-    --loyalty-bronze-light: oklch(0.96 0 0);
+    --loyalty-bronze: oklch(0.65 0.18 50);
+    --loyalty-bronze-light: oklch(0.96 0.04 50);
 
     /* -- Shadow Tokens -- */
-    --shadow-xs: 0 1px 2px 0 oklch(0 0 0 / 3%);
-    --shadow-sm: 0 1px 2px 0 oklch(0 0 0 / 3%);
-    --shadow-md: 0 2px 4px 0 oklch(0 0 0 / 5%);
-    --shadow-lg: 0 4px 6px -1px oklch(0 0 0 / 8%);
-    --shadow-xl: 0 8px 10px -2px oklch(0 0 0 / 10%);
-    --shadow-2xl: 0 12px 16px -4px oklch(0 0 0 / 12%);
+    --shadow-xs: 0 1px 2px 0 oklch(0 0 0 / 5%);
+    --shadow-sm: 0 1px 3px 0 oklch(0 0 0 / 10%), 0 1px 2px -1px oklch(0 0 0 / 10%);
+    --shadow-md: 0 4px 6px -1px oklch(0 0 0 / 10%), 0 2px 4px -2px oklch(0 0 0 / 10%);
+    --shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 10%), 0 4px 6px -4px oklch(0 0 0 / 10%);
+    --shadow-xl: 0 20px 25px -5px oklch(0 0 0 / 10%), 0 8px 10px -6px oklch(0 0 0 / 10%);
+    --shadow-2xl: 0 25px 50px -12px oklch(0 0 0 / 25%);
     --shadow-card: var(--shadow-sm);
-    --shadow-card-hover: var(--shadow-md);
-    --shadow-dropdown: var(--shadow-md);
-    --shadow-modal: var(--shadow-lg);
-    --shadow-button: none;
+    --shadow-card-hover: var(--shadow-lg);
+    --shadow-dropdown: var(--shadow-lg);
+    --shadow-modal: var(--shadow-xl);
+    --shadow-button: var(--shadow-sm);
 
     /* -- Z-Index Scale -- */
     --z-dropdown: 50;
@@ -172,27 +172,27 @@
     /* -- Agentic Experience Tokens (Sidebar/Chart pattern) -- */
     --agentic: oklch(0.98 0 0);
     --agentic-foreground: oklch(0.13 0 0);
-    --agentic-primary: oklch(0 0 0);
+    --agentic-primary: oklch(0.59 0.2 264);
     --agentic-primary-foreground: oklch(1 0 0);
-    --agentic-accent: oklch(0.96 0 0);
+    --agentic-accent: oklch(0.96 0.01 264);
     --agentic-accent-foreground: oklch(0.13 0 0);
     --agentic-border: oklch(0.91 0 0);
-    --agentic-ring: oklch(0 0 0);
+    --agentic-ring: oklch(0.59 0.2 264);
     --agentic-muted: oklch(0.96 0 0);
     --agentic-muted-foreground: oklch(0.45 0 0);
     --agentic-input: oklch(0.96 0 0);
 
-    /* -- Header Tokens (negative/dark: black bg, white text) -- */
-    --header: oklch(0.14 0 0);
-    --header-foreground: oklch(0.98 0 0);
-    --header-primary: oklch(0.98 0 0);
-    --header-primary-foreground: oklch(0 0 0);
-    --header-accent: oklch(0.20 0 0);
-    --header-accent-foreground: oklch(0.98 0 0);
-    --header-muted: oklch(0.20 0 0);
-    --header-muted-foreground: oklch(0.62 0 0);
-    --header-border: oklch(1 0 0 / 10%);
-    --header-ring: oklch(0.62 0 0);
+    /* -- Header Tokens -- */
+    --header: oklch(1 0 0);
+    --header-foreground: oklch(0.13 0 0);
+    --header-primary: oklch(0.59 0.2 264);
+    --header-primary-foreground: oklch(1 0 0);
+    --header-accent: oklch(0.96 0 0);
+    --header-accent-foreground: oklch(0.13 0 0);
+    --header-muted: oklch(0.96 0 0);
+    --header-muted-foreground: oklch(0.46 0 0);
+    --header-border: oklch(0.91 0 0);
+    --header-ring: oklch(0.59 0.2 264);
 
     /* -- Component Spacing Tokens -- */
     --spacing-modal-padding: 1rem;
@@ -219,19 +219,19 @@
     }
   }
 
-  /* Dark mode overrides (light header when dark mode) */
+  /* Dark mode overrides */
   .dark {
-    /* -- Header Tokens (light mode for dark theme) -- */
-    --header: oklch(1 0 0);
-    --header-foreground: oklch(0.13 0 0);
-    --header-primary: oklch(0 0 0);
-    --header-primary-foreground: oklch(1 0 0);
-    --header-accent: oklch(0.96 0 0);
-    --header-accent-foreground: oklch(0.13 0 0);
-    --header-muted: oklch(0.96 0 0);
-    --header-muted-foreground: oklch(0.46 0 0);
-    --header-border: oklch(0.91 0 0);
-    --header-ring: oklch(0 0 0);
+    /* -- Header Tokens (dark mode) -- */
+    --header: oklch(0.14 0 0);
+    --header-foreground: oklch(0.98 0 0);
+    --header-primary: oklch(0.98 0 0);
+    --header-primary-foreground: oklch(0 0 0);
+    --header-accent: oklch(0.20 0 0);
+    --header-accent-foreground: oklch(0.98 0 0);
+    --header-muted: oklch(0.20 0 0);
+    --header-muted-foreground: oklch(0.62 0 0);
+    --header-border: oklch(1 0 0 / 10%);
+    --header-ring: oklch(0.62 0 0);
   }
 
   * {
@@ -240,36 +240,18 @@
 
   body {
     @apply bg-background text-foreground antialiased;
-    font-family: var(--font-sen), 'Sen', -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+      'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 
-  h1, h2 {
-    @apply font-semibold tracking-tight;
-  }
-  h3, h4, h5, h6 {
-    @apply font-medium tracking-tight;
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-normal tracking-tight;
   }
 }
 
 @layer components {
-  /* ============================================================================
-     LAYOUT - Gutter system (matches original Market Street)
-     Mobile: 16px, Tablet: 24px, Desktop: 32px, Large Desktop: 40px
-     ============================================================================ */
-  .layout-gutter {
-    @apply px-4 sm:px-6 lg:px-8 xl:px-10;
-  }
-
-  .layout-commerce {
-    @apply layout-gutter mx-auto;
-  }
-
-  .layout-editorial {
-    @apply layout-gutter max-w-7xl mx-auto;
-  }
-
   /* ============================================================================
      BUTTON COMPONENTS
      ============================================================================ */
@@ -298,7 +280,7 @@
     box-shadow: var(--shadow-button);
   }
   .btn-outline:hover {
-    background-color: oklch(0.98 0 0);
+    background-color: oklch(0.59 0.2 264 / 5%);
   }
 
   /* ============================================================================
@@ -348,8 +330,8 @@
      ============================================================================ */
   .announcement-bar {
     @apply text-sm py-2 px-4;
-    background-color: var(--brand-gray-50);
-    color: var(--brand-black);
+    background-color: var(--brand-blue-100);
+    color: var(--brand-blue-900);
   }
 
   /* ============================================================================
@@ -649,15 +631,15 @@ html {
 @keyframes anchorPulse {
   0% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 oklch(0 0 0 / 10%);
+    box-shadow: 0 0 0 0 oklch(0.59 0.2 264 / 40%);
   }
   50% {
     transform: scale(1.02);
-    box-shadow: 0 0 0 8px oklch(0 0 0 / 0%);
+    box-shadow: 0 0 0 8px oklch(0.59 0.2 264 / 0%);
   }
   100% {
     transform: scale(1);
-    box-shadow: 0 0 0 0 oklch(0 0 0 / 0%);
+    box-shadow: 0 0 0 0 oklch(0.59 0.2 264 / 0%);
   }
 }
 

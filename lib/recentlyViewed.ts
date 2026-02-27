@@ -2,7 +2,7 @@
 
 import { Product } from '../components/ProductListingPage'
 
-const RECENTLY_VIEWED_KEY = 'market_street_recently_viewed'
+const RECENTLY_VIEWED_KEY = 'sfdc_foundations_recently_viewed'
 const MAX_ITEMS = 10
 
 /**

@@ -1,6 +1,10 @@
-# Market Street
+# NEXT Design System
 
-A modern retail storefront built with Next.js, TypeScript, and Tailwind CSS.
+This project implements a design from Figma.
+
+## Design Reference
+
+Figma URL: https://www.figma.com/design/thOqUebuMDvygZxONEWLeB/NEXT-Design-System?node-id=12174-50028&m=dev
 
 ## Setup
 
@@ -16,17 +20,16 @@ A modern retail storefront built with Next.js, TypeScript, and Tailwind CSS.
 
 3. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Deployment
+## Implementation Status
 
-Configured for Heroku deployment:
+The project structure is set up with Next.js, TypeScript, and Tailwind CSS. To complete the implementation, please provide:
 
-```bash
-git push heroku main
-```
+- Screenshot of the Figma design
+- Design specifications (colors, fonts, spacing, etc.)
+- Component descriptions
+- Any exported assets from Figma
 
-## Tech Stack
+Once provided, the design will be implemented to match the Figma specifications.
 
-- **Framework:** Next.js 14
-- **Language:** TypeScript
-- **Styling:** Tailwind CSS with design tokens
-- **Data:** Mock data layer with optional Supabase integration
+# next-foundations
+# next-foundations

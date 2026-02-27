@@ -1499,12 +1499,12 @@ export default function CheckoutPage() {
       <div className="min-h-screen bg-brand-gray-50">
         {/* Simple Header */}
         <header className="bg-white border-b border-brand-gray-200 py-4">
-          <div className="layout-commerce">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <Link href="/" className="flex-shrink-0 flex items-center gap-2">
               <img 
                 src="/images/logo.svg" 
-                alt="Market Street" 
-                className="h-4 w-auto"
+                alt="Salesforce Foundations" 
+                className="h-10 w-auto"
               />
             </Link>
           </div>
@@ -1528,12 +1528,12 @@ export default function CheckoutPage() {
     <div className="min-h-screen flex flex-col bg-white">
       {/* Header */}
       <header className="bg-white border-b border-brand-gray-200 py-4 sticky top-0 z-50">
-        <div className="layout-commerce flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <Link href="/" className="flex-shrink-0 flex items-center gap-2">
             <img 
               src="/images/logo.svg" 
-              alt="Market Street" 
-              className="h-4 w-auto"
+              alt="Salesforce Foundations" 
+              className="h-10 w-auto"
             />
           </Link>
           
@@ -1550,14 +1550,14 @@ export default function CheckoutPage() {
 
       {/* Page Title */}
       <div className="bg-white border-b border-brand-gray-200">
-        <div className="layout-commerce py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <h1 className="text-2xl sm:text-3xl font-bold text-brand-black tracking-tight">Checkout</h1>
         </div>
       </div>
 
       {/* Main Content */}
       <main className="flex-1">
-        <div className="layout-commerce py-4 md:py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-8">
           <div className="flex flex-col lg:flex-row gap-6 lg:gap-11">
           {/* Left Column - Checkout Steps */}
           <div className="flex-1 space-y-4 md:space-y-6">
@@ -2520,9 +2520,9 @@ export default function CheckoutPage() {
                           I wish to receive product updates, news and promotions from Market Street.
                         </p>
                         <p className="text-xs text-brand-gray-500 mt-1">
-                          By clicking below and placing your order, you agree (i) to make your purchase from Market Street as merchant of record for this transaction, subject to Market Street&apos;s{' '}
-                          <Link href="/terms" className="text-brand-blue-500 hover:underline">Terms & Conditions</Link>; (ii) that your information will be handled by Market Street in accordance with the{' '}
-                        <Link href="/privacy" className="text-brand-blue-500 hover:underline">Market Street Privacy Policy</Link>.
+                          By clicking below and placing your order, you agree (i) to make your purchase from Salesforce as merchant of record for this transaction, subject to Salesforce&apos;s{' '}
+                          <Link href="/terms" className="text-brand-blue-500 hover:underline">Terms & Conditions</Link>; (ii) that your information will be handled by Salesforce in accordance with the{' '}
+                          <Link href="/privacy" className="text-brand-blue-500 hover:underline">Salesforce Privacy Policy</Link>.
                         </p>
                       </div>
                     </label>
@@ -2602,9 +2602,9 @@ export default function CheckoutPage() {
 
       {/* Footer */}
       <footer className="border-t border-brand-gray-200 bg-white">
-        <div className="layout-commerce py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           <div className="text-sm text-brand-gray-600 text-center">
-            © Market Street 1818 Cornwall Ave, Vancouver BC V5J 1C7
+            © Salesforce Foundations 1818 Cornwall Ave, Vancouver BC V5J 1C7
           </div>
         </div>
       </footer>

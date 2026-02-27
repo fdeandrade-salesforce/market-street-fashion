@@ -9,7 +9,6 @@ import PromoBanner from '../../components/PromoBanner'
 import EditorialCard from '../../components/EditorialCard'
 import { getProductsBySubcategory } from '../../lib/products'
 import { Product } from '../../components/ProductListingPage'
-import { getProductImageUrl } from '../../src/data/mock/products'
 
 export default function WomenPage() {
   const [products, setProducts] = useState<Product[]>([])
@@ -30,7 +29,7 @@ export default function WomenPage() {
         columns: 'full' as const,
         content: (
           <PromoBanner
-            title="New Season: The Edit"
+            title="New Collection: Geometric Forms"
             subtitle="Limited Time Offer"
             ctaText="Shop Collection"
             variant="gradient"
@@ -44,8 +43,8 @@ export default function WomenPage() {
           <EditorialCard
             title="Premium Collection"
             subtitle="Signature Series"
-            description="Discover our curated selection of contemporary fashion designed for the modern woman."
-            image={getProductImageUrl('silk-midi-dress', 2)}
+            description="Discover our curated selection of premium geometric designs crafted for the modern woman."
+            image="/images/hero/hero-collection.png"
             ctaText="Explore Premium"
             variant="image-background"
           />

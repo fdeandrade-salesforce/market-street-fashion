@@ -82,7 +82,7 @@ export default function ErrorPageWithCrossSell({
       />
       <Navigation />
       
-      <main className="flex-1 flex flex-col layout-gutter">
+      <main className="flex-1 flex flex-col px-4 sm:px-6 lg:px-8">
         {/* Error content - centered */}
         <div className="flex-1 flex items-center justify-center py-12">
           <div className="max-w-2xl mx-auto text-center">

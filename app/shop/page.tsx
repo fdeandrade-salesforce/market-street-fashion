@@ -8,7 +8,6 @@ import PromoBanner from '../../components/PromoBanner'
 import EditorialCard from '../../components/EditorialCard'
 import { getAllProducts } from '../../lib/products'
 import { Product } from '../../components/ProductListingPage'
-import { getProductImageUrl } from '../../src/data/mock/products'
 
 export default function ShopPage() {
   const [products, setProducts] = useState<Product[]>([])
@@ -44,7 +43,7 @@ export default function ShopPage() {
             title="Heritage Line"
             subtitle="Exclusive Collection"
             description="Timeless sophistication meets modern craftsmanship"
-            image={getProductImageUrl('tailored-blazer', 2)}
+            image="/images/hero/hero-collection.png"
             ctaText="Shop Now"
             variant="image-background"
           />
@@ -59,7 +58,7 @@ export default function ShopPage() {
       <ProductListingPage 
         products={products} 
         category="Shop"
-        headerImage={getProductImageUrl('wide-leg-trousers', 2)}
+        headerImage="/images/hero/hero-collection.png"
         contentSlots={contentSlots}
       />
       <Footer />

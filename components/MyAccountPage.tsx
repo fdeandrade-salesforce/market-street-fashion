@@ -463,7 +463,7 @@ function OrderDetailContent({ orderNumber, showToastMessage }: { orderNumber: st
                   const canCancelItem = order.canCancel && order.status !== 'Cancelled'
                   const bundleTotal = items.reduce((sum, i) => sum + (i.price ?? 0) * (i.quantity ?? 1), 0)
                   const bundleOriginalTotal = items.reduce((sum, i) => sum + (i.originalPrice ?? i.price ?? 0) * (i.quantity ?? 1), 0)
-                  const bundleImageSrc = items[0]?.image ?? '/images/placeholder.png'
+                  const bundleImageSrc = setId === 'set-1' ? '/images/products/bundle-1.png' : setId === 'set-2' ? '/images/products/bundle-2.png' : setId === 'set-3' ? '/images/products/bundle-3.png' : items[0]?.image ?? '/images/placeholder.png'
 
                   if (setId === 'default') {
                     const canReviewDefaultItem = defaultGroup?.status === 'Delivered' || order.status === 'Delivered' || order.status === 'Picked Up'
@@ -1884,7 +1884,7 @@ export default function MyAccountPage() {
   const [showPreferredStoreHours, setShowPreferredStoreHours] = useState(true) // Default expanded per UX requirement
   const [preferredStoreForPickup, setPreferredStoreForPickup] = useState({
     id: '1',
-    name: 'Market Street - San Francisco',
+    name: 'Salesforce Foundations - San Francisco',
     address: '415 Mission Street, San Francisco, CA 94105',
     hours: 'Monday: 9 AM - 9 PM\nTuesday: 9 AM - 9 PM\nWednesday: 9 AM - 9 PM\nThursday: 9 AM - 9 PM\nFriday: 9 AM - 10 PM\nSaturday: 10 AM - 10 PM\nSunday: 11 AM - 7 PM',
   })
@@ -1976,14 +1976,14 @@ export default function MyAccountPage() {
   }, [activeSection, pathname])
 
   const [interestsForm, setInterestsForm] = useState({
-    designStyles: ['Casual', 'Classic'],
+    designStyles: ['Minimalist', 'Geometric'],
     roomTypes: ['Living Room', 'Office'],
     materials: ['Ceramic'],
     aesthetics: ['Modern'],
   })
 
   const [preferencesForm, setPreferencesForm] = useState({
-    productCategories: ['Dresses', 'Outerwear'],
+    productCategories: ['Geometric', 'Sets'],
     shoppingPreferences: 'unisex' as 'womens' | 'mens' | 'unisex',
   })
 
@@ -2966,7 +2966,7 @@ export default function MyAccountPage() {
       <AnnouncementBar />
       <Navigation />
 
-      <main className="layout-commerce py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex flex-col lg:flex-row gap-6 lg:gap-8">
           {/* Left Sidebar - Account Navigation */}
           <aside className={`transition-all duration-300 ease-in-out flex-shrink-0 w-full lg:w-auto ${
@@ -3818,13 +3818,13 @@ export default function MyAccountPage() {
                           onClick={() => {
                             setIsEditingInterestsAndPreferences(false)
                             setInterestsForm({
-                              designStyles: ['Casual', 'Classic'],
+                              designStyles: ['Minimalist', 'Geometric'],
                               roomTypes: ['Living Room', 'Office'],
                               materials: ['Ceramic'],
                               aesthetics: ['Modern'],
                             })
                             setPreferencesForm({
-                              productCategories: ['Dresses', 'Outerwear'],
+                              productCategories: ['Geometric', 'Sets'],
                               shoppingPreferences: 'unisex',
                             })
                             setMeasuresForm({
@@ -4497,7 +4497,7 @@ export default function MyAccountPage() {
                     {/* Legal Disclaimer */}
                     <div className="pt-4 border-t border-brand-gray-200">
                       <p className="text-sm text-brand-gray-700 leading-relaxed">
-                        By enabling these communication preferences, you agree to receive marketing communications from Market Street, including exclusive offers, latest product info, news about upcoming collections and more. Please see our{' '}
+                        By enabling these communication preferences, you agree to receive marketing communications from Salesforce Foundations, including exclusive offers, latest product info, news about upcoming collections and more. Please see our{' '}
                         <a href="/terms" className="text-brand-blue-500 hover:text-brand-blue-600 hover:underline">Terms & Conditions</a> and{' '}
                         <a href="/privacy" className="text-brand-blue-500 hover:text-brand-blue-600 hover:underline">Privacy Policy</a> for more details.
                       </p>
@@ -6312,7 +6312,7 @@ export default function MyAccountPage() {
                     <input type="radio" name="return-method" value="store" className="text-brand-blue-500" />
                     <div>
                       <p className="text-sm font-medium text-brand-black">Return to store</p>
-                      <p className="text-xs text-brand-gray-600">Bring items to any Market Street location</p>
+                      <p className="text-xs text-brand-gray-600">Bring items to any Salesforce Foundations location</p>
                     </div>
                   </label>
                 </div>
@@ -7296,12 +7296,12 @@ export default function MyAccountPage() {
                 <div className="space-y-4">
                   {(() => {
                     const allOptions = interestsModalCategory === 'designStyles' 
-                      ? ['Casual', 'Classic', 'Bohemian', 'Modern', 'Contemporary', 'Sporty', 'Formal', 'Relaxed']
+                      ? ['Minimalist', 'Geometric', 'Abstract', 'Modern', 'Contemporary', 'Scandinavian', 'Bauhaus', 'Organic']
                       : interestsModalCategory === 'roomTypes'
                       ? ['Living Room', 'Bedroom', 'Office', 'Studio', 'Gallery', 'Kitchen', 'Dining', 'Entryway']
                       : interestsModalCategory === 'materials'
                       ? ['Ceramic', 'Metal', 'Wood', 'Glass', 'Stone', 'Resin', 'Concrete', 'Marble']
-                      : ['Casual', 'Formal', 'Sporty', 'Bohemian', 'Classic', 'Modern', 'Elegant', 'Relaxed']
+                      : ['Minimalist', 'Bold', 'Organic', 'Architectural', 'Sculptural', 'Industrial', 'Elegant', 'Playful']
                     
                     const currentSelected = interestsModalCategory === 'designStyles'
                       ? interestsForm.designStyles
@@ -7416,7 +7416,7 @@ export default function MyAccountPage() {
               {/* Modal Content */}
               <div className="flex-1 overflow-y-auto p-6">
                 <div className="space-y-4">
-                  {['Dresses', 'Outerwear', 'Tops', 'Shoes', 'Bags'].map((category) => {
+                  {['Geometric', 'Abstract', 'Modular', 'Premium', 'Sets'].map((category) => {
                     const isSelected = preferencesForm.productCategories.includes(category)
                     return (
                       <label

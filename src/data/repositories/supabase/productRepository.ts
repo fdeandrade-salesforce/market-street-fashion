@@ -211,9 +211,9 @@ export class SupabaseProductRepository implements IProductRepository {
 
       // Category mapping (same as mock)
       const categoryMappings: Record<string, string[]> = {
-        'Women': ['New In', 'Outerwear', 'Dresses', 'Tops', 'Knitwear', 'Shirts', 'Jeans', 'Trousers', 'Skirts', 'Blazers', 'Activewear', 'Shoes', 'Bags', 'Accessories'],
-        'Men': ['New In', 'Outerwear', 'Jackets & Blazers', 'Shirts', 'T-Shirts', 'Knitwear', 'Jeans', 'Trousers', 'Suits', 'Shoes', 'Bags', 'Accessories'],
-        'Kids': ['Girls', 'Boys'],
+        'Women': ['Geometric', 'Abstract', 'Premium'],
+        'Men': ['Modular', 'Sets'],
+        'Accessories': ['Geometric', 'Abstract', 'Modular'],
       }
 
       const allowedCategories = categoryMappings[category] || []
@@ -340,9 +340,9 @@ export class SupabaseProductRepository implements IProductRepository {
   ): Promise<Product[]> {
     try {
       const categoryMappings: Record<string, string[]> = {
-        'Women': ['New In', 'Outerwear', 'Dresses', 'Tops', 'Knitwear', 'Shirts', 'Jeans', 'Trousers', 'Skirts', 'Blazers', 'Activewear', 'Shoes', 'Bags', 'Accessories'],
-        'Men': ['New In', 'Outerwear', 'Jackets & Blazers', 'Shirts', 'T-Shirts', 'Knitwear', 'Jeans', 'Trousers', 'Suits', 'Shoes', 'Bags', 'Accessories'],
-        'Kids': ['Girls', 'Boys'],
+        'Women': ['Geometric', 'Abstract', 'Premium'],
+        'Men': ['Modular', 'Sets'],
+        'Accessories': ['Geometric', 'Abstract', 'Modular'],
       }
 
       const allowedCategories = categoryMappings[category] || []
@@ -614,7 +614,7 @@ export class SupabaseProductRepository implements IProductRepository {
     return {
       id: row.id,
       name: row.name,
-      brand: row.brand || 'Market Street',
+      brand: row.brand || 'Salesforce Foundations',
       price: parseFloat(row.price),
       originalPrice: row.original_price ? parseFloat(row.original_price) : undefined,
       image: row.image,
@@ -657,7 +657,7 @@ export class SupabaseProductRepository implements IProductRepository {
   /**
    * Deduplicate products by name for PLP views
    * This ensures only one product card appears per product family
-   * (e.g., Ribbed Tank Top appears once, not once per color variant)
+   * (e.g., Pure Cube appears once, not once per color variant)
    * 
    * The method also consolidates color information from all variants
    */

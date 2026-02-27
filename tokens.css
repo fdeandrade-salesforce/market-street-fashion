@@ -155,7 +155,7 @@
 
 /*---break---*/
 :root {
-  --radius: 0;
+  --radius: 0.625rem;
 
   /* -- Core Semantic Colors -- */
   --background: oklch(1 0 0);
@@ -164,7 +164,7 @@
   --card-foreground: oklch(0.13 0 0);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.13 0 0);
-  --primary: oklch(0 0 0);
+  --primary: oklch(0.59 0.2 264);
   --primary-foreground: oklch(1 0 0);
   --secondary: oklch(0.96 0 0);
   --secondary-foreground: oklch(0.13 0 0);
@@ -172,33 +172,33 @@
   --muted-foreground: oklch(0.45 0 0);
   --accent: oklch(0.96 0 0);
   --accent-foreground: oklch(0.13 0 0);
-  --destructive: oklch(0 0 0);
+  --destructive: oklch(0.55 0.22 27);
   --destructive-foreground: oklch(1 0 0);
   --border: oklch(0.91 0 0);
   --input: oklch(0.91 0 0);
-  --ring: oklch(0 0 0);
+  --ring: oklch(0.59 0.2 264);
 
   /* -- Status Colors -- */
-  --success: oklch(0 0 0);
+  --success: oklch(0.55 0.16 145);
   --success-foreground: oklch(1 0 0);
-  --warning: oklch(0 0 0);
-  --warning-foreground: oklch(1 0 0);
-  --info: oklch(0 0 0);
+  --warning: oklch(0.75 0.15 85);
+  --warning-foreground: oklch(0.25 0 0);
+  --info: oklch(0.59 0.2 264);
   --info-foreground: oklch(1 0 0);
-  --error: oklch(0 0 0);
+  --error: oklch(0.55 0.22 27);
   --error-foreground: oklch(1 0 0);
 
   /* -- Brand Blue Palette -- */
-  --brand-blue-50: oklch(0.98 0 0);
-  --brand-blue-100: oklch(0.96 0 0);
-  --brand-blue-200: oklch(0.93 0 0);
-  --brand-blue-300: oklch(0.88 0 0);
-  --brand-blue-400: oklch(0.74 0 0);
-  --brand-blue-500: oklch(0 0 0);
-  --brand-blue-600: oklch(0 0 0);
-  --brand-blue-700: oklch(0.1 0 0);
-  --brand-blue-800: oklch(0.26 0 0);
-  --brand-blue-900: oklch(0.13 0 0);
+  --brand-blue-50: oklch(0.97 0.02 264);
+  --brand-blue-100: oklch(0.93 0.04 264);
+  --brand-blue-200: oklch(0.88 0.08 264);
+  --brand-blue-300: oklch(0.78 0.12 264);
+  --brand-blue-400: oklch(0.68 0.16 264);
+  --brand-blue-500: oklch(0.59 0.2 264);
+  --brand-blue-600: oklch(0.52 0.2 264);
+  --brand-blue-700: oklch(0.46 0.18 264);
+  --brand-blue-800: oklch(0.42 0.16 264);
+  --brand-blue-900: oklch(0.38 0.14 264);
 
   /* -- Brand Gray Palette -- */
   --brand-gray-50: oklch(0.98 0 0);
@@ -230,24 +230,24 @@
   --payment-googlepay-gray: oklch(0.96 0 0);
 
   /* -- Product Badge Colors -- */
-  --badge-new: oklch(0 0 0);
+  --badge-new: oklch(0.55 0.16 145);
   --badge-new-foreground: oklch(1 0 0);
-  --badge-bestseller: oklch(0 0 0);
+  --badge-bestseller: oklch(0.59 0.2 264);
   --badge-bestseller-foreground: oklch(1 0 0);
-  --badge-online-only: oklch(0.26 0 0);
+  --badge-online-only: oklch(0.55 0.2 300);
   --badge-online-only-foreground: oklch(1 0 0);
-  --badge-limited: oklch(0.1 0 0);
+  --badge-limited: oklch(0.65 0.18 50);
   --badge-limited-foreground: oklch(1 0 0);
-  --badge-sale: oklch(0 0 0);
+  --badge-sale: oklch(0.59 0.2 264);
   --badge-sale-foreground: oklch(1 0 0);
-  --badge-out-of-stock: oklch(0.26 0 0);
+  --badge-out-of-stock: oklch(0.55 0.22 27);
   --badge-out-of-stock-foreground: oklch(1 0 0);
 
   /* -- Loyalty Badge Colors -- */
-  --loyalty-platinum: oklch(0.26 0 0);
-  --loyalty-gold: oklch(0.38 0 0);
+  --loyalty-platinum: oklch(0.55 0.2 300);
+  --loyalty-gold: oklch(0.75 0.15 85);
   --loyalty-silver: oklch(0.62 0 0);
-  --loyalty-bronze: oklch(0.46 0 0);
+  --loyalty-bronze: oklch(0.65 0.18 50);
 
   /* -- Chart Colors (monochromatic) -- */
   --chart-1: oklch(0.13 0 0);
@@ -259,46 +259,46 @@
   /* -- Sidebar Colors (for future use) -- */
   --sidebar: oklch(0.98 0 0);
   --sidebar-foreground: oklch(0.13 0 0);
-  --sidebar-primary: oklch(0 0 0);
+  --sidebar-primary: oklch(0.59 0.2 264);
   --sidebar-primary-foreground: oklch(1 0 0);
   --sidebar-accent: oklch(0.96 0 0);
   --sidebar-accent-foreground: oklch(0.13 0 0);
   --sidebar-border: oklch(0.91 0 0);
-  --sidebar-ring: oklch(0 0 0);
+  --sidebar-ring: oklch(0.59 0.2 264);
 
   /* -- Agentic Experience Tokens -- */
   --agentic: oklch(0.98 0 0);
   --agentic-foreground: oklch(0.13 0 0);
-  --agentic-primary: oklch(0 0 0);
+  --agentic-primary: oklch(0.59 0.2 264);
   --agentic-primary-foreground: oklch(1 0 0);
-  --agentic-accent: oklch(0.96 0 0);
+  --agentic-accent: oklch(0.96 0.01 264);
   --agentic-accent-foreground: oklch(0.13 0 0);
   --agentic-border: oklch(0.91 0 0);
-  --agentic-ring: oklch(0 0 0);
+  --agentic-ring: oklch(0.59 0.2 264);
   --agentic-muted: oklch(0.96 0 0);
   --agentic-muted-foreground: oklch(0.45 0 0);
   --agentic-input: oklch(0.96 0 0);
 
-  /* -- Header Tokens (negative/dark: black bg, white text) -- */
-  --header: oklch(0.14 0 0);
-  --header-foreground: oklch(0.98 0 0);
-  --header-primary: oklch(0.98 0 0);
-  --header-primary-foreground: oklch(0 0 0);
-  --header-accent: oklch(0.20 0 0);
-  --header-accent-foreground: oklch(0.98 0 0);
-  --header-muted: oklch(0.20 0 0);
-  --header-muted-foreground: oklch(0.62 0 0);
-  --header-border: oklch(1 0 0 / 10%);
-  --header-ring: oklch(0.62 0 0);
+  /* -- Header Tokens -- */
+  --header: oklch(1 0 0);
+  --header-foreground: oklch(0.13 0 0);
+  --header-primary: oklch(0.59 0.2 264);
+  --header-primary-foreground: oklch(1 0 0);
+  --header-accent: oklch(0.96 0 0);
+  --header-accent-foreground: oklch(0.13 0 0);
+  --header-muted: oklch(0.96 0 0);
+  --header-muted-foreground: oklch(0.46 0 0);
+  --header-border: oklch(0.91 0 0);
+  --header-ring: oklch(0.59 0.2 264);
 
   /* -- Shadow Tokens -- */
-  /* Base scale only - minimal editorial shadows */
-  --shadow-xs: 0 1px 2px 0 oklch(0 0 0 / 3%);
-  --shadow-sm: 0 1px 2px 0 oklch(0 0 0 / 3%);
-  --shadow-md: 0 2px 4px 0 oklch(0 0 0 / 5%);
-  --shadow-lg: 0 4px 6px -1px oklch(0 0 0 / 8%);
-  --shadow-xl: 0 8px 10px -2px oklch(0 0 0 / 10%);
-  --shadow-2xl: 0 12px 16px -4px oklch(0 0 0 / 12%);
+  /* Base scale only (component-specific shadows removed - use base shadows directly) */
+  --shadow-xs: 0 1px 2px 0 oklch(0 0 0 / 5%);
+  --shadow-sm: 0 1px 3px 0 oklch(0 0 0 / 10%), 0 1px 2px -1px oklch(0 0 0 / 10%);
+  --shadow-md: 0 4px 6px -1px oklch(0 0 0 / 10%), 0 2px 4px -2px oklch(0 0 0 / 10%);
+  --shadow-lg: 0 10px 15px -3px oklch(0 0 0 / 10%), 0 4px 6px -4px oklch(0 0 0 / 10%);
+  --shadow-xl: 0 20px 25px -5px oklch(0 0 0 / 10%), 0 8px 10px -6px oklch(0 0 0 / 10%);
+  --shadow-2xl: 0 25px 50px -12px oklch(0 0 0 / 25%);
 
   /* -- Z-Index Scale -- */
   --z-dropdown: 50;
@@ -395,17 +395,17 @@
   --agentic-muted-foreground: oklch(0.62 0 0);
   --agentic-input: oklch(0.20 0 0);
 
-  /* -- Header Tokens (light when dark mode) -- */
-  --header: oklch(1 0 0);
-  --header-foreground: oklch(0.13 0 0);
-  --header-primary: oklch(0 0 0);
-  --header-primary-foreground: oklch(1 0 0);
-  --header-accent: oklch(0.96 0 0);
-  --header-accent-foreground: oklch(0.13 0 0);
-  --header-muted: oklch(0.96 0 0);
-  --header-muted-foreground: oklch(0.46 0 0);
-  --header-border: oklch(0.91 0 0);
-  --header-ring: oklch(0 0 0);
+  /* -- Header Tokens (dark mode) -- */
+  --header: oklch(0.14 0 0);
+  --header-foreground: oklch(0.98 0 0);
+  --header-primary: oklch(0.98 0 0);
+  --header-primary-foreground: oklch(0 0 0);
+  --header-accent: oklch(0.20 0 0);
+  --header-accent-foreground: oklch(0.98 0 0);
+  --header-muted: oklch(0.20 0 0);
+  --header-muted-foreground: oklch(0.62 0 0);
+  --header-border: oklch(1 0 0 / 10%);
+  --header-ring: oklch(0.62 0 0);
 
   /* -- Brand Colors (same in dark mode) -- */
   --brand-black: oklch(0 0 0);

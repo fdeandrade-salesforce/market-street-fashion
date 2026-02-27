@@ -1,5 +1,5 @@
 {
-  "name": "market-street",
+  "name": "next-design-system",
   "version": "0.1.0",
   "private": true,
   "engines": {
@@ -23,11 +23,12 @@
     "compress-images": "tsx scripts/compress-images.ts"
   },
   "dependencies": {
+    "@google/model-viewer": "^4.1.0",
     "@supabase/supabase-js": "^2.93.1",
     "next": "14.1.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "sharp": "^0.34.5"
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
@@ -37,9 +38,9 @@
     "eslint": "^8.0.0",
     "eslint-config-next": "^14.0.0",
     "postcss": "^8.4.31",
+    "sharp": "^0.34.5",
     "tailwindcss": "^3.3.5",
     "tsx": "^4.21.0",
-    "typescript": "^5.2.2",
-    "xlsx": "^0.18.5"
+    "typescript": "^5.2.2"
   }
 }

@@ -14,7 +14,6 @@ import { getCart, updateCartQuantity, removeFromCart, addToCart, updateCartItemF
 import { getAllProducts } from '../lib/products'
 import { logout } from '../lib/auth'
 import { Product } from './ProductListingPage'
-import { getProductImageUrl } from '../src/data/mock/products'
 
 interface ExtendedCartItem extends CartItem {
   fulfillmentMethod?: 'pickup' | 'delivery'
@@ -41,43 +40,38 @@ interface NavItem {
   className?: string
 }
 
-
 const navigationItems: NavItem[] = [
   {
     label: 'Women',
     href: '/women',
     children: [
       {
-        title: 'Shop by Category',
+        title: 'Categories',
         items: [
           { label: 'All Women', href: '/women' },
-          { label: 'New In', href: '/women/new-in' },
-          { label: 'Outerwear', href: '/women/outerwear' },
-          { label: 'Dresses', href: '/women/dresses' },
-          { label: 'Tops', href: '/women/tops' },
-          { label: 'Knitwear', href: '/women/knitwear' },
-          { label: 'Shirts', href: '/women/shirts' },
-          { label: 'Jeans', href: '/women/jeans' },
-          { label: 'Trousers', href: '/women/trousers' },
-          { label: 'Skirts', href: '/women/skirts' },
-          { label: 'Blazers', href: '/women/blazers' },
-          { label: 'Activewear', href: '/women/activewear' },
-          { label: 'Shoes', href: '/women/shoes' },
-          { label: 'Bags', href: '/women/bags' },
-          { label: 'Accessories', href: '/women/accessories' },
+          { label: 'Geometric', href: '/women/geometric' },
+          { label: 'Abstract', href: '/women/abstract' },
+          { label: 'Spheres', href: '/women/spheres' },
+        ],
+      },
+      {
+        title: 'Top Sellers',
+        items: [
+          { label: 'Signature Form', href: '/women?filter=bestseller' },
+          { label: 'Pure Cube', href: '/women?filter=bestseller' },
+          { label: 'Soft Sphere', href: '/women?filter=bestseller' },
         ],
       },
       {
         title: 'Collections',
         items: [
           { label: 'New Arrivals', href: '/women?filter=new' },
-          { label: 'Best Sellers', href: '/women?filter=bestseller' },
           { label: 'Limited Edition', href: '/women?filter=limited' },
-          { label: 'Essentials', href: '/women?filter=essentials' },
+          { label: 'Sets & Bundles', href: '/women/sets' },
         ],
       },
     ],
-    featuredImage: getProductImageUrl('oversized-blazer', 2),
+    featuredImage: '/images/products/signature-form-white-1.png',
     featuredLabel: 'New Arrivals',
     featuredLink: '/women?filter=new',
   },
@@ -86,64 +80,62 @@ const navigationItems: NavItem[] = [
     href: '/men',
     children: [
       {
-        title: 'Shop by Category',
+        title: 'Categories',
         items: [
           { label: 'All Men', href: '/men' },
-          { label: 'New In', href: '/men/new-in' },
-          { label: 'Outerwear', href: '/men/outerwear' },
-          { label: 'Jackets & Blazers', href: '/men/jackets-blazers' },
-          { label: 'Shirts', href: '/men/shirts' },
-          { label: 'T-Shirts', href: '/men/t-shirts' },
-          { label: 'Knitwear', href: '/men/knitwear' },
-          { label: 'Jeans', href: '/men/jeans' },
-          { label: 'Trousers', href: '/men/trousers' },
-          { label: 'Suits', href: '/men/suits' },
-          { label: 'Shoes', href: '/men/shoes' },
-          { label: 'Bags', href: '/men/bags' },
-          { label: 'Accessories', href: '/men/accessories' },
+          { label: 'Geometric', href: '/men/geometric' },
+          { label: 'Abstract', href: '/men/abstract' },
+          { label: 'Cubes', href: '/men/cubes' },
+        ],
+      },
+      {
+        title: 'Top Sellers',
+        items: [
+          { label: 'Pure Cube Black', href: '/men?filter=bestseller' },
+          { label: 'Fusion Prism', href: '/men?filter=bestseller' },
+          { label: 'Vertical Set', href: '/men?filter=bestseller' },
         ],
       },
       {
         title: 'Collections',
         items: [
           { label: 'New Arrivals', href: '/men?filter=new' },
-          { label: 'Best Sellers', href: '/men?filter=bestseller' },
           { label: 'Essentials', href: '/men?filter=essentials' },
           { label: 'Premium', href: '/men/premium' },
         ],
       },
     ],
-    featuredImage: getProductImageUrl('bomber-jacket', 2),
+    featuredImage: '/images/products/pure-cube-black-1.png',
     featuredLabel: 'New Arrivals',
     featuredLink: '/men?filter=new',
   },
   {
-    label: 'Kids',
-    href: '/kids',
+    label: 'Accessories',
+    href: '/accessories',
     children: [
       {
-        title: 'Shop by Category',
+        title: 'Categories',
         items: [
-          { label: 'All Kids', href: '/kids' },
-          { label: 'Girls', href: '/kids/girls' },
-          { label: 'Boys', href: '/kids/boys' },
+          { label: 'All Accessories', href: '/accessories' },
+          { label: 'Stands', href: '/accessories/stands' },
+          { label: 'Display Cases', href: '/accessories/display-cases' },
         ],
       },
       {
-        title: 'Collections',
+        title: 'By Material',
         items: [
-          { label: 'New Arrivals', href: '/kids?filter=new' },
-          { label: 'Best Sellers', href: '/kids?filter=bestseller' },
-          { label: 'Essentials', href: '/kids?filter=essentials' },
+          { label: 'Wood', href: '/accessories?material=wood' },
+          { label: 'Metal', href: '/accessories?material=metal' },
+          { label: 'Glass', href: '/accessories?material=glass' },
         ],
       },
     ],
-    featuredImage: getProductImageUrl('kids-rain-jacket', 2),
-    featuredLabel: 'New Arrivals',
-    featuredLink: '/kids?filter=new',
+    featuredImage: '/images/products/vertical-set-1.png',
+    featuredLabel: 'Complete Sets',
+    featuredLink: '/accessories/sets',
   },
   { label: 'New Releases', href: '/new-releases' },
-  { label: 'Sale', href: '/sale', className: 'text-header-foreground' },
+  { label: 'Sale', href: '/sale', className: 'text-brand-blue-500' },
 ]
 
 export default function Navigation() {
@@ -321,20 +313,20 @@ export default function Navigation() {
   const activeNavItem = navigationItems.find(item => item.label === activeDropdown)
 
   return (
-    <nav className="sticky top-0 z-50 bg-header border-b border-header-border">
-      <div className="layout-commerce">
-        <div className="flex items-center h-16">
+    <nav className="sticky top-0 z-50 bg-white border-b border-brand-gray-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <Link href="/" className="flex-shrink-0 flex items-center gap-2">
             <img 
               src="/images/logo.svg" 
-              alt="Market Street" 
-              className="h-4 w-auto brightness-0 invert"
+              alt="Salesforce Foundations" 
+              className="h-10 w-auto"
             />
           </Link>
 
-          {/* Desktop Navigation - Left aligned after logo */}
-          <div className="hidden md:flex items-center space-x-1 ml-6">
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-1">
             {navigationItems.map((item) => (
               <div
                 key={item.label}
@@ -345,8 +337,8 @@ export default function Navigation() {
                   href={item.href}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
                     activeDropdown === item.label
-                      ? 'bg-header-primary text-header-primary-foreground'
-                      : item.className || 'text-header-foreground hover:text-header-muted-foreground'
+                      ? 'bg-brand-blue-500 text-white'
+                      : item.className || 'text-brand-black hover:text-brand-gray-600'
                   }`}
                 >
                   {item.label}
@@ -356,11 +348,11 @@ export default function Navigation() {
           </div>
 
           {/* Right Side Actions */}
-          <div className="flex items-center space-x-2 ml-auto">
+          <div className="flex items-center space-x-2">
             {/* Search Button */}
             <button 
               onClick={() => setIsSearchOpen(true)}
-              className="p-2 text-header-foreground hover:text-header-muted-foreground transition-colors"
+              className="p-2 text-brand-black hover:text-brand-gray-600 transition-colors"
               aria-label="Search"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -371,7 +363,7 @@ export default function Navigation() {
             {/* Agent/AI Assistant Button */}
             <button 
               onClick={() => openAgent()}
-              className="p-2 text-header-foreground hover:text-header-muted-foreground transition-colors"
+              className="p-2 text-brand-black hover:text-brand-blue-500 transition-colors"
               aria-label="Personal Assistant"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
@@ -388,7 +380,7 @@ export default function Navigation() {
             {/* Cart Button */}
             <button 
               onClick={() => setIsCartOpen(true)}
-              className={`p-2 text-header-foreground hover:text-header-muted-foreground transition-all relative ${
+              className={`p-2 text-brand-black hover:text-brand-gray-600 transition-all relative ${
                 cartIconPulse ? 'animate-pulse' : ''
               }`}
               aria-label={`Shopping cart with ${cartCount} items`}
@@ -397,7 +389,7 @@ export default function Navigation() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
               </svg>
               {cartCount > 0 && (
-                <span className={`absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-header-primary text-header-primary-foreground text-xs font-medium rounded-full flex items-center justify-center px-1 transition-transform ${
+                <span className={`absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-brand-blue-500 text-white text-xs font-medium rounded-full flex items-center justify-center px-1 transition-transform ${
                   cartIconPulse ? 'scale-125' : ''
                 }`}>
                   {cartCount > 99 ? '99+' : cartCount}
@@ -405,7 +397,7 @@ export default function Navigation() {
               )}
             </button>
             <button
-              className="md:hidden p-2 text-header-foreground"
+              className="md:hidden p-2 text-brand-black"
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -421,7 +413,7 @@ export default function Navigation() {
 
         {/* Mobile Menu */}
         {isMenuOpen && (
-          <div className="md:hidden py-4 border-t border-header-border">
+          <div className="md:hidden py-4 border-t border-brand-gray-200">
             {navigationItems.map((item) => {
               const isExpanded = expandedMobileItems.has(item.label)
               const hasChildren = item.children && item.children.length > 0
@@ -439,7 +431,7 @@ export default function Navigation() {
                         }
                         setExpandedMobileItems(newExpanded)
                       }}
-                      className={`w-full flex items-center justify-between py-3 px-4 text-header-foreground hover:bg-header-accent transition-colors font-medium ${item.className || ''}`}
+                      className={`w-full flex items-center justify-between py-3 px-4 text-brand-black hover:bg-brand-gray-50 transition-colors font-medium ${item.className || ''}`}
                     >
                       <span>{item.label}</span>
                       <svg
@@ -454,20 +446,20 @@ export default function Navigation() {
                   ) : (
                     <Link
                       href={item.href}
-                      className={`block py-3 px-4 text-header-foreground hover:bg-header-accent transition-colors font-medium ${item.className || ''}`}
+                      className={`block py-3 px-4 text-brand-black hover:bg-brand-gray-50 transition-colors font-medium ${item.className || ''}`}
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {item.label}
                     </Link>
                   )}
                   {hasChildren && isExpanded && (
-                    <div className="pl-4 pb-2 bg-header-accent">
+                    <div className="pl-4 pb-2 bg-brand-gray-50">
                       {item.children?.flatMap((column) =>
                         column.items.map((link) => (
                           <Link
                             key={link.label}
                             href={link.href}
-                            className="block py-2 px-4 text-sm text-header-muted-foreground hover:text-header-foreground transition-colors"
+                            className="block py-2 px-4 text-sm text-brand-gray-600 hover:text-brand-black transition-colors"
                             onClick={() => setIsMenuOpen(false)}
                           >
                             {link.label}
@@ -486,12 +478,12 @@ export default function Navigation() {
       {/* Mega Menu - Full Width, Outside the container */}
       {activeNavItem?.children && (
         <div 
-          className="absolute left-0 right-0 top-full bg-header-accent border-b border-header-border shadow-lg overflow-hidden"
+          className="absolute left-0 right-0 top-full bg-white border-b border-brand-gray-200 shadow-lg overflow-hidden"
           onMouseEnter={() => handleMouseEnter(activeNavItem.label)}
           onMouseLeave={handleMouseLeave}
         >
           <div 
-            className="layout-commerce py-8"
+            className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8"
             style={{
               animation: 'menuSlideDown 0.15s ease-out forwards'
             }}
@@ -503,7 +495,7 @@ export default function Navigation() {
                   {activeNavItem.children.map((column, idx) => (
                     <div key={idx} className="min-w-[140px]">
                       {column.title && (
-                        <p className="text-xs font-semibold text-header-muted-foreground uppercase tracking-wider mb-3">
+                        <p className="text-xs font-semibold text-brand-gray-400 uppercase tracking-wider mb-3">
                           {column.title}
                         </p>
                       )}
@@ -512,7 +504,7 @@ export default function Navigation() {
                           <li key={link.label}>
                             <Link
                               href={link.href}
-                              className="text-sm text-header-foreground hover:text-header-muted-foreground transition-colors"
+                              className="text-sm text-brand-black hover:text-brand-blue-500 transition-colors"
                               onClick={() => setActiveDropdown(null)}
                             >
                               {link.label}
@@ -529,7 +521,7 @@ export default function Navigation() {
               {activeNavItem.featuredImage && (
                 <Link
                   href={activeNavItem.featuredLink || activeNavItem.href}
-                  className="relative w-56 h-40 bg-header-muted rounded-lg overflow-hidden group flex-shrink-0"
+                  className="relative w-56 h-40 bg-brand-gray-100 rounded-lg overflow-hidden group flex-shrink-0"
                   onClick={() => setActiveDropdown(null)}
                 >
                   <img

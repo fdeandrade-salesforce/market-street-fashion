@@ -2,7 +2,6 @@
 
 import React, { useState, useRef, useEffect } from 'react'
 import ModalHeader from './ModalHeader'
-import { getProductImageUrl } from '../src/data/mock/products'
 
 interface AgentSidebarProps {
   isOpen: boolean
@@ -21,8 +20,8 @@ interface AgentSidebarProps {
 // Conversation starter pills (welcome screen)
 const quickActions = [
   'Best sellers under $100',
-  'Top rated dresses',
-  'Suggest outfits for a casual day out',
+  'Top rated sculptures',
+  'Suggest pieces for minimalist living room',
 ]
 
 // Conversation context pills - guide initial choices when in search flow
@@ -68,7 +67,6 @@ type PillFilterAction =
   | { type: 'color'; value: string }
   | { type: 'size'; value: string }
   | { type: 'matteFinish' }
-  | { type: 'casualStyle' }
   | { type: 'showSimilar' }
 
 function getPillFilterAction(pill: string): PillFilterAction | null {
@@ -76,8 +74,7 @@ function getPillFilterAction(pill: string): PillFilterAction | null {
   if (COLOR_PILL_MAP[pill]) return { type: 'color', value: COLOR_PILL_MAP[pill] }
   if (SIZE_PILL_MAP[pill]) return { type: 'size', value: SIZE_PILL_MAP[pill] }
   if (pill === 'Matte finish') return { type: 'matteFinish' }
-  if (pill === 'Casual style') return { type: 'casualStyle' }
-  if (pill === 'Show similar styles') return { type: 'showSimilar' }
+  if (pill === 'Show similar pieces') return { type: 'showSimilar' }
   return null
 }
 
@@ -138,7 +135,7 @@ export default function AgentSidebar({ isOpen, onClose, initialMessage, searchQu
     ])
     setTimeout(() => {
       const contextualResponse = isSearchContext
-        ? `I see you're looking for "${searchQuery}"! I found some options for you in the results below. To help me narrow it down, tell me more—what size are you thinking? Any preference on color or style? I can also suggest pieces that work well together.`
+        ? `I see you're looking for "${searchQuery}"! I found some options for you in the results below. To help me narrow it down, tell me more—what size are you thinking? Any preference on color or finish? I can also suggest pieces that work well together.`
         : "Based on the product you're viewing, I can provide more details. Would you like me to suggest similar pieces or answer any other questions?"
 
       setMessages((prev) => [
@@ -190,9 +187,6 @@ export default function AgentSidebar({ isOpen, onClose, initialMessage, searchQu
           if (filterAction.type === 'matteFinish') {
             return { ...base, matteFinish: true }
           }
-          if (filterAction.type === 'casualStyle') {
-            return { ...base, casualStyle: true }
-          }
           return base
         })
       }
@@ -204,7 +198,6 @@ export default function AgentSidebar({ isOpen, onClose, initialMessage, searchQu
       else if (filterAction.type === 'color') response = `I've filtered by ${filterAction.value}. Check the results on the left.`
       else if (filterAction.type === 'size') response = `I've filtered by ${action} size. Check the results on the left.`
       else if (filterAction.type === 'matteFinish') response = `I've filtered for matte finish. Check the results on the left.`
-      else if (filterAction.type === 'casualStyle') response = `I've filtered for casual styles. Check the results on the left.`
       else if (filterAction.type === 'showSimilar') response = `I've cleared the filters to show you more options. Browse the full collection on the left.`
     }
 
@@ -241,7 +234,7 @@ export default function AgentSidebar({ isOpen, onClose, initialMessage, searchQu
       {/* Header */}
       <div className="flex-shrink-0">
         <ModalHeader
-          title="Market Street Personal Assistant"
+          title="Salesforce Foundations Personal Assistant"
           onClose={onClose}
           variant="agentic"
           closeAriaLabel="Close assistant"
@@ -288,15 +281,15 @@ export default function AgentSidebar({ isOpen, onClose, initialMessage, searchQu
           <div className="p-4">
             <div className="aspect-[4/3] bg-agentic-muted rounded-xl overflow-hidden mb-4">
               <img
-                src={getProductImageUrl('oversized-blazer', 1, 'Black')}
+                src="/images/products/signature-form-white-1.png"
                 alt="Personal Assistant"
                 className="w-full h-full object-cover"
               />
             </div>
             <h3 className="text-xl font-semibold text-agentic-foreground mb-2">Hello There!</h3>
             <p className="text-sm text-agentic-muted-foreground mb-4 leading-relaxed">
-              Welcome to your personal shopper assistant. I specialize in fashion and style recommendations.
-              Whether you need the perfect outfit for an occasion or a gift idea, I&apos;ll help you find it.
+              Welcome to your personal shopper assistant. I specialize in sculptural objects and minimalist design.
+              Whether you need the perfect piece for your space or a gift recommendation, I&apos;ll help you find it.
               What brings you here today?
             </p>
             {/* Conversation starter pills */}

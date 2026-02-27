@@ -7,13 +7,13 @@ import Link from 'next/link'
 
 export default function MaintenancePreviewPage() {
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-white layout-gutter">
+    <div className="min-h-screen flex flex-col items-center justify-center bg-white px-4 sm:px-6 lg:px-8">
       {/* Minimal header: logo only */}
-      <header className="absolute top-0 left-0 right-0 py-6 layout-gutter">
+      <header className="absolute top-0 left-0 right-0 py-6 px-4 sm:px-6 lg:px-8">
         <Link href="/" className="inline-flex items-center">
           <img
             src="/images/logo.svg"
-            alt="Market Street"
+            alt="Salesforce Foundations"
             className="h-10 w-auto"
           />
         </Link>
@@ -78,7 +78,7 @@ export default function MaintenancePreviewPage() {
 
       {/* Minimal footer line */}
       <footer className="py-6 text-sm text-brand-gray-500">
-        © Market Street
+        © Salesforce Foundations
       </footer>
     </div>
   )

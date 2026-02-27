@@ -42,7 +42,7 @@ function SearchContent() {
     return (
       <div className="min-h-screen flex flex-col">
         <Navigation />
-        <main className="flex-1 layout-commerce w-full py-12">
+        <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12">
           <h1 className="text-2xl font-semibold text-brand-black mb-4">Search</h1>
           <p className="text-brand-gray-600">Enter a search term to find products.</p>
         </main>
@@ -55,7 +55,7 @@ function SearchContent() {
     return (
       <div className="min-h-screen flex flex-col">
         <Navigation />
-        <main className="flex-1 layout-commerce w-full py-12">
+        <main className="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-12">
           <div className="flex items-center gap-2 text-brand-gray-500">
             <svg className="w-6 h-6 animate-spin" fill="none" viewBox="0 0 24 24" aria-hidden="true">
               <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />

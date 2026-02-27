@@ -9,7 +9,6 @@ import PromoBanner from '../../components/PromoBanner'
 import EditorialCard from '../../components/EditorialCard'
 import { getProductsBySubcategory } from '../../lib/products'
 import { Product } from '../../components/ProductListingPage'
-import { getProductImageUrl } from '../../src/data/mock/products'
 
 export default function AccessoriesPage() {
   const [products, setProducts] = useState<Product[]>([])
@@ -33,7 +32,7 @@ export default function AccessoriesPage() {
             title="Complete Your Look"
             subtitle="Styling Tips"
             description="Mix and match our accessories to create unique combinations that reflect your personal style."
-            image={getProductImageUrl('leather-crossbody-bag-brown', 2)}
+            image="/images/hero/hero-collection.png"
             ctaText="View Guide"
             variant="image-top"
           />
@@ -59,7 +58,7 @@ export default function AccessoriesPage() {
             title="Modular Collection"
             subtitle="Build Your Space"
             description="Create your perfect arrangement with our modular accessories that adapt to any space."
-            image={getProductImageUrl('structured-handbag', 1, 'Black')}
+            image="/images/products/base-module-1.png"
             ctaText="Shop Modular"
             variant="image-background"
           />

@@ -11,7 +11,6 @@ export interface AgentFilters {
   colors?: string[]
   sizes?: string[]
   matteFinish?: boolean
-  casualStyle?: boolean
   showSimilar?: boolean
 }
 

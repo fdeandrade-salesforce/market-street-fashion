@@ -5,16 +5,11 @@ const nextConfig = {
   // it from node_modules instead of creating a vendor chunk.
   serverExternalPackages: ['@supabase/supabase-js'],
   images: {
-    domains: ['images.unsplash.com', 's3.amazonaws.com'],
+    domains: ['images.unsplash.com'],
     remotePatterns: [
       {
         protocol: 'https',
         hostname: 'images.unsplash.com',
-      },
-      {
-        protocol: 'https',
-        hostname: 's3.amazonaws.com',
-        pathname: '/northerntrailoutfitters.com/**',
       },
     ],
   },

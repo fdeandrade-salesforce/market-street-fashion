@@ -5,11 +5,12 @@ export default function Footer() {
     'Shop': [
       'Women',
       'Men',
-      'Kids',
+      'Accessories',
       'New Releases',
       'Sale',
     ],
     'Help': [
+      'FAQ',
       'Customer Service',
       'Size Guide',
       'Shipping & Returns',
@@ -17,7 +18,7 @@ export default function Footer() {
       'Contact Us',
     ],
     'About': [
-      'About Market Street',
+      'About Salesforce Foundations',
       'Careers',
       'Sustainability',
       'Press',
@@ -26,7 +27,7 @@ export default function Footer() {
 
   return (
     <footer className="bg-white border-t border-brand-gray-200 mt-12 md:mt-16">
-      <div className="layout-commerce py-12 md:py-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 md:py-16">
         <div className="grid grid-cols-2 md:grid-cols-3 gap-8 md:gap-12">
           {Object.entries(footerLinks).map(([category, links]) => (
             <div key={category}>
@@ -36,14 +37,14 @@ export default function Footer() {
               <ul className="space-y-2">
                 {links.map((link) => {
                   let href = '#'
-                  if (link === 'About Market Street') {
+                  if (link === 'About Salesforce Foundations') {
                     href = '/about'
                   } else if (link === 'Women') {
                     href = '/women'
                   } else if (link === 'Men') {
                     href = '/men'
-                  } else if (link === 'Kids') {
-                    href = '/kids'
+                  } else if (link === 'Accessories') {
+                    href = '/accessories'
                   } else if (link === 'New Releases') {
                     href = '/new-releases'
                   } else if (link === 'Sale') {
@@ -60,6 +61,8 @@ export default function Footer() {
                     href = '/sustainability'
                   } else if (link === 'Press') {
                     href = '/press'
+                  } else if (link === 'FAQ') {
+                    href = '/customer-service'
                   } else if (link === 'Customer Service') {
                     href = '/customer-service'
                   } else if (link === 'Size Guide') {
@@ -98,8 +101,8 @@ export default function Footer() {
                 <div className="flex items-center gap-2">
                   <img 
                     src="/images/logo.svg" 
-                    alt="Market Street" 
-                    className="h-4 w-auto"
+                    alt="Salesforce Foundations" 
+                    className="h-8 w-auto"
                   />
                 </div>
                 <div className="flex items-center gap-4 text-sm text-brand-gray-600">
@@ -135,7 +138,7 @@ export default function Footer() {
             {/* Bottom row: Address and legal links */}
             <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-brand-gray-600">
               <div>
-                © Market Street 1818 Cornwall Ave, Vancouver BC V5J 1C7
+                © Salesforce Foundations 1818 Cornwall Ave, Vancouver BC V5J 1C7
               </div>
               <div className="flex items-center gap-4">
                 <a href="/privacy" className="hover:text-brand-black transition-colors flex items-center gap-1">

@@ -10,8 +10,6 @@ import StoreLocatorModal from './StoreLocatorModal'
 import NotifyMeModal from './NotifyMeModal'
 import { addToCart } from '../lib/cart'
 import { toggleWishlist, getWishlistIds } from '../lib/wishlist'
-import { getAllProductsWithVariants } from '../lib/products'
-import { getColorHex, isSpecialColor } from '../lib/color-utils'
 
 export interface Product {
   id: string
@@ -45,7 +43,6 @@ export interface Product {
   keyBenefits?: string[]
   technicalSpecs?: Record<string, string>
   description?: string
-  videos?: string[] // Product videos (shown first, with first image as fallback)
 }
 
 interface FilterState {
@@ -106,12 +103,6 @@ export default function ProductListingPage({
   const [quickViewProduct, setQuickViewProduct] = useState<Product | null>(null)
   const [notifyMeProduct, setNotifyMeProduct] = useState<Product | null>(null)
   const [wishlist, setWishlist] = useState<string[]>([])
-  const [allProductsForVariants, setAllProductsForVariants] = useState<Product[]>([])
-  
-  // Load all products with variants for ProductCard hover and QuickView variant selection
-  useEffect(() => {
-    getAllProductsWithVariants().then(setAllProductsForVariants)
-  }, [])
   
   // Initialize wishlist from localStorage and listen for updates
   useEffect(() => {
@@ -686,70 +677,22 @@ export default function ProductListingPage({
     return chips
   }, [filters, priceRange])
 
-  // Get header image - uses S3 PLP banners (matches original project)
-  const S3_BASE = 'https://s3.amazonaws.com/northerntrailoutfitters.com/market-street'
+  // Get header image based on subcategory
   const getHeaderImage = () => {
     if (headerImage) return headerImage
-
-    const subcategoryMaps: Record<string, Record<string, string>> = {
-      Women: {
-        'New In': 'All Women',
-        Outerwear: 'Outerwear',
-        Dresses: 'Dresses',
-        Tops: 'Tops',
-        Knitwear: 'Sweaters',
-        Shirts: 'Tops',
-        Jeans: 'Denim',
-        Trousers: 'Trousers',
-        Skirts: 'Skirts',
-        Blazers: 'Jackets',
-        Activewear: 'Tops',
-        Shoes: 'Bags',
-        Bags: 'Bags',
-        Accessories: 'Accessories',
-      },
-      Men: {
-        'New In': 'All Men',
-        'Jackets & Blazers': 'Jackets',
-        'T-Shirts': 'Tshirts',
-        Shirts: 'Shirts',
-        Suits: 'Suits',
-        Trousers: 'Pants',
-        Pants: 'Pants',
-        Bottoms: 'Bottoms',
-        Outerwear: 'Outerwear',
-        Accessories: 'Accessories',
-      },
-      Kids: {
-        Boys: 'Boys',
-        Girls: 'Girls',
-        'Boys Tops': 'Tops',
-        'Boys Bottoms': 'Bottoms',
-        'Boys Shoes': 'Shoes',
-        'Boys Accessories': 'Accessories',
-        'Girls Dresses': 'Dresses',
-        'Girls Tops': 'Tops',
-        'Girls Bottoms': 'Bottoms',
-        'Girls Shoes': 'Shoes',
-        'Girls Accessories': 'Accessories',
-      },
+    
+    const categoryImages: Record<string, string> = {
+      'Women': '/images/hero/hero-collection.png',
+      'Men': '/images/products/fusion-block-1.png',
+      'Accessories': '/images/products/spiral-accent-1.png',
+      'Geometric': '/images/products/pure-cube-white-1.png',
+      'Abstract': '/images/products/flow-form-i-1.png',
+      'Sets': '/images/products/vertical-set-1.png',
+      'Modular': '/images/products/base-module-1.png',
+      'Premium': '/images/products/signature-form-white-1.png',
     }
-
-    let imageName: string
-    if (subcategory) {
-      const categoryMap = subcategoryMaps[category] || {}
-      const mappedSubcategory = categoryMap[subcategory] || subcategory
-      imageName = `${category}-${mappedSubcategory}.png`
-    } else {
-      const categoryDisplayName = category === 'Kids' ? 'Kids' : category
-      imageName = `${category}-All ${categoryDisplayName}.png`
-    }
-
-    if (category === 'Sale') {
-      imageName = subcategory ? `Sales-${subcategory} Sale.png` : 'Sales-All Sale.png'
-    }
-
-    return `${S3_BASE}/resources/plp banners/${encodeURIComponent(imageName)}`
+    
+    return categoryImages[category] || '/images/hero/hero-collection.png'
   }
 
   // Generate breadcrumbs
@@ -788,7 +731,7 @@ export default function ProductListingPage({
         </div>
         
         <div className="relative h-full flex items-end">
-          <div className="layout-commerce w-full pb-8 md:pb-10">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-8 md:pb-10">
             <div className="max-w-2xl">
               <div className="inline-block mb-4">
                 <span className="text-xs md:text-sm text-white/80 uppercase tracking-widest font-medium">
@@ -806,7 +749,7 @@ export default function ProductListingPage({
         </div>
       </div>
 
-      <div className="layout-commerce py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-brand-gray-500 mb-6">
           {breadcrumbs.map((crumb, idx) => {
@@ -1246,8 +1189,25 @@ export default function ProductListingPage({
                         <div className="grid grid-cols-4 gap-3">
                           {availableColors.map((color) => {
                             const count = getColorCount(color)
+                            const colorMap: Record<string, string> = {
+                              blue: '#3b82f6',
+                              black: '#000000',
+                              white: '#ffffff',
+                              red: '#ef4444',
+                              green: '#22c55e',
+                              yellow: '#eab308',
+                              pink: '#ec4899',
+                              purple: '#a855f7',
+                              orange: '#f97316',
+                              brown: '#a16207',
+                              gray: '#6b7280',
+                              grey: '#6b7280',
+                              khaki: '#c3b091',
+                              neon: '#ccff00',
+                            }
+                            const colorLower = color.toLowerCase()
                             const isSelected = filters.colors.includes(color)
-                            const isSpecial = isSpecialColor(color)
+                            const isPrinted = colorLower === 'printed'
                             
                             return (
                               <button
@@ -1255,7 +1215,7 @@ export default function ProductListingPage({
                                 onClick={() => handleColorToggle(color)}
                                 className="flex flex-col items-center gap-2 group"
                               >
-                                {isSpecial ? (
+                                {isPrinted ? (
                                   <div
                                     className={`w-10 h-10 rounded-full border-2 transition-all bg-gradient-to-br from-purple-400 via-blue-400 to-white ${
                                       isSelected
@@ -1270,7 +1230,7 @@ export default function ProductListingPage({
                                         ? 'border-brand-blue-500 ring-2 ring-brand-blue-200'
                                         : 'border-brand-gray-300 group-hover:border-brand-gray-400'
                                     }`}
-                                    style={{ backgroundColor: getColorHex(color) }}
+                                    style={{ backgroundColor: colorMap[colorLower] || '#cccccc' }}
                                   />
                                 )}
                                 <div className="text-center">
@@ -1501,7 +1461,7 @@ export default function ProductListingPage({
                             onUnifiedAction={handleUnifiedAction}
                             onAddToWishlist={handleAddToWishlist}
                             isInWishlist={wishlist.includes(item.data.id)}
-                            allProducts={allProductsForVariants.length > 0 ? allProductsForVariants : products}
+                            allProducts={products}
                           />
                         )
                       }
@@ -1611,11 +1571,7 @@ export default function ProductListingPage({
       {quickViewProduct && (
         <QuickViewModal
           product={quickViewProduct}
-          productVariants={
-            allProductsForVariants.length > 0
-              ? allProductsForVariants.filter((p) => p.name === quickViewProduct.name)
-              : []
-          }
+          productVariants={[]}
           isOpen={!!quickViewProduct}
           onClose={() => setQuickViewProduct(null)}
           onAddToCart={handleAddToCart}

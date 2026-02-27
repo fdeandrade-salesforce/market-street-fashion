@@ -27,7 +27,6 @@ import ModalHeader from './ModalHeader'
 import DeliveryEstimates, { DeliveryEstimateState } from './DeliveryEstimates'
 import { getReviewRepo } from '../src/data'
 import MobileAddToCartButton from './MobileAddToCartButton'
-import { getColorHex } from '../lib/color-utils'
 import {
   PDPProduct,
   VariantGroup,
@@ -880,7 +879,14 @@ export default function ProductDetailPage({
   }, [(displayProduct as PDPProduct).videos])
   
   // Mapping of product IDs to their 3D model GLB files
-  const product3DModels: Record<string, string> = {}
+  const product3DModels: Record<string, string> = {
+    'pure-cube-white': 'Pure Cube White.glb',
+    'pure-cube-black': 'Black Pure Box.glb', // File name: "Black Pure Box.glb"
+    'pure-cube-gray': 'Gray Pure Box.glb', // File name: "Gray Pure Box.glb"
+    'steady-prism': 'Steady Prism.glb',
+    'spiral-accent': 'Spiral Accent.glb',
+    'vertical-set': 'Vertical Set.glb',
+  }
   
   // Check if this product has a 3D model - use displayProduct.id
   const has3DModel = useMemo(() => {
@@ -891,19 +897,18 @@ export default function ProductDetailPage({
     return has3DModel ? product3DModels[displayProduct.id] : null
   }, [has3DModel, displayProduct.id])
   
-  // Combine videos (first), images, and 3D model into a single media array
-  // Videos are first with first image as poster/fallback per user request
+  // Combine images, videos, and 3D model into a single media array
+  // 3D model is added last
   const mediaItems: MediaItem[] = useMemo(() => {
-    const firstImage = images[0]
     return [
-      ...videos.map((src): MediaItem => ({ type: 'video', src, thumbnail: firstImage })),
       ...images.map((src): MediaItem => ({ type: 'image', src, alt: displayProduct.name })),
+      ...videos.map((src): MediaItem => ({ type: 'video', src, thumbnail: src })),
       // Add 3D model last if available
       ...(has3DModel && model3DFile ? [{ 
         type: 'model3d' as const, 
         src: `/models/${model3DFile}`, 
         alt: `${displayProduct.name} 3D Model`,
-        thumbnail: firstImage
+        thumbnail: images[0] // Use first product image as thumbnail
       }] : []),
     ]
   }, [images, videos, has3DModel, model3DFile, displayProduct.name])
@@ -961,6 +966,8 @@ export default function ProductDetailPage({
     return badgeList
   }, [displayProduct.badges, displayProduct.isNew, displayProduct.isBestSeller, displayProduct.isOnlineOnly, displayProduct.isLimitedEdition, hasDiscount])
   
+  // State for video playback
+  const [isVideoPlaying, setIsVideoPlaying] = useState(false)
   const videoRef = React.useRef<HTMLVideoElement>(null)
 
   // Stock status - use displayProduct for accurate stock info
@@ -986,7 +993,8 @@ export default function ProductDetailPage({
     { label: product.name, href: '#' },
   ]
 
-  const description = product.description || `A carefully crafted piece designed for versatility and style. Made from premium materials with attention to detail, this piece combines comfort with contemporary design for a look that transitions effortlessly from day to night.`
+  // Default product details - contextual to geometric forms
+  const description = product.description || `A masterfully crafted geometric form designed to bring balance and elegance to any space. Each piece is precision-manufactured using premium composite materials, featuring clean lines and perfect proportions that catch and reflect light beautifully throughout the day.`
 
   const keyBenefits = product.keyBenefits || [
     'Precision-crafted geometry',
@@ -1006,7 +1014,7 @@ export default function ProductDetailPage({
       <AnnouncementBar />
       <Navigation />
 
-      <main className="layout-commerce py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumbs */}
         <nav className="flex items-center gap-2 text-sm text-brand-gray-500 mb-6">
           {breadcrumbs.map((crumb, idx) => {
@@ -1071,14 +1079,39 @@ export default function ProductDetailPage({
                   <div className="relative aspect-square bg-brand-gray-100 rounded-2xl overflow-hidden">
                     <video
                       ref={videoRef}
-                      key={mediaItems[currentImageIndex].src}
                       src={mediaItems[currentImageIndex].src}
                       className="w-full h-full object-cover"
-                      autoPlay
-                      muted
+                      controls={isVideoPlaying}
                       loop
                       playsInline
+                      onClick={() => {
+                        if (videoRef.current) {
+                          if (isVideoPlaying) {
+                            videoRef.current.pause()
+                          } else {
+                            videoRef.current.play()
+                          }
+                          setIsVideoPlaying(!isVideoPlaying)
+                        }
+                      }}
                     />
+                    {!isVideoPlaying && (
+                      <div 
+                        className="absolute inset-0 flex items-center justify-center bg-black/20 cursor-pointer transition-opacity hover:bg-black/30"
+                        onClick={() => {
+                          if (videoRef.current) {
+                            videoRef.current.play()
+                            setIsVideoPlaying(true)
+                          }
+                        }}
+                      >
+                        <div className="w-16 h-16 bg-white/90 rounded-full flex items-center justify-center shadow-lg">
+                          <svg className="w-8 h-8 text-brand-black ml-1" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M8 5v14l11-7z" />
+                          </svg>
+                        </div>
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <ImageZoom
@@ -1119,6 +1152,7 @@ export default function ProductDetailPage({
                     key={idx}
                     onClick={() => {
                       setCurrentImageIndex(idx)
+                      setIsVideoPlaying(false)
                     }}
                     className={`flex-shrink-0 w-20 h-20 rounded-lg overflow-hidden border-2 transition-all relative ${
                       currentImageIndex === idx
@@ -1454,9 +1488,17 @@ export default function ProductDetailPage({
                               <span className="flex items-center gap-2">
                                 <span
                                   className="w-4 h-4 rounded-full border border-brand-gray-300"
-                                style={{
-                                    backgroundColor: getColorHex(option.value),
-                                }}
+                                  style={{
+                                    backgroundColor:
+                                      option.value.toLowerCase() === 'white' ? '#fff' :
+                                      option.value.toLowerCase() === 'black' ? '#000' :
+                                      option.value.toLowerCase() === 'gray' ? '#6b7280' :
+                                      option.value.toLowerCase() === 'charcoal' ? '#36454F' :
+                                      option.value.toLowerCase() === 'silver' ? '#C0C0C0' :
+                                      option.value.toLowerCase() === 'ivory' ? '#FFFFF0' :
+                                      option.value.toLowerCase() === 'natural' ? '#FAF0E6' :
+                                      option.value.toLowerCase() === 'ware' ? '#D2B48C' : '#ccc',
+                                  }}
                                 />
                                 {option.value}
                               </span>
@@ -2047,7 +2089,7 @@ export default function ProductDetailPage({
             onAddToWishlist={handleAddToWishlist}
             wishlistIds={wishlist}
             allProducts={recentlyViewed}
-            sectionClassName="bg-brand-gray-50 -mx-4 sm:-mx-6 lg:-mx-8 xl:-mx-10 layout-gutter"
+            sectionClassName="bg-brand-gray-50 -mx-4 sm:-mx-6 lg:-mx-8 px-4 sm:px-6 lg:px-8"
           />
         )}
 
@@ -2227,7 +2269,12 @@ export default function ProductDetailPage({
                                     : 'border-brand-gray-200 hover:border-brand-gray-400'
                                 }`}
                                 style={{
-                                    backgroundColor: getColorHex(option.value),
+                                  backgroundColor:
+                                    option.value.toLowerCase() === 'white' ? '#fff' :
+                                    option.value.toLowerCase() === 'black' ? '#000' :
+                                    option.value.toLowerCase() === 'gray' ? '#6b7280' :
+                                    option.value.toLowerCase() === 'charcoal' ? '#36454F' :
+                                    option.value.toLowerCase() === 'silver' ? '#C0C0C0' : '#ccc',
                                 }}
                                 title={option.value}
                               />
