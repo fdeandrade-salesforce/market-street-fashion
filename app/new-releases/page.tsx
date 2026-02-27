@@ -10,10 +10,11 @@ import QuickViewModal from '../../components/QuickViewModal'
 import NotifyMeModal from '../../components/NotifyMeModal'
 import LazyImage from '../../components/LazyImage'
 import PromoBanner from '../../components/PromoBanner'
-import { getNewReleases, getNewReleasesByCategory, getAllProductsWithVariants } from '../../lib/products'
+import { getNewReleases, getAllProductsWithVariants } from '../../lib/products'
 import { Product } from '../../components/ProductListingPage'
 import { toggleWishlist, getWishlistIds } from '../../lib/wishlist'
 import { addToCart } from '../../lib/cart'
+import { getProductImageUrl } from '../../src/data/mock/products'
 
 export default function NewReleasesPage() {
   const [wishlistIds, setWishlistIds] = useState<string[]>([])
@@ -40,24 +41,39 @@ export default function NewReleasesPage() {
   const [newInAccessories, setNewInAccessories] = useState<Product[]>([])
   const [allProducts, setAllProducts] = useState<Product[]>([])
 
-  // Load products on mount
   useEffect(() => {
+    const shuffle = <T,>(arr: T[]): T[] => {
+      const a = [...arr]
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]]
+      }
+      return a
+    }
+
     const loadProducts = async () => {
-      const [all, just, trending, women, men, accessories, allProds] = await Promise.all([
-        getNewReleases(12),
-        getNewReleases(12),
-        getNewReleases(8),
-        getNewReleasesByCategory('Women', 8),
-        getNewReleasesByCategory('Men', 8),
-        getNewReleasesByCategory('Accessories', 8),
+      const [newProducts, allProds] = await Promise.all([
+        getNewReleases(),
         getAllProductsWithVariants(),
       ])
-      setAllNewReleases(all)
-      setJustDropped(just)
-      setTrendingNew(trending)
-      setNewInWomen(women)
-      setNewInMen(men)
-      setNewInAccessories(accessories)
+
+      setAllNewReleases(newProducts.slice(0, 12))
+
+      const reversed = [...newProducts].reverse()
+      setJustDropped(reversed.slice(0, 12))
+
+      const byRating = [...newProducts].sort((a, b) => (b.rating || 0) - (a.rating || 0))
+      setTrendingNew(byRating.slice(0, 8))
+
+      const womenPool = shuffle(newProducts.filter(p => p.category === 'Women'))
+      setNewInWomen(womenPool.length > 0 ? womenPool.slice(0, 8) : shuffle(allProds.filter(p => p.category === 'Women')).slice(0, 8))
+
+      const menPool = shuffle(newProducts.filter(p => p.category === 'Men'))
+      setNewInMen(menPool.length > 0 ? menPool.slice(0, 8) : shuffle(allProds.filter(p => p.category === 'Men')).slice(0, 8))
+
+      const accPool = shuffle(newProducts.filter(p => p.category === 'Accessories' || p.subcategory === 'Accessories' || p.subcategory === 'Bags' || p.subcategory === 'Shoes'))
+      setNewInAccessories(accPool.length > 0 ? accPool.slice(0, 8) : shuffle(allProds.filter(p => p.category === 'Accessories' || p.subcategory === 'Accessories' || p.subcategory === 'Bags' || p.subcategory === 'Shoes')).slice(0, 8))
+
       setAllProducts(allProds)
     }
     loadProducts()
@@ -135,7 +151,7 @@ export default function NewReleasesPage() {
         <div className="relative h-[250px] md:h-[300px] lg:h-[350px] overflow-hidden">
           <div className="absolute inset-0">
             <LazyImage
-              src="/images/hero/hero-collection.png"
+              src={getProductImageUrl('silk-midi-dress-pink', 2)}
               alt="New Releases"
               className="w-full h-full"
               objectFit="cover"
@@ -144,7 +160,7 @@ export default function NewReleasesPage() {
           </div>
           
           <div className="relative h-full flex items-end">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full pb-8 md:pb-10">
+            <div className="layout-commerce w-full pb-8 md:pb-10">
               <div className="max-w-2xl">
                 <div className="inline-block mb-4">
                   <span className="text-xs md:text-sm text-white/80 uppercase tracking-widest font-medium">
@@ -163,7 +179,7 @@ export default function NewReleasesPage() {
         </div>
 
         {/* Main Content Layout: Left Rail + Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="layout-commerce py-8">
           {/* Breadcrumbs */}
           <nav className="flex items-center gap-2 text-sm text-brand-gray-500 mb-6">
             {breadcrumbs.map((crumb, idx) => {

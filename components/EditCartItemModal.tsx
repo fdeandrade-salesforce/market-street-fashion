@@ -3,6 +3,7 @@
 import React, { useState, useMemo, useEffect, useRef } from 'react'
 import { Product } from './ProductListingPage'
 import { getAllProducts } from '../lib/products'
+import { getColorHex } from '../lib/color-utils'
 import LazyImage from './LazyImage'
 import Model3DViewer from './Model3DViewer'
 
@@ -75,14 +76,7 @@ export default function EditCartItemModal({
   }, [selectedColor, variantProducts, product])
 
   // Mapping of product IDs to their 3D model GLB files
-  const product3DModels: Record<string, string> = {
-    'pure-cube-white': 'Pure Cube White.glb',
-    'pure-cube-black': 'Black Pure Box.glb',
-    'pure-cube-gray': 'Gray Pure Box.glb',
-    'steady-prism': 'Steady Prism.glb',
-    'spiral-accent': 'Spiral Accent.glb',
-    'vertical-set': 'Vertical Set.glb',
-  }
+  const product3DModels: Record<string, string> = {}
 
   // Get images for current variant
   const images = useMemo(() => {
@@ -397,19 +391,20 @@ export default function EditCartItemModal({
                   <label className="block text-sm font-medium text-brand-black mb-2">
                     Color: {selectedColor}
                   </label>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 items-center">
                     {product.colors.map((color) => (
                       <button
                         key={color}
                         onClick={() => setSelectedColor(color)}
-                        className={`min-w-[44px] px-3 py-2 text-sm border transition-colors capitalize rounded-lg ${
+                        className={`w-10 h-10 rounded-full border-2 transition-all ${
                           selectedColor === color
-                            ? 'bg-brand-blue-500 text-white border-brand-blue-500 shadow-sm'
-                            : 'bg-white text-brand-black border-brand-gray-300 hover:border-brand-blue-500'
+                            ? 'border-brand-blue-500 ring-2 ring-brand-blue-200'
+                            : 'border-brand-gray-200 hover:border-brand-gray-400'
                         }`}
-                      >
-                        {color}
-                      </button>
+                        style={{ backgroundColor: getColorHex(color) }}
+                        title={color}
+                        aria-label={color}
+                      />
                     ))}
                   </div>
                 </div>

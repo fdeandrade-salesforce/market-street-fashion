@@ -45,8 +45,8 @@ class SupabaseConfigRepository implements IConfigRepository {
   async getSiteConfig(): Promise<SiteConfig> {
     // Return default config
     return {
-      siteName: 'Salesforce Foundations',
-      siteDescription: 'Premium design products',
+      siteName: 'Market Street',
+      siteDescription: 'Discover the latest trends in fashion and retail.',
       logoUrl: '/images/logo.svg',
       contactEmail: 'contact@marketstreet.com',
       supportPhone: '+1-555-0100',

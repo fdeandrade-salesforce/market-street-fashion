@@ -26,8 +26,18 @@ export default function WomenSubcategoryPage({ params }: PageProps) {
     loadProducts()
   }, [subcategory])
 
-  // Capitalize first letter of subcategory
-  const formattedSubcategory = subcategory.charAt(0).toUpperCase() + subcategory.slice(1)
+  // Convert URL slug to display name (e.g. new-in -> New In, jackets-blazers -> Jackets & Blazers)
+  const slugToDisplay: Record<string, string> = {
+    'new-in': 'New In',
+    'jackets-blazers': 'Jackets & Blazers',
+    't-shirts': 'T-Shirts',
+  }
+  const formattedSubcategory =
+    slugToDisplay[subcategory.toLowerCase()] ??
+    subcategory
+      .split('-')
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+      .join(' ')
 
   return (
     <div className="min-h-screen flex flex-col">

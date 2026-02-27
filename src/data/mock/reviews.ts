@@ -14,17 +14,17 @@ import { Review, ReviewSummary } from '../../types'
 
 export const mockReviews: Review[] = [
   // ============================================================================
-  // PURE CUBE - Popular product with many reviews
+  // RIBBED TANK TOP - Popular product with many reviews
   // ============================================================================
   {
     id: 'pc-1',
-    productId: 'pure-cube-white',
+    productId: 'ribbed-tank-top',
     author: 'James R.',
     rating: 5,
     date: 'January 2025',
     location: 'San Francisco, CA',
-    title: 'Perfect minimalist accent',
-    content: 'The Pure Cube is exactly what I was looking for. The white finish is crisp and clean, and the proportions are spot-on. It sits beautifully on my console table and catches the light perfectly throughout the day.',
+    title: 'Perfect everyday staple',
+    content: 'The Ribbed Tank Top is exactly what I was looking for. The white color is crisp and clean, and the fit is spot-on. It layers beautifully with blazers and cardigans and works for any occasion.',
     verified: true,
     helpful: 34,
     images: [
@@ -34,13 +34,13 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'pc-2',
-    productId: 'pure-cube-white',
+    productId: 'ribbed-tank-top',
     author: 'Maria S.',
     rating: 5,
     date: 'December 2024',
     location: 'New York, NY',
-    title: 'Museum quality at home',
-    content: 'I bought this for my home office and it elevates the entire space. The craftsmanship is impeccable - you can tell this is precision-made. The matte white finish doesn\'t show fingerprints which is a huge plus.',
+    title: 'Office-to-weekend versatile',
+    content: 'I bought this for work and it elevates every outfit. The quality is impeccable - you can tell the fabric is premium. The white color doesn\'t show wear which is a huge plus.',
     verified: true,
     helpful: 28,
     images: [
@@ -49,25 +49,25 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'pc-3',
-    productId: 'pure-cube-white',
+    productId: 'ribbed-tank-top',
     author: 'Thomas K.',
     rating: 4,
     date: 'November 2024',
     location: 'Chicago, IL',
-    title: 'Beautiful but smaller than expected',
-    content: 'Gorgeous piece with excellent build quality. My only note is that I wish I had ordered the Large size - the Medium is a bit smaller than it appeared in photos. That said, the quality is outstanding.',
+    title: 'Beautiful but runs small',
+    content: 'Gorgeous top with excellent fabric quality. My only note is that I wish I had ordered the Large size - the Medium is a bit snugger than it appeared in photos. That said, the quality is outstanding.',
     verified: true,
     helpful: 19,
   },
   {
     id: 'pc-4',
-    productId: 'pure-cube-white',
+    productId: 'ribbed-tank-top',
     author: 'Emily W.',
     rating: 5,
     date: 'October 2024',
     location: 'Portland, OR',
-    title: 'Bought 3 for my shelving unit',
-    content: 'These cubes arranged on my floating shelves create such a sophisticated look. The white color matches my Scandinavian decor perfectly. Already planning to buy more!',
+    title: 'Bought 3 in different colors',
+    content: 'These tank tops in multiple colors create such a versatile wardrobe base. The white matches everything perfectly. Already planning to buy more!',
     verified: true,
     helpful: 41,
     images: [
@@ -78,13 +78,13 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'pc-7',
-    productId: 'pure-cube-white',
+    productId: 'ribbed-tank-top',
     author: 'Alexandra P.',
     rating: 5,
     date: 'February 2025',
     location: 'Boston, MA',
     title: 'A comprehensive review after 6 months of ownership',
-    content: 'I\'ve been meaning to write this review for a while now, and after living with my Pure Cube White for six months, I feel I can give a truly comprehensive assessment. First, let me talk about the packaging - it arrived double-boxed with foam inserts that kept it perfectly protected during transit. The unboxing experience itself felt premium. Upon first holding the cube, I was immediately struck by its weight and density. This is not a hollow decorative piece; it has real substance and presence. The matte white finish is absolutely pristine, with no visible seams or imperfections whatsoever. I\'ve placed mine on a walnut console table in my entryway, and it catches the natural light beautifully throughout the day. In the morning sun, it has an almost warm glow, while in the evening it takes on cooler tones. Maintenance has been minimal - I simply dust it weekly with a microfiber cloth. I was initially worried about the white showing fingerprints, but the matte finish does an excellent job of hiding them. My interior designer actually asked where I got it because she wants to recommend it to her other clients. Overall, this is the kind of piece that elevates an entire room. Worth every penny and then some.',
+    content: 'I\'ve been meaning to write this review for a while now, and after wearing my Ribbed Tank Top for six months, I feel I can give a truly comprehensive assessment. First, the packaging - it arrived neatly folded and the presentation felt premium. Upon first trying it on, I was immediately struck by the softness and fit. The fabric has real substance and quality. The white color is absolutely pristine and pairs with everything. I\'ve worn mine to the office layered under blazers, on weekends with jeans, and even to casual dinners. The fabric holds up beautifully - I wash it weekly and it still looks new. I was initially worried about the white showing stains, but it cleans easily. My friends have actually asked where I got it because they want their own. Overall, this is the kind of wardrobe staple that elevates every outfit. Worth every penny and then some.',
     verified: true,
     helpful: 67,
     images: [
@@ -93,13 +93,13 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'pc-5',
-    productId: 'pure-cube-black',
+    productId: 'oversized-blazer',
     author: 'David L.',
     rating: 5,
     date: 'January 2025',
     location: 'Los Angeles, CA',
     title: 'Sleek and sophisticated',
-    content: 'The black version is absolutely stunning. It has a subtle depth to the finish that photographs don\'t quite capture. Worth every penny.',
+    content: 'The black blazer is absolutely stunning. It has a subtle structure to the cut that photographs don\'t quite capture. Worth every penny.',
     verified: true,
     helpful: 22,
     images: [
@@ -108,13 +108,13 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'pc-6',
-    productId: 'pure-cube-gray',
+    productId: 'wide-leg-trousers',
     author: 'Rachel M.',
     rating: 4,
     date: 'December 2024',
     location: 'Seattle, WA',
     title: 'Great neutral option',
-    content: 'The gray is the perfect middle ground - not too stark like white, not as dramatic as black. Fits seamlessly into my living room.',
+    content: 'The gray is the perfect middle ground - not too stark like white, not as dramatic as black. Pairs seamlessly with any top.',
     verified: true,
     helpful: 15,
     images: [
@@ -123,17 +123,17 @@ export const mockReviews: Review[] = [
   },
 
   // ============================================================================
-  // SOLID CYLINDER - Bestseller with solid reviews
+  // SILK MIDI DRESS - Bestseller with solid reviews
   // ============================================================================
   {
     id: 'sc-1',
-    productId: 'solid-cylinder',
+    productId: 'silk-midi-dress',
     author: 'Nathan B.',
     rating: 5,
     date: 'January 2025',
     location: 'Austin, TX',
     title: 'Timeless design',
-    content: 'The Solid Cylinder has a weight and presence that makes it feel substantial. It\'s become the anchor piece on my coffee table. The proportions are perfect.',
+    content: 'The Silk Midi Dress has a drape and presence that makes it feel special. It\'s become my go-to for events. The fit is perfect.',
     verified: true,
     helpful: 27,
     images: [
@@ -142,25 +142,25 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'sc-2',
-    productId: 'solid-cylinder',
+    productId: 'silk-midi-dress',
     author: 'Sophie T.',
     rating: 4,
     date: 'November 2024',
     location: 'Denver, CO',
     title: 'Versatile piece',
-    content: 'I use this as a bookend and it works beautifully. Heavy enough to hold books in place while looking elegant. Would love to see more color options.',
+    content: 'I wear this to the office and evenings out. Dresses up or down beautifully. Would love to see more color options.',
     verified: true,
     helpful: 18,
   },
   {
     id: 'sc-3',
-    productId: 'solid-cylinder',
+    productId: 'silk-midi-dress',
     author: 'Marcus J.',
     rating: 5,
     date: 'October 2024',
     location: 'Miami, FL',
     title: 'Better than expected',
-    content: 'Arrived perfectly packaged. The cylinder has a smooth, tactile finish that\'s addictive to touch. My guests always comment on it.',
+    content: 'Arrived perfectly packaged. The silk has a smooth, luxurious feel. I always get compliments when I wear it.',
     verified: true,
     helpful: 12,
     images: [
@@ -170,17 +170,17 @@ export const mockReviews: Review[] = [
   },
 
   // ============================================================================
-  // SOFT SPHERE - Good reviews with some variance
+  // LEATHER ANKLE BOOTS - Good reviews with some variance
   // ============================================================================
   {
     id: 'ss-1',
-    productId: 'soft-sphere',
+    productId: 'leather-ankle-boots',
     author: 'Lauren H.',
     rating: 5,
     date: 'December 2024',
     location: 'Boston, MA',
-    title: 'Organic elegance',
-    content: 'The Soft Sphere has this calming presence. The curved form is so pleasing to look at. It\'s become my favorite piece in my meditation corner.',
+    title: 'Classic elegance',
+    content: 'These ankle boots have a timeless profile. The leather is so supple and comfortable. They\'ve become my everyday go-to footwear.',
     verified: true,
     helpful: 31,
     images: [
@@ -189,25 +189,25 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'ss-2',
-    productId: 'soft-sphere',
+    productId: 'leather-ankle-boots',
     author: 'Chris P.',
     rating: 3,
     date: 'November 2024',
     location: 'Philadelphia, PA',
     title: 'Nice but not perfect',
-    content: 'The sphere is beautiful but I noticed a small imperfection in the finish near the base. Customer service was helpful but I expected perfection at this price point.',
+    content: 'The boots are beautiful but I noticed a small imperfection in the stitching. Customer service was helpful but I expected perfection at this price point.',
     verified: true,
     helpful: 8,
   },
   {
     id: 'ss-3',
-    productId: 'soft-sphere',
+    productId: 'leather-ankle-boots',
     author: 'Amanda G.',
     rating: 5,
     date: 'October 2024',
     location: 'Nashville, TN',
     title: 'Absolutely love it',
-    content: 'Perfect addition to my entryway console. The gray tone works with everything and the shape adds softness to an otherwise angular space.',
+    content: 'Perfect addition to my wardrobe. The neutral tone works with everything and the style adds polish to any outfit.',
     verified: true,
     helpful: 24,
     images: [
@@ -217,17 +217,17 @@ export const mockReviews: Review[] = [
   },
 
   // ============================================================================
-  // FINE CONE - Fewer reviews, newer product feel
+  // STRUCTURED HANDBAG - Fewer reviews, newer product feel
   // ============================================================================
   {
     id: 'fc-1',
-    productId: 'fine-cone',
+    productId: 'structured-handbag',
     author: 'Diana K.',
     rating: 5,
     date: 'January 2025',
     location: 'San Diego, CA',
-    title: 'Striking geometry',
-    content: 'The Fine Cone makes such a statement. The precision of the point is remarkable - it looks like it could have been carved by a master sculptor.',
+    title: 'Striking design',
+    content: 'The Structured Handbag makes such a statement. The clean lines and quality construction are remarkable - it looks like a designer piece.',
     verified: true,
     helpful: 14,
     images: [
@@ -236,29 +236,29 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'fc-2',
-    productId: 'fine-cone',
+    productId: 'structured-handbag',
     author: 'Peter M.',
     rating: 4,
     date: 'December 2024',
     location: 'Dallas, TX',
     title: 'Great conversation starter',
-    content: 'Everyone who visits asks about this piece. It has an almost architectural quality. Docking one star only because I wish it came in larger sizes.',
+    content: 'Everyone asks where I got this bag. It has such a polished, professional look. Docking one star only because I wish it came in more colors.',
     verified: true,
     helpful: 9,
   },
 
   // ============================================================================
-  // STEADY PRISM - New product, fewer but enthusiastic reviews
+  // WOOL BLEND COAT - New product, fewer but enthusiastic reviews
   // ============================================================================
   {
     id: 'sp-1',
-    productId: 'steady-prism',
+    productId: 'wool-blend-coat',
     author: 'Victoria N.',
     rating: 5,
     date: 'January 2025',
     location: 'Brooklyn, NY',
-    title: 'Light plays beautifully on it',
-    content: 'The Steady Prism catches and reflects light in the most beautiful way. In the morning sun, it creates subtle patterns on my wall. Absolutely magical.',
+    title: 'Fabric drapes beautifully',
+    content: 'The Wool Blend Coat has the most beautiful drape. The quality of the wool blend is evident - it holds its shape while feeling incredibly soft. Absolutely love it.',
     verified: true,
     helpful: 38,
     images: [
@@ -268,13 +268,13 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'sp-2',
-    productId: 'steady-prism',
+    productId: 'wool-blend-coat',
     author: 'Jonathan R.',
     rating: 5,
     date: 'December 2024',
     location: 'Minneapolis, MN',
-    title: 'Architectural beauty',
-    content: 'As an architect, I appreciate precision and this delivers. The angles are crisp, the finish is flawless. It sits on my drafting desk as daily inspiration.',
+    title: 'Tailored perfection',
+    content: 'The cut is impeccable. The structure is crisp, the finish is flawless. It\'s my go-to coat for important meetings and events.',
     verified: true,
     helpful: 26,
     images: [
@@ -283,29 +283,29 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'sp-3',
-    productId: 'steady-prism',
+    productId: 'wool-blend-coat',
     author: 'Kelly T.',
     rating: 4,
     date: 'November 2024',
     location: 'Phoenix, AZ',
     title: 'Unique piece',
-    content: 'Love the geometric form. It\'s stable on any surface and the proportions are perfect. Would recommend for anyone who appreciates clean design.',
+    content: 'Love the classic silhouette. It works with dresses and jeans alike. Would recommend for anyone who appreciates quality outerwear.',
     verified: true,
     helpful: 15,
   },
 
   // ============================================================================
-  // DUAL FORMS - Limited edition, exclusive feel
+  // OXFORD SHIRT - Classic staple, exclusive feel
   // ============================================================================
   {
     id: 'df-1',
-    productId: 'dual-forms',
+    productId: 'oxford-shirt',
     author: 'Alexander B.',
     rating: 5,
     date: 'December 2024',
     location: 'Washington, DC',
     title: 'Worth the splurge',
-    content: 'The Dual Forms are like yin and yang for my bookshelf. They complement each other perfectly while each standing beautifully on its own. Museum-quality pieces.',
+    content: 'The Oxford Shirt is a wardrobe essential. It works with blazers for the office and jeans for weekends. The quality is exceptional.',
     verified: true,
     helpful: 29,
     images: [
@@ -315,13 +315,13 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'df-2',
-    productId: 'dual-forms',
+    productId: 'oxford-shirt',
     author: 'Stephanie L.',
     rating: 5,
     date: 'November 2024',
     location: 'Atlanta, GA',
-    title: 'Elegant pairing',
-    content: 'I placed these on either side of my fireplace mantle and they create such beautiful symmetry. The quality is exceptional.',
+    title: 'Elegant and versatile',
+    content: 'I wear this shirt to meetings and casual Fridays. It layers beautifully under sweaters. The quality is exceptional.',
     verified: true,
     helpful: 17,
     images: [
@@ -330,17 +330,17 @@ export const mockReviews: Review[] = [
   },
 
   // ============================================================================
-  // VERTICAL SET - Bestseller with many positive reviews
+  // KNIT MIDI SKIRT - Bestseller with many positive reviews
   // ============================================================================
   {
     id: 'vs-1',
-    productId: 'vertical-set',
+    productId: 'knit-midi-skirt',
     author: 'Michelle B.',
     rating: 5,
     date: 'January 2025',
     location: 'Scottsdale, AZ',
     title: 'Best purchase this year',
-    content: 'The Vertical Set exceeded all my expectations. The pieces stack perfectly and the quality is museum-grade. I rearrange them weekly for a fresh look.',
+    content: 'The Knit Midi Skirt exceeded all my expectations. The fit is perfect and the quality is excellent. I wear it weekly with different tops.',
     verified: true,
     helpful: 52,
     images: [
@@ -351,13 +351,13 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'vs-2',
-    productId: 'vertical-set',
+    productId: 'knit-midi-skirt',
     author: 'Brian K.',
     rating: 5,
     date: 'December 2024',
     location: 'San Jose, CA',
     title: 'Versatile and beautiful',
-    content: 'These work together or separately. Currently have them cascading down my floating shelves. The quality of each piece is consistent and impressive.',
+    content: 'This skirt works with blouses, sweaters, or t-shirts. The knit quality is consistent and impressive. A true wardrobe staple.',
     verified: true,
     helpful: 38,
     images: [
@@ -366,25 +366,25 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'vs-3',
-    productId: 'vertical-set',
+    productId: 'knit-midi-skirt',
     author: 'Nina S.',
     rating: 4,
     date: 'November 2024',
     location: 'Raleigh, NC',
-    title: 'Great value for the set',
-    content: 'Buying the set is definitely the way to go. Each piece complements the others. Minor note: wish the packaging was more sustainable.',
+    title: 'Great value',
+    content: 'The price point is excellent for the quality. Pairs with so many tops. Minor note: wish it came in more colors.',
     verified: true,
     helpful: 21,
   },
   {
     id: 'vs-4',
-    productId: 'vertical-set',
+    productId: 'knit-midi-skirt',
     author: 'Daniel F.',
     rating: 5,
     date: 'October 2024',
     location: 'Columbus, OH',
-    title: 'Interior designer approved',
-    content: 'As an interior designer, I use these in client projects all the time. They photograph beautifully and work in virtually any modern space.',
+    title: 'Style blogger approved',
+    content: 'As a fashion enthusiast, I recommend this to friends all the time. It photographs beautifully and works for virtually any occasion.',
     verified: true,
     helpful: 44,
     images: [
@@ -394,13 +394,13 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'vs-5',
-    productId: 'vertical-set',
+    productId: 'knit-midi-skirt',
     author: 'Margaret H.',
     rating: 5,
     date: 'January 2025',
     location: 'San Diego, CA',
-    title: 'Transformed my living room completely - detailed review',
-    content: 'I want to share my experience with the Vertical Set because I think potential buyers deserve a thorough review. I purchased this set after months of deliberation, and I can confidently say it was one of the best home decor decisions I\'ve ever made. The set arrived impeccably packaged, with each piece individually wrapped in soft cloth and nested in custom foam. When I first arranged the pieces on my credenza, I was blown away by how they transformed the entire feel of my living room. The craftsmanship is exceptional - you can tell these are precision-manufactured with extreme attention to detail. What I love most is the versatility. I\'ve experimented with at least a dozen different arrangements, and each one creates a completely different aesthetic. Sometimes I stack them vertically for a dramatic tower effect. Other times I spread them horizontally for a more relaxed, gallery-like display. My partner was initially skeptical about spending this much on decorative objects, but even he admits they\'ve become the focal point of our space. We\'ve received countless compliments from guests, with many asking where we purchased them. The white finish has held up beautifully over the past few months with minimal cleaning required. If you\'re on the fence, I say go for it. This is the kind of purchase that brings daily joy.',
+    title: 'Transformed my wardrobe - detailed review',
+    content: 'I want to share my experience with the Knit Midi Skirt because I think potential buyers deserve a thorough review. I purchased this after months of looking for the perfect midi skirt, and I can confidently say it was one of the best wardrobe decisions I\'ve ever made. It arrived impeccably packaged. When I first tried it on, I was blown away by how flattering the fit is. The craftsmanship is exceptional - you can tell the knit quality is premium. What I love most is the versatility. I\'ve styled it with at least a dozen different tops, and each look feels completely different. Sometimes I wear it with a tucked-in blouse for the office. Other times with a cozy sweater for weekends. My friends were initially skeptical about another skirt purchase, but even they admit it\'s become a staple. I\'ve received countless compliments, with many asking where I got it. The fabric has held up beautifully over the past few months with proper care. If you\'re on the fence, I say go for it. This is the kind of purchase that gets worn constantly.',
     verified: true,
     helpful: 58,
     images: [
@@ -411,17 +411,17 @@ export const mockReviews: Review[] = [
   },
 
   // ============================================================================
-  // SPIRAL ACCENT - New and artistic
+  // SATIN SLIP DRESS - New and elegant
   // ============================================================================
   {
     id: 'sa-1',
-    productId: 'spiral-accent',
+    productId: 'satin-slip-dress',
     author: 'Olivia P.',
     rating: 5,
     date: 'January 2025',
     location: 'Salt Lake City, UT',
-    title: 'Sculptural masterpiece',
-    content: 'The Spiral Accent is more sculpture than decor. It has an organic flow that softens my otherwise geometric living room. Absolutely stunning.',
+    title: 'Elegant masterpiece',
+    content: 'The Satin Slip Dress is more than a dress - it\'s a statement. The drape and flow are so flattering. Absolutely stunning for special occasions.',
     verified: true,
     helpful: 23,
     images: [
@@ -430,13 +430,13 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'sa-2',
-    productId: 'spiral-accent',
+    productId: 'satin-slip-dress',
     author: 'Michael H.',
     rating: 5,
     date: 'December 2024',
     location: 'Portland, ME',
-    title: 'Art piece quality',
-    content: 'This could easily be in a gallery. The spiral form is hypnotic and the craftsmanship is flawless. Worth every penny.',
+    title: 'Designer quality',
+    content: 'This could easily be from a luxury brand. The satin has a gorgeous sheen and the craftsmanship is flawless. Worth every penny.',
     verified: true,
     helpful: 18,
     images: [
@@ -446,17 +446,17 @@ export const mockReviews: Review[] = [
   },
 
   // ============================================================================
-  // FLOW FORM I - Bestseller, artistic product
+  // PLEATED MIDI SKIRT - Bestseller, classic product
   // ============================================================================
   {
     id: 'ff1-1',
-    productId: 'flow-form-i',
+    productId: 'pleated-midi-skirt',
     author: 'Catherine R.',
     rating: 5,
     date: 'January 2025',
     location: 'Santa Monica, CA',
-    title: 'Breathtaking organic form',
-    content: 'Flow Form I has this incredible sense of movement frozen in time. It looks different from every angle. My favorite piece in my collection.',
+    title: 'Breathtaking movement',
+    content: 'The Pleated Midi Skirt has this incredible flow when you walk. The pleats catch the light beautifully. My favorite skirt in my wardrobe.',
     verified: true,
     helpful: 41,
     images: [
@@ -467,13 +467,13 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'ff1-2',
-    productId: 'flow-form-i',
+    productId: 'pleated-midi-skirt',
     author: 'Andrew T.',
     rating: 5,
     date: 'December 2024',
     location: 'Austin, TX',
     title: 'Worth the investment',
-    content: 'This is a statement piece that elevates any room. The curves are so smooth and the finish is impeccable. Highly recommend.',
+    content: 'This is a statement piece that elevates any outfit. The pleats are so crisp and the fit is impeccable. Highly recommend.',
     verified: true,
     helpful: 33,
     images: [
@@ -482,29 +482,29 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'ff1-3',
-    productId: 'flow-form-i',
+    productId: 'pleated-midi-skirt',
     author: 'Rebecca W.',
     rating: 4,
     date: 'November 2024',
     location: 'Charlotte, NC',
     title: 'Beautiful but needs care',
-    content: 'Gorgeous piece but the curves collect dust easily. Small price to pay for something this beautiful. Get the Large size if you can!',
+    content: 'Gorgeous skirt but dry clean only. Small price to pay for something this beautiful. Size up if you\'re between sizes!',
     verified: true,
     helpful: 19,
   },
 
   // ============================================================================
-  // FUSION BLOCK - Bestseller, modular system
+  // LEATHER CROSSBODY BAG - Bestseller, versatile accessory
   // ============================================================================
   {
     id: 'fb-1',
-    productId: 'fusion-block',
+    productId: 'leather-crossbody-bag',
     author: 'Robert H.',
     rating: 5,
     date: 'January 2025',
     location: 'Detroit, MI',
-    title: 'Endlessly configurable',
-    content: 'The Fusion Block system is genius. I\'ve rearranged it dozens of times and it always looks intentional. The modular approach is perfect for my evolving taste.',
+    title: 'Endlessly versatile',
+    content: 'The Leather Crossbody Bag is genius. I use it for work, weekends, and travel. The size is perfect and it always looks polished.',
     verified: true,
     helpful: 36,
     images: [
@@ -515,13 +515,13 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'fb-2',
-    productId: 'fusion-block',
+    productId: 'leather-crossbody-bag',
     author: 'Jessica M.',
     rating: 5,
     date: 'December 2024',
     location: 'Tampa, FL',
-    title: 'Best modular design',
-    content: 'I\'ve tried other modular decor but nothing compares to the quality and design of Fusion Block. Each piece fits together perfectly.',
+    title: 'Best crossbody design',
+    content: 'I\'ve tried other crossbody bags but nothing compares to the quality and design of this one. The strap length is perfect.',
     verified: true,
     helpful: 28,
     images: [
@@ -530,29 +530,29 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'fb-3',
-    productId: 'fusion-block',
+    productId: 'leather-crossbody-bag',
     author: 'William C.',
     rating: 4,
     date: 'November 2024',
     location: 'Indianapolis, IN',
-    title: 'Great system, want more pieces',
-    content: 'Love the concept and execution. Would buy expansion packs in a heartbeat if they were available. Hint hint, Salesforce Foundations!',
+    title: 'Great bag, want more colors',
+    content: 'Love the design and quality. Would buy in other colors in a heartbeat if they were available. Hint hint, Market Street!',
     verified: true,
     helpful: 22,
   },
 
   // ============================================================================
-  // SIGNATURE FORM - Premium product, glowing reviews
+  // SILK BLOUSE - Premium product, glowing reviews
   // ============================================================================
   {
     id: 'sf-1',
-    productId: 'signature-form-white',
+    productId: 'silk-blouse',
     author: 'Jennifer S.',
     rating: 5,
     date: 'January 2025',
     location: 'Beverly Hills, CA',
-    title: 'The crown jewel of my home',
-    content: 'The Signature Form is absolutely worth the premium price. It\'s the centerpiece of my living room and the quality is beyond reproach. Museum-quality craftsmanship.',
+    title: 'The crown jewel of my wardrobe',
+    content: 'The Silk Blouse is absolutely worth the premium price. It\'s my go-to for important meetings and the quality is beyond reproach. Luxury-level craftsmanship.',
     verified: true,
     helpful: 56,
     images: [
@@ -562,13 +562,13 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'sf-2',
-    productId: 'signature-form-white',
+    productId: 'silk-blouse',
     author: 'Christopher L.',
     rating: 5,
     date: 'December 2024',
     location: 'Manhattan, NY',
     title: 'Investment piece',
-    content: 'This is the kind of piece you build a room around. The white finish is pristine and the form is timeless. Will be in my family for generations.',
+    content: 'This is the kind of piece you build outfits around. The silk is pristine and the cut is timeless. A wardrobe staple for years to come.',
     verified: true,
     helpful: 42,
     images: [
@@ -577,13 +577,13 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'sf-3',
-    productId: 'signature-form-silver',
+    productId: 'tailored-blazer',
     author: 'Angela M.',
     rating: 5,
     date: 'January 2025',
     location: 'Malibu, CA',
-    title: 'Stunning silver finish',
-    content: 'The silver version has this subtle shimmer that catches light beautifully. It\'s modern yet timeless. Absolutely love it.',
+    title: 'Stunning tailored fit',
+    content: 'The blazer has a perfect structured fit that flatters my silhouette. It\'s modern yet timeless. Absolutely love it.',
     verified: true,
     helpful: 31,
     images: [
@@ -593,13 +593,13 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'sf-4',
-    productId: 'signature-form-black',
+    productId: 'slim-fit-chinos',
     author: 'Gregory P.',
     rating: 5,
     date: 'December 2024',
     location: 'Chicago, IL',
-    title: 'Dramatic and elegant',
-    content: 'The black Signature Form makes such a bold statement. It anchors my all-white living room perfectly. The contrast is chef\'s kiss.',
+    title: 'Versatile and elegant',
+    content: 'The Slim Fit Chinos make such a polished statement. They anchor my work and weekend wardrobes perfectly. The fit is chef\'s kiss.',
     verified: true,
     helpful: 27,
     images: [
@@ -608,13 +608,13 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'sf-5',
-    productId: 'signature-form-white',
+    productId: 'silk-blouse',
     author: 'Richard M.',
     rating: 5,
     date: 'January 2025',
     location: 'Miami Beach, FL',
-    title: 'An investment piece that defines my space - full review',
-    content: 'After researching premium home decor for nearly a year, I finally pulled the trigger on the Signature Form in white, and I need to share why this was absolutely the right choice. Let me start with my background: I\'m a collector of contemporary art and design pieces, and I\'ve purchased items from galleries around the world. The Signature Form stands shoulder to shoulder with pieces costing three times as much. The form itself is mesmerizing - it has these subtle curves that create different silhouettes depending on your viewing angle and the time of day. In my oceanfront condo, the morning light creates the most beautiful shadows on the wall behind it. By evening, with my accent lighting, it takes on an almost sculptural quality that draws the eye immediately upon entering the room. The craftsmanship deserves special mention. I examined every inch with my photographer\'s loupe and found zero imperfections. The finish is uniform, the edges are crisp where they should be and softly radiused where appropriate. This is the work of true artisans. I positioned mine on a custom pedestal in my living room, and it has essentially become the anchor point for all my other design decisions. Friends and colleagues who visit invariably gravitate toward it and want to know where I acquired such a piece. Several have already ordered their own after seeing mine in person. Is it an investment? Absolutely. Is it worth every penny? Without question.',
+    title: 'An investment piece that defines my style - full review',
+    content: 'After researching premium wardrobe staples for nearly a year, I finally pulled the trigger on the Silk Blouse, and I need to share why this was absolutely the right choice. Let me start with my background: I work in a creative field where presentation matters, and I\'ve invested in pieces from well-known brands. This Silk Blouse stands shoulder to shoulder with items costing three times as much. The fabric itself is mesmerizing - it has a beautiful drape that creates different silhouettes depending on how you style it. For the office, I pair it with the Slim Fit Chinos. For evenings, I tuck it into high-waisted trousers. The craftsmanship deserves special mention. I examined every stitch and found zero imperfections. The finish is uniform, the buttons are secure, and the cut is flattering. This is the work of true artisans. This blouse has essentially become the anchor of my work wardrobe. Colleagues invariably ask where I got it. Several have already ordered their own after seeing mine. Is it an investment? Absolutely. Is it worth every penny? Without question.',
     verified: true,
     helpful: 73,
     images: [
@@ -625,17 +625,17 @@ export const mockReviews: Review[] = [
   },
 
   // ============================================================================
-  // CORE ASSEMBLY - Limited edition, enthusiast reviews
+  // WOOL BLEND SCARF - Classic accessory, enthusiast reviews
   // ============================================================================
   {
     id: 'ca-1',
-    productId: 'core-assembly',
+    productId: 'wool-blend-scarf',
     author: 'Timothy R.',
     rating: 5,
     date: 'January 2025',
     location: 'San Francisco, CA',
-    title: 'Engineering meets art',
-    content: 'The Core Assembly is an engineering marvel. The way the pieces interlock is satisfying on a deep level. It\'s as much fun to build as it is to display.',
+    title: 'Cozy meets chic',
+    content: 'The Wool Blend Scarf is a winter essential. The softness is satisfying and it adds polish to any outfit. I wear it with coats and blazers alike.',
     verified: true,
     helpful: 24,
     images: [
@@ -645,13 +645,13 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'ca-2',
-    productId: 'core-assembly',
+    productId: 'wool-blend-scarf',
     author: 'Samantha K.',
     rating: 5,
     date: 'December 2024',
     location: 'Seattle, WA',
     title: 'Worth the wait',
-    content: 'Had to wait for this to come back in stock but it was worth every day. The complexity and quality are unmatched. A true collector\'s piece.',
+    content: 'Had to wait for this to come back in stock but it was worth every day. The quality and softness are unmatched. A true wardrobe staple.',
     verified: true,
     helpful: 18,
     images: [
@@ -660,17 +660,17 @@ export const mockReviews: Review[] = [
   },
 
   // ============================================================================
-  // TWIN TOWERS - Set product, positive reviews
+  // LEATHER CHELSEA BOOTS - Footwear, positive reviews
   // ============================================================================
   {
     id: 'tt-1',
-    productId: 'twin-towers-large',
+    productId: 'leather-chelsea-boots',
     author: 'Patricia N.',
     rating: 5,
     date: 'January 2025',
     location: 'Houston, TX',
-    title: 'Dramatic vertical presence',
-    content: 'The Large Twin Towers flank my fireplace and create such drama. The height really draws the eye up. Beautiful craftsmanship.',
+    title: 'Classic versatile boot',
+    content: 'These Chelsea boots go with everything. Dresses, jeans, trousers - they add polish to any outfit. Beautiful craftsmanship.',
     verified: true,
     helpful: 31,
     images: [
@@ -680,13 +680,13 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'tt-2',
-    productId: 'twin-towers-small',
+    productId: 'crew-neck-t-shirt',
     author: 'Edward J.',
     rating: 4,
     date: 'December 2024',
     location: 'Pittsburgh, PA',
-    title: 'Perfect desk companions',
-    content: 'The Small size works great on my desk. They add sophistication without taking up too much space. Wish shipping was faster.',
+    title: 'Perfect everyday tee',
+    content: 'The fit works great for layering or wearing alone. Adds polish without trying too hard. Wish it came in more colors.',
     verified: true,
     helpful: 14,
     images: [
@@ -705,13 +705,13 @@ export const mockReviews: Review[] = [
   // ============================================================================
   {
     id: 'fd-1',
-    productId: 'floating-disk-white',
+    productId: 'leather-belt',
     author: 'Linda C.',
     rating: 4,
     date: 'December 2024',
     location: 'Sacramento, CA',
     title: 'Simple and elegant',
-    content: 'The Floating Disk is understated but beautiful. It adds a subtle touch of design without overwhelming the space. Great quality.',
+    content: 'The Leather Belt is understated but beautiful. It adds a subtle touch of polish to any outfit. Great quality.',
     verified: true,
     helpful: 8,
     images: [
@@ -720,13 +720,13 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'us-1',
-    productId: 'unity-sphere',
+    productId: 'cashmere-scarf',
     author: 'Mark W.',
     rating: 5,
     date: 'January 2025',
     location: 'Las Vegas, NV',
-    title: 'Perfect sphere',
-    content: 'The Unity Sphere is mesmerizing. The golden undertones in the finish give it warmth. Sits perfectly on my sideboard.',
+    title: 'Perfect luxury',
+    content: 'The Cashmere Scarf is mesmerizing. The softness is incredible. Pairs perfectly with my wool coat.',
     verified: true,
     helpful: 16,
     images: [
@@ -736,25 +736,25 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'us-2',
-    productId: 'unity-sphere',
+    productId: 'cashmere-scarf',
     author: 'Carol T.',
     rating: 4,
     date: 'December 2024',
     location: 'Milwaukee, WI',
     title: 'Beautiful addition',
-    content: 'Bought this as a gift for my daughter\'s new apartment. She loves it! The size options are great.',
+    content: 'Bought this as a gift for my daughter. She loves it! The color options are great.',
     verified: true,
     helpful: 11,
   },
   {
     id: 'bm-1',
-    productId: 'base-module',
+    productId: 'bomber-jacket',
     author: 'Frank D.',
     rating: 5,
     date: 'December 2024',
     location: 'Kansas City, MO',
-    title: 'Great foundation piece',
-    content: 'Started my modular collection with the Base Module and it\'s perfect. Solid construction and works with all the other pieces.',
+    title: 'Great casual layer',
+    content: 'The Bomber Jacket is my go-to casual outer layer. Solid construction and works with jeans and dresses alike.',
     verified: true,
     helpful: 14,
     images: [
@@ -763,25 +763,25 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'cl-1',
-    productId: 'compact-layer',
+    productId: 'leather-messenger-bag',
     author: 'Helen R.',
     rating: 4,
     date: 'November 2024',
     location: 'Orlando, FL',
-    title: 'Nice layered design',
-    content: 'The Compact Layer has a nice horizontal emphasis that works well on my long console table. Good value.',
+    title: 'Nice professional design',
+    content: 'The Leather Messenger Bag has the perfect size for my laptop and essentials. Good value for the quality.',
     verified: true,
     helpful: 7,
   },
   {
     id: 'lg-1',
-    productId: 'layer-grid',
+    productId: 'wool-blend-overcoat',
     author: 'Steven M.',
     rating: 5,
     date: 'January 2025',
     location: 'Cleveland, OH',
-    title: 'Geometric perfection',
-    content: 'The grid pattern on this piece is so satisfying. It casts interesting shadows on the wall behind it. Highly recommend.',
+    title: 'Classic perfection',
+    content: 'The Wool Blend Overcoat is so well tailored. It elevates any outfit for fall and winter. Highly recommend.',
     verified: true,
     helpful: 12,
     images: [
@@ -791,13 +791,13 @@ export const mockReviews: Review[] = [
   },
   {
     id: 'sc-4',
-    productId: 'sky-column',
+    productId: 'cropped-cardigan',
     author: 'Dorothy L.',
     rating: 5,
     date: 'December 2024',
     location: 'San Antonio, TX',
-    title: 'Elegant vertical element',
-    content: 'The Sky Column adds height and drama to my corner. The proportions are perfect and it\'s surprisingly stable.',
+    title: 'Elegant layering piece',
+    content: 'The Cropped Cardigan adds polish to any outfit. The proportions are perfect and it layers beautifully.',
     verified: true,
     helpful: 9,
     images: [
@@ -847,28 +847,28 @@ export function generateReviewSummary(productId: string): ReviewSummary {
 
 // Pre-computed review summaries for all products with reviews
 export const mockReviewSummaries: Record<string, ReviewSummary> = {
-  'pure-cube-white': generateReviewSummary('pure-cube-white'),
-  'pure-cube-black': generateReviewSummary('pure-cube-black'),
-  'pure-cube-gray': generateReviewSummary('pure-cube-gray'),
-  'solid-cylinder': generateReviewSummary('solid-cylinder'),
-  'soft-sphere': generateReviewSummary('soft-sphere'),
-  'fine-cone': generateReviewSummary('fine-cone'),
-  'steady-prism': generateReviewSummary('steady-prism'),
-  'dual-forms': generateReviewSummary('dual-forms'),
-  'vertical-set': generateReviewSummary('vertical-set'),
-  'spiral-accent': generateReviewSummary('spiral-accent'),
-  'flow-form-i': generateReviewSummary('flow-form-i'),
-  'fusion-block': generateReviewSummary('fusion-block'),
-  'signature-form-white': generateReviewSummary('signature-form-white'),
-  'signature-form-silver': generateReviewSummary('signature-form-silver'),
-  'signature-form-black': generateReviewSummary('signature-form-black'),
-  'core-assembly': generateReviewSummary('core-assembly'),
-  'twin-towers-large': generateReviewSummary('twin-towers-large'),
-  'twin-towers-small': generateReviewSummary('twin-towers-small'),
-  'floating-disk-white': generateReviewSummary('floating-disk-white'),
-  'unity-sphere': generateReviewSummary('unity-sphere'),
-  'base-module': generateReviewSummary('base-module'),
-  'compact-layer': generateReviewSummary('compact-layer'),
-  'layer-grid': generateReviewSummary('layer-grid'),
-  'sky-column': generateReviewSummary('sky-column'),
+  'ribbed-tank-top': generateReviewSummary('ribbed-tank-top'),
+  'oversized-blazer': generateReviewSummary('oversized-blazer'),
+  'wide-leg-trousers': generateReviewSummary('wide-leg-trousers'),
+  'silk-midi-dress': generateReviewSummary('silk-midi-dress'),
+  'leather-ankle-boots': generateReviewSummary('leather-ankle-boots'),
+  'structured-handbag': generateReviewSummary('structured-handbag'),
+  'wool-blend-coat': generateReviewSummary('wool-blend-coat'),
+  'oxford-shirt': generateReviewSummary('oxford-shirt'),
+  'knit-midi-skirt': generateReviewSummary('knit-midi-skirt'),
+  'satin-slip-dress': generateReviewSummary('satin-slip-dress'),
+  'pleated-midi-skirt': generateReviewSummary('pleated-midi-skirt'),
+  'leather-crossbody-bag': generateReviewSummary('leather-crossbody-bag'),
+  'silk-blouse': generateReviewSummary('silk-blouse'),
+  'tailored-blazer': generateReviewSummary('tailored-blazer'),
+  'slim-fit-chinos': generateReviewSummary('slim-fit-chinos'),
+  'wool-blend-scarf': generateReviewSummary('wool-blend-scarf'),
+  'leather-chelsea-boots': generateReviewSummary('leather-chelsea-boots'),
+  'crew-neck-t-shirt': generateReviewSummary('crew-neck-t-shirt'),
+  'leather-belt': generateReviewSummary('leather-belt'),
+  'cashmere-scarf': generateReviewSummary('cashmere-scarf'),
+  'bomber-jacket': generateReviewSummary('bomber-jacket'),
+  'leather-messenger-bag': generateReviewSummary('leather-messenger-bag'),
+  'wool-blend-overcoat': generateReviewSummary('wool-blend-overcoat'),
+  'cropped-cardigan': generateReviewSummary('cropped-cardigan'),
 }

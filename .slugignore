@@ -1,0 +1,11 @@
+*.md
+*.xlsx
+*.csv
+preview.html
+scripts/
+supabase/
+apps/
+resources/
+generate-product-import.ts
+.cursor/
+.cursorignore

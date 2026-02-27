@@ -17,8 +17,8 @@ import {
 // ============================================================================
 
 export const mockSiteConfig: SiteConfig = {
-  siteName: 'Salesforce Foundations',
-  siteDescription: 'Premium geometric design objects for modern spaces',
+  siteName: 'Market Street',
+  siteDescription: 'Discover the latest trends in fashion and retail. Shop the new season collection.',
   logoUrl: '/images/logo.svg',
   contactEmail: 'support@marketstreet.com',
   supportPhone: '+1 (800) 555-0123',
@@ -29,7 +29,7 @@ export const mockSiteConfig: SiteConfig = {
     pinterest: 'https://pinterest.com/marketstreet',
     youtube: 'https://youtube.com/marketstreet',
   },
-  shippingThreshold: 50, // Free shipping over $50
+  shippingThreshold: 90, // Free shipping over $90
   defaultCurrency: 'USD',
   taxRate: 0.0875, // 8.75% tax rate
 }
@@ -87,7 +87,7 @@ export const mockFeatureFlags: FeatureFlags = {
 
 export const mockAnnouncementBarConfig: AnnouncementBarConfig = {
   enabled: true,
-  message: 'FREE WORLDWIDE SHIPPING from $90',
+  message: 'FREE WORLDWIDE SHIPPING from $90 | New Season Now Available',
   dismissible: true,
   backgroundColor: '#E8F4FE',
   textColor: '#1E3A5F',

@@ -2,7 +2,8 @@ import sharp from 'sharp'
 import * as fs from 'fs'
 import * as path from 'path'
 
-const QUALITY = 70 // 0.7 quality as requested
+const QUALITY = 70
+const MAX_DIMENSION = 1200
 const PUBLIC_DIR = path.join(process.cwd(), 'public')
 
 interface CompressionResult {
@@ -11,6 +12,7 @@ interface CompressionResult {
   compressedSize: number
   savings: number
   savingsPercent: string
+  resized: boolean
 }
 
 async function getImageFiles(dir: string): Promise<string[]> {
@@ -40,21 +42,31 @@ async function compressImage(filePath: string): Promise<CompressionResult | null
   const originalSize = fs.statSync(filePath).size
   
   try {
+    const metadata = await sharp(filePath).metadata()
+    const needsResize = (metadata.width && metadata.width > MAX_DIMENSION) ||
+                        (metadata.height && metadata.height > MAX_DIMENSION)
+
+    let pipeline = sharp(filePath)
+
+    if (needsResize) {
+      pipeline = pipeline.resize(MAX_DIMENSION, MAX_DIMENSION, {
+        fit: 'inside',
+        withoutEnlargement: true,
+      })
+    }
+
     let buffer: Buffer
     
     if (ext === '.png') {
-      // For PNG, convert to optimized PNG with compression
-      buffer = await sharp(filePath)
+      buffer = await pipeline
         .png({ quality: QUALITY, compressionLevel: 9 })
         .toBuffer()
     } else if (ext === '.jpg' || ext === '.jpeg') {
-      // For JPEG, use quality setting
-      buffer = await sharp(filePath)
+      buffer = await pipeline
         .jpeg({ quality: QUALITY })
         .toBuffer()
     } else if (ext === '.webp') {
-      // For WebP, use quality setting
-      buffer = await sharp(filePath)
+      buffer = await pipeline
         .webp({ quality: QUALITY })
         .toBuffer()
     } else {
@@ -63,7 +75,6 @@ async function compressImage(filePath: string): Promise<CompressionResult | null
     
     const compressedSize = buffer.length
     
-    // Only save if we actually reduced the size
     if (compressedSize < originalSize) {
       fs.writeFileSync(filePath, buffer)
       
@@ -72,7 +83,8 @@ async function compressImage(filePath: string): Promise<CompressionResult | null
         originalSize,
         compressedSize,
         savings: originalSize - compressedSize,
-        savingsPercent: ((1 - compressedSize / originalSize) * 100).toFixed(1) + '%'
+        savingsPercent: ((1 - compressedSize / originalSize) * 100).toFixed(1) + '%',
+        resized: !!needsResize,
       }
     } else {
       return {
@@ -80,7 +92,8 @@ async function compressImage(filePath: string): Promise<CompressionResult | null
         originalSize,
         compressedSize: originalSize,
         savings: 0,
-        savingsPercent: '0% (kept original)'
+        savingsPercent: '0% (kept original)',
+        resized: false,
       }
     }
   } catch (error) {
@@ -100,7 +113,7 @@ function formatBytes(bytes: number): string {
 async function main() {
   console.log('🖼️  Image Compression Script')
   console.log('============================')
-  console.log(`Quality: ${QUALITY}%`)
+  console.log(`Quality: ${QUALITY}% | Max dimension: ${MAX_DIMENSION}px`)
   console.log(`Scanning: ${PUBLIC_DIR}`)
   console.log('')
   
@@ -124,7 +137,8 @@ async function main() {
       totalCompressed += result.compressedSize
       
       if (result.savings > 0) {
-        console.log(` ✓ Saved ${result.savingsPercent}`)
+        const tag = result.resized ? ' [resized]' : ''
+        console.log(` ✓ Saved ${result.savingsPercent}${tag}`)
       } else {
         console.log(` → Already optimized`)
       }
@@ -136,7 +150,9 @@ async function main() {
   console.log('\n============================')
   console.log('📊 Summary')
   console.log('============================')
+  const resizedCount = results.filter(r => r.resized).length
   console.log(`Total images processed: ${results.length}`)
+  console.log(`Images resized (>${MAX_DIMENSION}px): ${resizedCount}`)
   console.log(`Original total size: ${formatBytes(totalOriginal)}`)
   console.log(`Compressed total size: ${formatBytes(totalCompressed)}`)
   console.log(`Total savings: ${formatBytes(totalOriginal - totalCompressed)} (${((1 - totalCompressed / totalOriginal) * 100).toFixed(1)}%)`)

@@ -123,7 +123,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             <div className="flex items-center justify-center mb-4">
               <img 
                 src="/images/logo.svg" 
-                alt="Salesforce Foundations" 
+                alt="Market Street" 
                 className="h-12 w-auto"
               />
             </div>
@@ -133,7 +133,7 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
             <p className="text-sm text-brand-gray-600 mt-1">
               {activeTab === 'signin' 
                 ? 'Sign in to access your account' 
-                : 'Join Salesforce Foundations for exclusive benefits'}
+                : 'Join Market Street for exclusive benefits'}
             </p>
           </div>
 
@@ -414,9 +414,9 @@ export default function LoginModal({ isOpen, onClose }: LoginModalProps) {
                         I wish to receive product updates, news and promotions from Market Street.
                       </p>
                       <p className="text-xs text-brand-gray-500 mt-1">
-                        By clicking below and placing your order, you agree (i) to make your purchase from Salesforce as merchant of record for this transaction, subject to Salesforce&apos;s{' '}
-                        <a href="/terms" className="text-brand-blue-500 hover:underline">Terms & Conditions</a>; (ii) that your information will be handled by Salesforce in accordance with the{' '}
-                        <a href="/privacy" className="text-brand-blue-500 hover:underline">Salesforce Privacy Policy</a>.
+                        By clicking below and placing your order, you agree (i) to make your purchase from Market Street as merchant of record for this transaction, subject to Market Street&apos;s{' '}
+                        <a href="/terms" className="text-brand-blue-500 hover:underline">Terms & Conditions</a>; (ii) that your information will be handled by Market Street in accordance with the{' '}
+                        <a href="/privacy" className="text-brand-blue-500 hover:underline">Market Street Privacy Policy</a>.
                       </p>
                     </div>
                   </label>

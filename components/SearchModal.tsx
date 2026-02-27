@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { searchProducts } from '@/lib/products'
+import { searchProducts, getFeaturedProducts } from '@/lib/products'
 import type { Product } from './ProductListingPage'
 
 interface SearchModalProps {
@@ -13,24 +13,26 @@ interface SearchModalProps {
 }
 
 const recentSearches = [
-  { type: 'history', text: 'geometric sculptures for living room' },
+  { type: 'history', text: 'oversized blazer black' },
   { type: 'search', text: 'white minimalist decor' },
   { type: 'search', text: 'abstract art pieces' },
   { type: 'search', text: 'modern cube designs' },
-]
-
-const bestsellers = [
-  { id: '1', name: 'Signature Form', price: 89.00, image: '/images/products/signature-form-white-1.png' },
-  { id: '2', name: 'Pure Cube', price: 65.00, image: '/images/products/pure-cube-white-1.png' },
-  { id: '3', name: 'Soft Sphere', price: 75.00, image: '/images/products/soft-sphere-1.png' },
 ]
 
 export default function SearchModal({ isOpen, onClose, onOpenAgent }: SearchModalProps) {
   const router = useRouter()
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState<Product[]>([])
+  const [bestsellers, setBestsellers] = useState<Product[]>([])
   const [isSearching, setIsSearching] = useState(false)
   const inputRef = useRef<HTMLInputElement>(null)
+
+  // Load bestsellers when modal opens
+  useEffect(() => {
+    if (isOpen && bestsellers.length === 0) {
+      getFeaturedProducts(6).then(setBestsellers)
+    }
+  }, [isOpen, bestsellers.length])
 
   // Debounced search
   useEffect(() => {
@@ -92,7 +94,7 @@ export default function SearchModal({ isOpen, onClose, onOpenAgent }: SearchModa
       
       {/* Modal Content - fills root which has data-modal-overlay constraint; no data-modal-center here as content is relative (that rule is for fixed centering wrappers) */}
       <div className="relative bg-card w-full h-full md:h-auto md:max-h-[80vh] md:overflow-y-auto shadow-2xl flex flex-col md:mt-0">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex-1 flex flex-col w-full">
+        <div className="layout-commerce flex-1 flex flex-col w-full">
           {/* Search Header */}
           <div className="flex items-center gap-2 md:gap-4 py-3 md:py-4 border-b border-brand-gray-200 flex-shrink-0">
             {/* Search Icon */}
@@ -252,7 +254,12 @@ export default function SearchModal({ isOpen, onClose, onOpenAgent }: SearchModa
                           />
                         </div>
                         <p className="text-xs md:text-sm font-medium text-brand-black line-clamp-2">{product.name}</p>
-                        <p className="text-xs md:text-sm text-brand-gray-600">${product.price.toFixed(2)}</p>
+                        <p className="text-xs md:text-sm text-brand-gray-600">
+                          ${product.price.toFixed(2)}
+                          {product.originalPrice && product.originalPrice > product.price && (
+                            <span className="ml-1 line-through text-brand-gray-400">${product.originalPrice.toFixed(2)}</span>
+                          )}
+                        </p>
                       </Link>
                     ))}
                   </div>

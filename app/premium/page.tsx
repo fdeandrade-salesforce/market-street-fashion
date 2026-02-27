@@ -6,6 +6,7 @@ import ProductListingPage from '../../components/ProductListingPage'
 import Footer from '../../components/Footer'
 import { getAllProducts } from '../../lib/products'
 import { Product } from '../../components/ProductListingPage'
+import { getProductImageUrl } from '../../src/data/mock/products'
 
 export default function PremiumPage() {
   const [products, setProducts] = useState<Product[]>([])
@@ -25,7 +26,7 @@ export default function PremiumPage() {
       <ProductListingPage 
         products={products} 
         category="Premium"
-        headerImage="/images/products/signature-form-silver-1.png"
+        headerImage={getProductImageUrl('wool-blend-overcoat-camel', 2)}
       />
       <Footer />
     </div>
