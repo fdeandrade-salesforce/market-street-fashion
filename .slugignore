@@ -1,6 +1,7 @@
 resources/
 apps/
 scripts/
+public/models/
 DESIGN_SYSTEM.md
 HEROKU_READINESS_REPORT.md
 SUPABASE_IMPLEMENTATION.md
