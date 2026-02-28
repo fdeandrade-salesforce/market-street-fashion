@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useState, useMemo, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Product } from './ProductListingPage'
@@ -30,7 +30,7 @@ export default function ProductCard({
   const [hoveredColor, setHoveredColor] = useState<string | null>(null)
   const [isCardHovered, setIsCardHovered] = useState(false)
 
-  // Find variant products by matching product name, category, and subcategory
+  // Find variant products by matching product name and category
   const variantProducts = useMemo(() => {
     if (!product.colors || product.colors.length <= 1 || allProducts.length === 0) {
       return {}
@@ -38,12 +38,10 @@ export default function ProductCard({
     
     const variants: Record<string, Product> = {}
     
-    // Find products with the same name, category, subcategory, but different colors
     allProducts.forEach((p) => {
       if (
         p.name === product.name && 
         p.category === product.category &&
-        p.subcategory === product.subcategory &&
         p.color && 
         product.colors?.includes(p.color)
       ) {
@@ -52,7 +50,7 @@ export default function ProductCard({
     })
     
     return variants
-  }, [allProducts, product.name, product.category, product.subcategory, product.colors])
+  }, [allProducts, product.name, product.category, product.colors])
 
   // Get current variant based on hovered color
   const currentDisplayVariant = useMemo(() => {
@@ -74,6 +72,15 @@ export default function ProductCard({
     
     return primaryImage
   }, [currentDisplayVariant, isCardHovered])
+
+  // Video support: video is first media, first image is poster/fallback
+  const productVideo = useMemo(() => {
+    return currentDisplayVariant.videos?.[0] || null
+  }, [currentDisplayVariant])
+  const hasSecondImage = Boolean(currentDisplayVariant.images && currentDisplayVariant.images.length >= 2)
+  // Show video by default; on hover, swap to second image if available
+  const showVideo = Boolean(productVideo) && !(isCardHovered && hasSecondImage)
+  const videoRef = useRef<HTMLVideoElement>(null)
 
   // Check if current display variant (hovered or default) is out of stock
   const isCurrentlyOutOfStock = !currentDisplayVariant.inStock
@@ -178,14 +185,30 @@ export default function ProductCard({
     >
       <div className="product-image relative">
         <div className="relative w-full h-full">
-          <LazyImage
-            src={currentImage}
-            alt={product.name}
-            className={`transition-opacity duration-300 ${
-              isCurrentlyOutOfStock ? 'opacity-50' : ''
-            }`}
-            objectFit="cover"
-          />
+          {showVideo && productVideo ? (
+            <video
+              ref={videoRef}
+              key={productVideo}
+              src={productVideo}
+              poster={currentImage}
+              className={`w-full h-full object-cover transition-opacity duration-300 ${
+                isCurrentlyOutOfStock ? 'opacity-50' : ''
+              }`}
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <LazyImage
+              src={currentImage}
+              alt={product.name}
+              className={`transition-opacity duration-300 ${
+                isCurrentlyOutOfStock ? 'opacity-50' : ''
+              }`}
+              objectFit="cover"
+            />
+          )}
         </div>
         <Link 
           href={`/product/${product.id}`} 

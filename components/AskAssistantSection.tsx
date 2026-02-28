@@ -24,7 +24,7 @@ function generateAIQuestions(props: AskAssistantSectionProps): string[] {
     questions.push('Which color would work best for a minimalist space?')
   }
 
-  if (category.includes('sculpture') || category.includes('decor') || category.includes('object')) {
+  if (category.includes('dress') || category.includes('clothing') || category.includes('fashion')) {
     questions.push('Will this work in a minimalist living room?')
     questions.push('What material is this made from?')
     questions.push(`How would you style the ${productName}?`)

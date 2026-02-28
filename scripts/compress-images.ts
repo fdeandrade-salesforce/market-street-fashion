@@ -2,7 +2,7 @@ import sharp from 'sharp'
 import * as fs from 'fs'
 import * as path from 'path'
 
-const QUALITY = 70 // 0.7 quality as requested
+const QUALITY = 85
 const PUBLIC_DIR = path.join(process.cwd(), 'public')
 
 interface CompressionResult {

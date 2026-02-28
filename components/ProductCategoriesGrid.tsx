@@ -88,7 +88,7 @@ export default function ProductCategoriesGrid({
 
   return (
     <section className={`py-12 md:py-16 lg:py-24 ${className}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="layout-commerce">
         {(title || subtitle) && (
           <div className="text-center mb-10 md:mb-12">
             {title && (

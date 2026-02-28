@@ -1,4 +1,9 @@
+import type { Metadata } from 'next'
 import ErrorPageWithCrossSell from '../components/ErrorPageWithCrossSell'
+
+export const metadata: Metadata = {
+  title: 'Page Not Found',
+}
 
 export default function NotFound() {
   return (

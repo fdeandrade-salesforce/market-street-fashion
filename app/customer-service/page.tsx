@@ -14,7 +14,7 @@ export default function CustomerServicePage() {
       <Navigation />
 
       <main className="flex-1">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="layout-commerce py-8">
           {/* Breadcrumbs */}
           <nav className="flex items-center gap-2 text-sm text-brand-gray-500 mb-6" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-brand-blue-500 transition-colors">
@@ -32,7 +32,7 @@ export default function CustomerServicePage() {
           {/* Introduction */}
           <section className="mb-16 md:mb-24">
             <p className="text-body-lg text-brand-gray-700 leading-relaxed mb-6">
-              At Salesforce Foundations, exceptional customer service is at the heart of everything we do. We&apos;re here to help you with any questions, concerns, or support you need. Our team is committed to providing you with a seamless and enjoyable experience.
+              At Market Street, exceptional customer service is at the heart of everything we do. We&apos;re here to help you with any questions, concerns, or support you need. Our team is committed to providing you with a seamless and enjoyable experience.
             </p>
             <p className="text-body-lg text-brand-gray-700 leading-relaxed">
               Whether you need help with an order, have questions about our products, or want to provide feedback, we&apos;re ready to assist you.

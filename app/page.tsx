@@ -14,8 +14,10 @@ import NotifyMeModal from '../components/NotifyMeModal'
 import { getFeaturedProducts, getNewArrivals, getAllProductsWithVariants } from '../lib/products'
 import { Product } from '../components/ProductListingPage'
 import { toggleWishlist, getWishlistIds } from '../lib/wishlist'
-import { getRecentlyViewed } from '../lib/recentlyViewed'
+import { getRecentlyViewed, clearRecentlyViewed } from '../lib/recentlyViewed'
 import { addToCart } from '../lib/cart'
+import { getProductImageUrl } from '../src/data/mock/products'
+
 
 export default function Home() {
   const [featuredProducts, setFeaturedProducts] = useState<Product[]>([])
@@ -119,7 +121,7 @@ export default function Home() {
         <Hero />
 
         {/* Featured Products */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="layout-commerce">
           <ProductCarousel
             id="featured"
             title="Featured Collection"
@@ -132,65 +134,65 @@ export default function Home() {
           />
         </div>
 
-        {/* Step Into Elegance - Product Categories Carousel */}
+        {/* Style for Real Life - Product Categories Carousel */}
         <ProductCategoriesGrid
-          title="Step into Elegance"
-          subtitle="At Salesforce Foundations, we believe design should be accessible, innovative, and timeless. Our collections are crafted for the modern individual who values quality, form, and lasting beauty."
+          title="Style for Real Life"
+          subtitle="At Market Street, we believe fashion should be effortless, authentic, and accessible. Our collections are designed for the modern individual who values quality, versatility, and timeless style."
           variant="category"
           cards={[
             {
-              title: 'Furniture',
-              image: '/images/hero/hero-collection.png',
-              link: '/shop',
-              description: 'Timeless pieces for modern living',
-            },
-            {
-              title: 'Lighting',
-              image: '/images/products/pure-cube-white-1.png',
-              link: '/shop',
-              description: 'Sculptural forms that illuminate',
-            },
-            {
-              title: 'Accessories',
-              image: '/images/products/spiral-accent-1.png',
-              link: '/accessories',
-              description: 'Thoughtful details for your space',
-            },
-            {
-              title: 'New Releases',
-              image: '/images/hero/hero-main.png',
-              link: '/new-releases',
-              description: 'Latest additions to the collection',
-            },
-            {
               title: 'Women',
-              image: '/images/hero/hero-collection.png',
+              image: getProductImageUrl('silk-midi-dress-navy', 1),
               link: '/women',
               description: 'Curated for her',
             },
             {
               title: 'Men',
-              image: '/images/products/fusion-block-1.png',
+              image: getProductImageUrl('tailored-suit-jacket', 1),
               link: '/men',
               description: 'Designed for him',
             },
             {
-              title: 'Geometric',
-              image: '/images/products/pure-cube-white-1.png',
-              link: '/shop',
-              description: 'Clean lines, bold shapes',
+              title: 'Kids',
+              image: getProductImageUrl('kids-floral-dress', 1),
+              link: '/kids',
+              description: 'Styles for little ones',
             },
             {
-              title: 'Modular',
-              image: '/images/products/base-module-1.png',
-              link: '/modular',
-              description: 'Customize your space',
+              title: 'New In',
+              image: getProductImageUrl('oversized-blazer-beige', 1),
+              link: '/new-releases',
+              description: 'Latest arrivals',
             },
             {
-              title: 'Premium',
-              image: '/images/products/signature-form-white-1.png',
-              link: '/premium',
-              description: 'Exceptional craftsmanship',
+              title: 'Outerwear',
+              image: getProductImageUrl('wool-blend-coat-navy', 1),
+              link: '/women/outerwear',
+              description: 'Coats, jackets & more',
+            },
+            {
+              title: 'Dresses',
+              image: getProductImageUrl('satin-slip-dress', 1),
+              link: '/women/dresses',
+              description: 'From casual to evening',
+            },
+            {
+              title: 'Shoes',
+              image: getProductImageUrl('leather-ankle-boots', 1),
+              link: '/women/shoes',
+              description: 'Step into style',
+            },
+            {
+              title: 'Bags',
+              image: getProductImageUrl('structured-handbag', 1),
+              link: '/women/bags',
+              description: 'Carry in style',
+            },
+            {
+              title: 'Sale',
+              image: getProductImageUrl('cropped-cardigan', 2),
+              link: '/sale',
+              description: 'Up to 50% off',
             },
           ]}
           className="bg-brand-gray-50"
@@ -200,17 +202,17 @@ export default function Home() {
         <PromoBannerGrid
           banners={[
             {
-              title: 'Curated Collections',
+              title: 'The New Season',
               subtitle: 'Discover',
-              image: '/images/hero/hero-collection.png',
+              image: getProductImageUrl('wool-blend-coat', 2),
               ctaText: 'Shop Now',
-              ctaLink: '/shop',
+              ctaLink: '/women?filter=new',
               overlayVariant: 'dark',
             },
             {
               title: 'Limited Editions',
               subtitle: 'Exclusive',
-              image: '/images/hero/hero-main.png',
+              image: getProductImageUrl('tailored-suit-jacket', 4),
               ctaText: 'Explore',
               ctaLink: '/new-releases',
               overlayVariant: 'dark',
@@ -221,7 +223,7 @@ export default function Home() {
 
         {/* New Arrivals Section */}
         <div className="bg-brand-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="layout-commerce">
             <ProductCarousel
               id="new-arrivals"
               title="New Arrivals"
@@ -235,23 +237,23 @@ export default function Home() {
           </div>
         </div>
 
-        {/* New Arrivals Promo Banner Grid (Repeat) */}
+        {/* Bestsellers Promo Banner Grid */}
         <PromoBannerGrid
           banners={[
             {
               title: 'Bestsellers',
               subtitle: 'Customer Favorites',
-              image: '/images/products/signature-form-white-1.png',
+              image: getProductImageUrl('silk-blouse', 2),
               ctaText: 'Shop Best Sellers',
-              ctaLink: '/shop',
+              ctaLink: '/women?filter=bestseller',
               overlayVariant: 'dark',
             },
             {
-              title: 'Bundle & Save',
-              subtitle: 'Special Offer',
-              image: '/images/products/bundle-1.png',
-              ctaText: 'View Bundles',
-              ctaLink: '/shop',
+              title: 'Essentials',
+              subtitle: 'Wardrobe Staples',
+              image: getProductImageUrl('merino-wool-sweater', 2),
+              ctaText: 'Shop Essentials',
+              ctaLink: '/men?filter=essentials',
               overlayVariant: 'dark',
             },
           ]}
@@ -261,9 +263,23 @@ export default function Home() {
         {/* Recently Viewed */}
         {recentlyViewed.length > 0 && (
           <div className="bg-brand-gray-50">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="layout-commerce">
+              <div className="mb-8 md:mb-12 flex items-center justify-between pt-12 md:pt-16 lg:pt-20">
+                <h2 className="text-3xl md:text-4xl font-normal text-brand-black tracking-tight">
+                  Recently Viewed
+                </h2>
+                <button
+                  onClick={() => {
+                    clearRecentlyViewed()
+                    setRecentlyViewed([])
+                  }}
+                  className="text-sm text-brand-gray-500 hover:text-brand-gray-700 underline"
+                >
+                  Clear
+                </button>
+              </div>
               <ProductGrid
-                title="Recently Viewed"
+                title=""
                 products={recentlyViewed}
                 columns={4}
                 onUnifiedAction={handleUnifiedAction}
@@ -275,33 +291,49 @@ export default function Home() {
           </div>
         )}
 
+        {/* Brand Story Section */}
+        <section className="py-16 md:py-24 bg-white">
+          <div className="max-w-4xl mx-auto layout-gutter text-center">
+            <h2 className="text-3xl md:text-4xl font-normal text-brand-black mb-6 tracking-tight">
+              Style for Real Life
+            </h2>
+            <p className="text-lg text-brand-gray-700 leading-relaxed mb-8 font-normal">
+              At Market Street, we believe fashion should be effortless, authentic, and accessible.
+              Our collections are designed for the modern individual who values quality,
+              versatility, and timeless style.
+            </p>
+            <p className="text-base text-brand-gray-600 leading-relaxed font-normal">
+              Discover pieces that move with you, adapt to your life, and become the foundation
+              of a wardrobe that works—every day, everywhere.
+            </p>
+          </div>
+        </section>
+
         {/* Newsletter Section */}
-        <section className="py-16 md:py-24">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="bg-brand-blue-500 text-white py-12 md:py-16 px-8 rounded-3xl">
+        <section className="pt-16 md:pt-24 pb-0">
+          <div className="bg-brand-blue-500 text-white py-12 md:py-16 px-8 rounded-none">
             <div className="text-center">
               <h2 className="text-2xl md:text-3xl font-semibold mb-3 tracking-tight">
-                Stay Updated
+                Join Our Community
               </h2>
               <p className="text-white/80 mb-8 font-normal text-sm">
-                Be the first to know about new collections and exclusive offers.
+                Be the first to discover new arrivals, exclusive offers, and style inspiration.
               </p>
               <form className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto justify-center">
                 <input
                   type="email"
                   placeholder="your.email@email.com"
-                  className="flex-1 px-5 py-3 bg-white text-brand-black placeholder-brand-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-blue-300 text-sm"
+                  className="flex-1 px-5 py-3 bg-white text-brand-black placeholder-brand-gray-400 focus:outline-none focus:ring-2 focus:ring-brand-blue-300 text-sm"
                   required
                 />
                 <button
                   type="submit"
-                  className="px-6 py-3 bg-white text-brand-blue-600 font-medium hover:bg-brand-gray-100 transition-colors rounded-lg text-sm"
+                  className="px-6 py-3 bg-white text-brand-blue-600 font-medium hover:bg-brand-gray-100 transition-colors text-sm"
                 >
                   Subscribe
                 </button>
               </form>
             </div>
-          </div>
           </div>
         </section>
       </main>

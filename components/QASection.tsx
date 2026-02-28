@@ -44,7 +44,7 @@ function generateContextualQuestions(
   hasColors?: boolean
 ): Question[] {
   const allQuestions: Question[] = []
-  const brand = productBrand || 'Salesforce Foundations'
+  const brand = productBrand || 'Market Street'
   const category = productCategory?.toLowerCase() || ''
   const subcategory = productSubcategory?.toLowerCase() || ''
 
@@ -99,7 +99,7 @@ function generateContextualQuestions(
   }
 
   // Category-specific questions
-  if (category.includes('geometric') || subcategory.includes('cube')) {
+  if (category.includes('dresses') || category.includes('tops') || subcategory.includes('blouse')) {
     allQuestions.push({
       id: `${productId}-material-1`,
       question: 'What material is this made from?',
@@ -109,7 +109,7 @@ function generateContextualQuestions(
       answers: [
         {
           id: `${productId}-material-1-1`,
-          content: `The ${productName} is crafted from premium materials with a focus on durability and aesthetic appeal. It features a minimalist design that complements any space.`,
+          content: `The ${productName} is crafted from premium fabrics with a focus on comfort and quality. It features a versatile design that works for many occasions.`,
           author: `${brand} Team`,
           date: 'a month ago',
           isSeller: true,
@@ -119,7 +119,7 @@ function generateContextualQuestions(
     })
   }
 
-  if (category.includes('geometric') || subcategory.includes('prism')) {
+  if (category.includes('outerwear') || category.includes('blazers') || subcategory.includes('coat')) {
     allQuestions.push({
       id: `${productId}-design-1`,
       question: 'How does this look in person?',
@@ -129,7 +129,7 @@ function generateContextualQuestions(
       answers: [
         {
           id: `${productId}-design-1-1`,
-          content: `The ${productName} looks even better in person! The geometric design is very striking and the quality is excellent. It's a beautiful piece that adds elegance to any room.`,
+          content: `The ${productName} looks even better in person! The cut and fit are very flattering and the quality is excellent. It's a versatile piece that elevates any outfit.`,
           author: 'David K.',
           date: '2 weeks ago',
           isSeller: false,

@@ -13,7 +13,7 @@ export default function PaymentMethodsPage() {
       <Navigation />
 
       <main className="flex-1">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="layout-commerce py-8">
           {/* Breadcrumbs */}
           <nav className="flex items-center gap-2 text-sm text-brand-gray-500 mb-6" aria-label="Breadcrumb">
             <Link href="/" className="hover:text-brand-blue-500 transition-colors">
@@ -31,7 +31,7 @@ export default function PaymentMethodsPage() {
           {/* Introduction */}
           <section className="mb-16 md:mb-24">
             <p className="text-body-lg text-brand-gray-700 leading-relaxed mb-6">
-              At Salesforce Foundations, we offer a variety of secure payment options to make your checkout experience convenient and safe. All transactions are processed through encrypted, secure payment gateways to protect your information.
+              At Market Street, we offer a variety of secure payment options to make your checkout experience convenient and safe. All transactions are processed through encrypted, secure payment gateways to protect your information.
             </p>
             <p className="text-body-lg text-brand-gray-700 leading-relaxed">
               We accept the following payment methods:

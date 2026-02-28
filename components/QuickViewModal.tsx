@@ -6,6 +6,7 @@ import { Product } from './ProductListingPage'
 import { addToCart } from '../lib/cart'
 import LazyImage from './LazyImage'
 import Model3DViewer from './Model3DViewer'
+import { getColorHex } from '../lib/color-utils'
 import {
   PDPProduct,
   VariantGroup,
@@ -15,7 +16,7 @@ import {
 
 // Media item type for gallery
 interface MediaItem {
-  type: 'image' | 'model3d'
+  type: 'image' | 'video' | 'model3d'
   src: string
   alt?: string
   thumbnail?: string
@@ -232,14 +233,8 @@ export default function QuickViewModal({
   }, [currentVariantId, allVariants, product])
 
   // Mapping of product IDs to their 3D model GLB files
-  const product3DModels: Record<string, string> = {
-    'pure-cube-white': 'Pure Cube White.glb',
-    'pure-cube-black': 'Black Pure Box.glb',
-    'pure-cube-gray': 'Gray Pure Box.glb',
-    'steady-prism': 'Steady Prism.glb',
-    'spiral-accent': 'Spiral Accent.glb',
-    'vertical-set': 'Vertical Set.glb',
-  }
+  const product3DModels: Record<string, string> = {}
+
 
   // Get images from displayProduct (variant images if available, else base product images)
   const images = useMemo(() => {
@@ -259,9 +254,14 @@ export default function QuickViewModal({
   const has3DModel = product3DModels[displayProduct.id] !== undefined
   const model3DFile = has3DModel ? product3DModels[displayProduct.id] : null
 
-  // Combine images and 3D model into media items
+  // Get videos from displayProduct (video first, image as fallback per user request)
+  const videos = useMemo(() => (displayProduct as PDPProduct).videos || [], [(displayProduct as PDPProduct).videos])
+  const firstImage = images[0]
+
+  // Combine videos (first), images, and 3D model into media items
   const mediaItems: MediaItem[] = useMemo(() => {
     const items: MediaItem[] = [
+      ...videos.map((src): MediaItem => ({ type: 'video', src, thumbnail: firstImage })),
       ...images.map((src): MediaItem => ({ type: 'image', src, alt: displayProduct.name })),
     ]
     // Add 3D model last if available
@@ -270,11 +270,11 @@ export default function QuickViewModal({
         type: 'model3d',
         src: `/models/${model3DFile}`,
         alt: `${displayProduct.name} 3D Model`,
-        thumbnail: images[0],
+        thumbnail: firstImage,
       })
     }
     return items
-  }, [images, has3DModel, model3DFile, displayProduct.name])
+  }, [images, videos, firstImage, has3DModel, model3DFile, displayProduct.name])
 
   // Reset image index when variant changes
   useEffect(() => {
@@ -537,6 +537,17 @@ export default function QuickViewModal({
                     autoRotate={true}
                     cameraControls={true}
                   />
+                ) : mediaItems[currentImageIndex]?.type === 'video' ? (
+                  <video
+                    key={mediaItems[currentImageIndex].src}
+                    src={mediaItems[currentImageIndex].src}
+                    poster={mediaItems[currentImageIndex].thumbnail}
+                    className="w-full h-full object-cover"
+                    autoPlay
+                    loop
+                    playsInline
+                    muted
+                  />
                 ) : (
                   <LazyImage
                     src={mediaItems[currentImageIndex]?.src || images[0]}
@@ -623,6 +634,8 @@ export default function QuickViewModal({
                               3D
                             </div>
                           </>
+                        ) : media.type === 'video' ? (
+                          <video src={media.src} className="w-full h-full object-cover" autoPlay muted loop playsInline />
                         ) : (
                           <LazyImage
                             src={media.src}
@@ -741,6 +754,7 @@ export default function QuickViewModal({
               {/* Variant Selection - Size, Color, Capacity, Scent */}
               {variantGroups.map((group) => {
                 const selectedValue = selectedValues[group.key]
+                const isColorGroup = group.key === 'color'
                 return (
                   <div key={group.key}>
                   <label className="block text-sm font-medium text-brand-black mb-2">
@@ -749,7 +763,20 @@ export default function QuickViewModal({
                   <div className="flex flex-wrap gap-2">
                       {group.options.map((option) => {
                         const isSelected = selectedValue === option.value
-                        return (
+                        return isColorGroup ? (
+                          <button
+                            key={option.id}
+                            onClick={() => handleOptionSelect(group.key, option.value)}
+                            className={`w-10 h-10 rounded-full border-2 transition-all ${
+                              isSelected
+                                ? 'border-brand-blue-500 ring-2 ring-brand-blue-200'
+                                : 'border-brand-gray-200 hover:border-brand-gray-400'
+                            }`}
+                            style={{ backgroundColor: getColorHex(option.value) }}
+                            title={option.value}
+                            aria-label={option.value}
+                          />
+                        ) : (
                       <button
                             key={option.id}
                             onClick={() => handleOptionSelect(group.key, option.value)}
@@ -800,37 +827,37 @@ export default function QuickViewModal({
                   </div>
                 )}
               </div>
+
+              {/* Quantity Selector */}
+              {displayProduct.inStock && (
+                <div>
+                  <label className="block text-sm font-medium text-brand-black mb-2">Quantity</label>
+                  <div className="flex items-center border border-brand-gray-300 rounded-lg w-fit">
+                    <button
+                      onClick={() => setQuantity(Math.max(1, quantity - 1))}
+                      className="px-3 py-2 text-brand-gray-600 hover:text-brand-black transition-colors"
+                      disabled={quantity <= 1}
+                    >
+                      −
+                    </button>
+                    <span className="px-4 py-2 text-brand-black font-medium min-w-[2.5rem] text-center">
+                      {quantity}
+                    </span>
+                    <button
+                      onClick={() => setQuantity(quantity + 1)}
+                      className="px-3 py-2 text-brand-gray-600 hover:text-brand-black transition-colors"
+                    >
+                      +
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
         </div>
 
         {/* Fixed Bottom Actions */}
         <div className="flex-shrink-0 border-t border-brand-gray-200 p-4 sm:p-4 md:p-6 bg-white rounded-b-none sm:rounded-b-2xl safe-area-inset-bottom">
-          {/* Quantity Selector */}
-          {displayProduct.inStock && (
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-brand-black mb-2">Quantity</label>
-              <div className="flex items-center border border-brand-gray-300 rounded-lg w-fit">
-                <button
-                  onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-3 py-2 text-brand-gray-600 hover:text-brand-black transition-colors"
-                  disabled={quantity <= 1}
-                >
-                  −
-                </button>
-                <span className="px-4 py-2 text-brand-black font-medium min-w-[2.5rem] text-center">
-                  {quantity}
-                </span>
-                <button
-                  onClick={() => setQuantity(quantity + 1)}
-                  className="px-3 py-2 text-brand-gray-600 hover:text-brand-black transition-colors"
-                >
-                  +
-                </button>
-              </div>
-            </div>
-          )}
-
           <div className="flex flex-col sm:flex-row gap-3">
             {!displayProduct.inStock ? (
               onNotify ? (

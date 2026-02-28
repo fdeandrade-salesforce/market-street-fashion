@@ -1,0 +1,117 @@
+#,Category,Product Name,Color,Product ID
+1,Women,Ribbed Tank Top,Black,ribbed-tank-top
+2,Women,Ribbed Tank Top,White,ribbed-tank-top-white
+3,Women,Ribbed Tank Top,Beige,ribbed-tank-top-beige
+4,Women,Oversized Blazer,Black,oversized-blazer
+5,Women,Oversized Blazer,Navy,oversized-blazer-navy
+6,Women,Oversized Blazer,Beige,
+7,Women,Wide Leg Trousers,Black,wide-leg-trousers
+8,Women,Wide Leg Trousers,Navy,
+9,Women,Wide Leg Trousers,Cream,
+10,Women,Silk Midi Dress,Black,silk-midi-dress
+11,Women,Silk Midi Dress,Navy,silk-midi-dress-navy
+12,Women,Silk Midi Dress,Pink,
+13,Women,Leather Ankle Boots,Black,leather-ankle-boots
+14,Women,Leather Ankle Boots,Brown,leather-ankle-boots-brown
+15,Women,Leather Ankle Boots,Tan,
+16,Women,Oversized T-Shirt,White,oversized-t-shirt
+17,Women,Oversized T-Shirt,Black,
+18,Women,Oversized T-Shirt,Gray,
+19,Women,High-Waisted Jeans,Blue,high-waisted-jeans
+20,Women,High-Waisted Jeans,Black,high-waisted-jeans-black
+21,Women,High-Waisted Jeans,White,
+22,Women,Structured Handbag,Black,structured-handbag
+23,Women,Structured Handbag,Brown,structured-handbag-brown
+24,Women,Structured Handbag,Beige,
+25,Women,Wool Blend Coat,Black,wool-blend-coat
+26,Women,Wool Blend Coat,Navy,
+27,Women,Wool Blend Coat,Camel,
+28,Women,Silk Blouse,White,silk-blouse
+29,Women,Silk Blouse,Black,
+30,Women,Silk Blouse,Navy,
+31,Women,Knit Midi Skirt,Black,knit-midi-skirt
+32,Women,Knit Midi Skirt,Navy,
+33,Women,Knit Midi Skirt,Beige,
+34,Women,Cropped Cardigan,Beige,cropped-cardigan
+35,Women,Cropped Cardigan,Gray,
+36,Women,Cropped Cardigan,Black,
+37,Women,Satin Slip Dress,Black,satin-slip-dress
+38,Women,Satin Slip Dress,Ivory,
+39,Women,Pleated Midi Skirt,Black,pleated-midi-skirt
+40,Women,Pleated Midi Skirt,Navy,
+41,Women,Leather Crossbody Bag,Black,leather-crossbody-bag
+42,Women,Leather Crossbody Bag,Brown,
+43,Women,Leather Crossbody Bag,Tan,
+44,Women,Oversized Denim Shirt,Blue,oversized-denim-shirt
+45,Women,Oversized Denim Shirt,Black,
+46,Women,Wool Blend Scarf,Beige,wool-blend-scarf
+47,Women,Wool Blend Scarf,Gray,
+48,Women,Wool Blend Scarf,Navy,
+49,Women,Tailored Blazer,Black,tailored-blazer
+50,Women,Tailored Blazer,Navy,
+51,Women,Tailored Blazer,Gray,
+52,Men,Slim Fit Chinos,Black,slim-fit-chinos
+53,Men,Slim Fit Chinos,Navy,slim-fit-chinos-navy
+54,Men,Slim Fit Chinos,Khaki,
+55,Men,Oxford Shirt,White,oxford-shirt
+56,Men,Oxford Shirt,Blue,oxford-shirt-blue
+57,Men,Oxford Shirt,Pink,
+58,Men,Merino Wool Sweater,Navy,merino-wool-sweater
+59,Men,Merino Wool Sweater,Gray,
+60,Men,Merino Wool Sweater,Black,
+61,Men,Leather Chelsea Boots,Black,leather-chelsea-boots
+62,Men,Leather Chelsea Boots,Brown,
+63,Men,Tailored Suit Jacket,Black,tailored-suit-jacket
+64,Men,Tailored Suit Jacket,Navy,
+65,Men,Tailored Suit Jacket,Gray,
+66,Men,Tailored Suit Trousers,Black,tailored-suit-trousers
+67,Men,Tailored Suit Trousers,Navy,
+68,Men,Tailored Suit Trousers,Gray,
+69,Men,Classic Denim Jacket,Blue,classic-denim-jacket
+70,Men,Classic Denim Jacket,Black,
+71,Men,Crew Neck T-Shirt,White,crew-neck-t-shirt
+72,Men,Crew Neck T-Shirt,Black,crew-neck-t-shirt-black
+73,Men,Crew Neck T-Shirt,Gray,
+74,Men,Crew Neck T-Shirt,Navy,
+75,Men,Slim Fit Jeans,Blue,slim-fit-jeans
+76,Men,Slim Fit Jeans,Black,
+77,Men,Leather Belt,Black,leather-belt
+78,Men,Leather Belt,Brown,
+79,Men,Bomber Jacket,Black,bomber-jacket
+80,Men,Bomber Jacket,Navy,
+81,Men,Bomber Jacket,Olive,
+82,Men,Cashmere Scarf,Gray,cashmere-scarf
+83,Men,Cashmere Scarf,Navy,
+84,Men,Cashmere Scarf,Camel,
+85,Men,Leather Messenger Bag,Black,leather-messenger-bag
+86,Men,Leather Messenger Bag,Brown,
+87,Men,Wool Blend Overcoat,Black,wool-blend-overcoat
+88,Men,Wool Blend Overcoat,Navy,
+89,Men,Wool Blend Overcoat,Camel,
+90,Kids,Kids Hooded Jacket,Pink,kids-hooded-jacket
+91,Kids,Kids Hooded Jacket,Navy,
+92,Kids,Kids Hooded Jacket,Red,
+93,Kids,Kids Denim Jeans,Blue,kids-denim-jeans
+94,Kids,Kids Denim Jeans,Black,kids-denim-jeans-black
+95,Kids,Kids Graphic T-Shirt,White,kids-graphic-t-shirt
+96,Kids,Kids Graphic T-Shirt,Gray,
+97,Kids,Kids Graphic T-Shirt,Navy,
+98,Kids,Kids Floral Dress,Pink,kids-floral-dress
+99,Kids,Kids Floral Dress,White,
+100,Kids,Kids Floral Dress,Blue,
+101,Kids,Kids Sneakers,White,kids-sneakers
+102,Kids,Kids Sneakers,Black,
+103,Kids,Kids Sneakers,Blue,
+104,Kids,Kids Knit Cardigan,Beige,kids-knit-cardigan
+105,Kids,Kids Knit Cardigan,Pink,
+106,Kids,Kids Cargo Shorts,Khaki,kids-cargo-shorts
+107,Kids,Kids Cargo Shorts,Navy,
+108,Kids,Kids Cargo Shorts,Gray,
+109,Kids,Kids Rain Jacket,Yellow,kids-rain-jacket
+110,Kids,Kids Rain Jacket,Pink,
+111,Kids,Kids Rain Jacket,Navy,
+112,Geometric,Pure Cube,White,pure-cube-white
+113,Geometric,Pure Cube,Black,pure-cube-black
+114,Geometric,Pure Cube,Gray,pure-cube-gray
+115,Geometric,Solid Cylinder,,solid-cylinder
+116,Geometric,Steady Prism,,steady-prism

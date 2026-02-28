@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "engines": {
-    "node": ">=18.0.0",
+    "node": "20.x",
     "npm": ">=9.0.0"
   },
   "scripts": {
@@ -20,7 +20,8 @@
     "import:supabase:orders": "tsx scripts/importMockOrdersToSupabase.ts",
     "import:supabase:reviews": "tsx scripts/importMockReviewsToSupabase.ts",
     "import:supabase:all": "tsx scripts/importMockAllToSupabase.ts",
-    "compress-images": "tsx scripts/compress-images.ts"
+    "compress-images": "tsx scripts/compress-images.ts",
+    "heroku-postbuild": "npm run build"
   },
   "dependencies": {
     "@google/model-viewer": "^4.1.0",
