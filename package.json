@@ -21,7 +21,7 @@
     "import:supabase:reviews": "tsx scripts/importMockReviewsToSupabase.ts",
     "import:supabase:all": "tsx scripts/importMockAllToSupabase.ts",
     "compress-images": "tsx scripts/compress-images.ts",
-    "heroku-postbuild": "npm run build && cp -r public .next/standalone/public && cp -r .next/static .next/standalone/.next/static"
+    "heroku-postbuild": "npm run build && cp -r public .next/standalone/public && cp -r .next/static .next/standalone/.next/static && rm -rf public .next/static .next/cache"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.93.1",
