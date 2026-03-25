@@ -18,37 +18,33 @@ interface HeroProps {
   autoPlayInterval?: number // in milliseconds (Nike uses ~5000-7000ms)
 }
 
-const S3_BASE = 'https://s3.amazonaws.com/northerntrailoutfitters.com/market-street'
-
-// Default slides if none provided
+// Default slides if none provided - uses local home-main assets from /images/content/
 const defaultSlides: Slide[] = [
   {
     title: 'The New Season',
     subtitle: 'A new collection shaped by contrast, proportion, and modern attitude. Introducing key pieces for the season ahead.',
-    video: `${S3_BASE}/resources/hero banner/01.mp4`,
+    video: '/images/content/home-main-01.mp4',
     ctaText: 'Discover the Collection',
     ctaLink: '/women?filter=new',
   },
   {
     title: 'The Modern Wardrobe',
     subtitle: 'Elevated silhouettes, refined textures, and a bold approach to everyday dressing. Designed to move with you.',
-    video: `${S3_BASE}/resources/hero banner/02.mp4`,
-    image: `${S3_BASE}/resources/hero banner/02.mp4`,
+    video: '/images/content/home-main-02.mp4',
     ctaText: 'Shop the Edit',
     ctaLink: '/women',
   },
   {
     title: 'After Hours',
     subtitle: 'Statement pieces and refined layers designed for nights out, late moments, and everything in between.',
-    video: `${S3_BASE}/resources/hero banner/03.mp4`,
-    image: `${S3_BASE}/resources/hero banner/03.mp4`,
+    video: '/images/content/home-main-03.mp4',
     ctaText: 'Explore the Collection',
     ctaLink: '/women',
   },
   {
     title: 'New Perspectives',
     subtitle: 'A curated drop of standout pieces that redefine contemporary fashion. Confident. Expressive. Uncompromising.',
-    image: `${S3_BASE}/resources/hero banner/04.png`,
+    image: '/images/content/home-main-04.png',
     ctaText: 'Shop Now',
     ctaLink: '/women',
   },

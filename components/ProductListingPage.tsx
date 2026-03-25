@@ -686,70 +686,71 @@ export default function ProductListingPage({
     return chips
   }, [filters, priceRange])
 
-  // Get header image - uses S3 PLP banners (matches original project)
-  const S3_BASE = 'https://s3.amazonaws.com/northerntrailoutfitters.com/market-street'
+  // Get header image - uses local category images from /images/categories/
   const getHeaderImage = () => {
     if (headerImage) return headerImage
 
     const subcategoryMaps: Record<string, Record<string, string>> = {
       Women: {
-        'New In': 'All Women',
-        Outerwear: 'Outerwear',
-        Dresses: 'Dresses',
-        Tops: 'Tops',
-        Knitwear: 'Sweaters',
-        Shirts: 'Tops',
-        Jeans: 'Denim',
-        Trousers: 'Trousers',
-        Skirts: 'Skirts',
-        Blazers: 'Jackets',
-        Activewear: 'Tops',
-        Shoes: 'Bags',
-        Bags: 'Bags',
-        Accessories: 'Accessories',
+        'New In': 'new-in',
+        Outerwear: 'outerwear',
+        Dresses: 'dresses',
+        Tops: 'tops',
+        Knitwear: 'knitwear',
+        Shirts: 'tops',
+        Jeans: 'bottoms',
+        Trousers: 'bottoms',
+        Skirts: 'bottoms',
+        Blazers: 'outerwear',
+        Activewear: 'tops',
+        Shoes: 'shoes',
+        Bags: 'bags',
+        Accessories: 'accessories',
       },
       Men: {
-        'New In': 'All Men',
-        'Jackets & Blazers': 'Jackets',
-        'T-Shirts': 'Tshirts',
-        Shirts: 'Shirts',
-        Suits: 'Suits',
-        Trousers: 'Pants',
-        Pants: 'Pants',
-        Bottoms: 'Bottoms',
-        Outerwear: 'Outerwear',
-        Accessories: 'Accessories',
+        'New In': 'new-in',
+        'Jackets & Blazers': 'outerwear',
+        'T-Shirts': 'tshirts-polos',
+        Shirts: 'shirts',
+        Suits: 'outerwear',
+        Trousers: 'trousers',
+        Pants: 'trousers',
+        Bottoms: 'trousers',
+        Outerwear: 'outerwear',
+        Accessories: 'accessories',
       },
       Kids: {
-        Boys: 'Boys',
-        Girls: 'Girls',
-        'Boys Tops': 'Tops',
-        'Boys Bottoms': 'Bottoms',
-        'Boys Shoes': 'Shoes',
-        'Boys Accessories': 'Accessories',
-        'Girls Dresses': 'Dresses',
-        'Girls Tops': 'Tops',
-        'Girls Bottoms': 'Bottoms',
-        'Girls Shoes': 'Shoes',
-        'Girls Accessories': 'Accessories',
+        Boys: 'boys',
+        Girls: 'girls',
+        'Boys Tops': 'boys',
+        'Boys Bottoms': 'boys',
+        'Boys Shoes': 'shoes',
+        'Boys Accessories': 'accessories',
+        'Girls Dresses': 'girls',
+        'Girls Tops': 'girls',
+        'Girls Bottoms': 'girls',
+        'Girls Shoes': 'shoes',
+        'Girls Accessories': 'accessories',
+        'New In': 'new-in',
       },
     }
 
-    let imageName: string
+    let imagePath: string
+    const categoryLower = category.toLowerCase()
+
     if (subcategory) {
       const categoryMap = subcategoryMaps[category] || {}
-      const mappedSubcategory = categoryMap[subcategory] || subcategory
-      imageName = `${category}-${mappedSubcategory}.png`
+      const mappedSubcategory = categoryMap[subcategory]
+      if (mappedSubcategory) {
+        imagePath = `/images/categories/${categoryLower === 'women' ? 'womens' : categoryLower === 'men' ? 'mens' : categoryLower}-${mappedSubcategory}.png`
+      } else {
+        imagePath = `/images/categories/${categoryLower === 'women' ? 'womens' : categoryLower === 'men' ? 'mens' : categoryLower}-${subcategory.toLowerCase().replace(/\s+/g, '-')}.png`
+      }
     } else {
-      const categoryDisplayName = category === 'Kids' ? 'Kids' : category
-      imageName = `${category}-All ${categoryDisplayName}.png`
+      imagePath = `/images/categories/${categoryLower === 'women' ? 'women' : categoryLower === 'men' ? 'men' : categoryLower}.png`
     }
 
-    if (category === 'Sale') {
-      imageName = subcategory ? `Sales-${subcategory} Sale.png` : 'Sales-All Sale.png'
-    }
-
-    return `${S3_BASE}/resources/plp banners/${encodeURIComponent(imageName)}`
+    return imagePath
   }
 
   // Generate breadcrumbs

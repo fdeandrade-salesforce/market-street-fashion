@@ -1,225 +1,218 @@
 /**
  * Product Image & Video Configuration
  *
- * Each product variant has an explicit entry mapping to the exact filenames in
- * public/images/products/{folder}/. No dynamic color lookups or overrides needed.
+ * Maps product variant IDs to their corresponding image files in
+ * public/images/products/{womens|mens|kids}/. Files follow the pattern:
+ * {category}-{product-name}-{color}-{NN}.png (e.g., womens-silk-midi-dress-pink-01.png)
  *
- * Videos are assigned to a single variant only (not inherited across color variants).
+ * Videos are assigned to specific variants only.
  */
 
 interface VariantImageConfig {
   folder: 'womens' | 'mens' | 'kids'
-  filenameBase: string
+  prefix: string
   count: number
   video?: string
-  files?: string[]
 }
 
 const V: Record<string, VariantImageConfig> = {
   // ====================== WOMEN ======================
 
-  // Ribbed Tank Top (special naming: "Ribbed Tank {Color} Top")
-  'ribbed-tank-top':       { folder: 'womens', filenameBase: 'Ribbed Tank Black Top', count: 4 },
-  'ribbed-tank-top-white': { folder: 'womens', filenameBase: 'Ribbed Tank White Top', count: 4, video: 'video-223.mp4' },
-  'ribbed-tank-top-beige': { folder: 'womens', filenameBase: 'Ribbed Tank Beige Top', count: 4 },
+  // Ribbed Tank Top (special naming: "womens-ribbed-tank-{color}-top")
+  'ribbed-tank-top':       { folder: 'womens', prefix: 'womens-ribbed-tank-black-top', count: 4 },
+  'ribbed-tank-top-white': { folder: 'womens', prefix: 'womens-ribbed-tank-white-top', count: 4, video: 'womens-ribbed-tank-white-top.mp4' },
+  'ribbed-tank-top-beige': { folder: 'womens', prefix: 'womens-ribbed-tank-beige-top', count: 4 },
 
   // Oversized Blazer
-  'oversized-blazer':       { folder: 'womens', filenameBase: 'Oversized Blazer Black', count: 4 },
-  'oversized-blazer-navy':  { folder: 'womens', filenameBase: 'Oversized Blazer Navy', count: 4 },
-  'oversized-blazer-beige': { folder: 'womens', filenameBase: 'Oversized Blazer Beige', count: 4, video: 'video-220.mp4' },
+  'oversized-blazer':       { folder: 'womens', prefix: 'womens-oversized-blazer-black', count: 4 },
+  'oversized-blazer-navy':  { folder: 'womens', prefix: 'womens-oversized-blazer-navy', count: 4 },
+  'oversized-blazer-beige': { folder: 'womens', prefix: 'womens-oversized-blazer-beige', count: 4, video: 'womens-oversized-blazer-beige.mp4' },
 
   // Wide Leg Trousers
-  'wide-leg-trousers':       { folder: 'womens', filenameBase: 'Wide Leg Trousers Black', count: 4 },
-  'wide-leg-trousers-cream': { folder: 'womens', filenameBase: 'Wide Leg Trousers Cream', count: 4 },
-  'wide-leg-trousers-navy':  { folder: 'womens', filenameBase: 'Wide Leg Trousers Navy', count: 4 },
+  'wide-leg-trousers':       { folder: 'womens', prefix: 'womens-wide-leg-trousers-black', count: 4 },
+  'wide-leg-trousers-cream': { folder: 'womens', prefix: 'womens-wide-leg-trousers-cream', count: 4 },
+  'wide-leg-trousers-navy':  { folder: 'womens', prefix: 'womens-wide-leg-trousers-navy', count: 4 },
 
   // Silk Midi Dress
-  'silk-midi-dress':      { folder: 'womens', filenameBase: 'Silk Midi Dress Black', count: 4 },
-  'silk-midi-dress-navy': { folder: 'womens', filenameBase: 'Silk Midi Dress Navy', count: 4 },
-  'silk-midi-dress-pink': { folder: 'womens', filenameBase: 'Silk Midi Dress Pink', count: 4, video: 'video-221.mp4' },
+  'silk-midi-dress':      { folder: 'womens', prefix: 'womens-silk-midi-dress-black', count: 4 },
+  'silk-midi-dress-navy': { folder: 'womens', prefix: 'womens-silk-midi-dress-navy', count: 4 },
+  'silk-midi-dress-pink': { folder: 'womens', prefix: 'womens-silk-midi-dress-pink', count: 4, video: 'womens-silk-midi-dress-pink.mp4' },
 
   // Leather Ankle Boots
-  'leather-ankle-boots':       { folder: 'womens', filenameBase: 'Leather Ankle Boots Black', count: 6 },
-  'leather-ankle-boots-brown': { folder: 'womens', filenameBase: 'Leather Ankle Boots Brown', count: 5 },
-  'leather-ankle-boots-tan':   { folder: 'womens', filenameBase: 'Leather Ankle Boots Tan', count: 4 },
+  'leather-ankle-boots':       { folder: 'womens', prefix: 'womens-leather-ankle-boots-black', count: 6 },
+  'leather-ankle-boots-brown': { folder: 'womens', prefix: 'womens-leather-ankle-boots-brown', count: 5 },
+  'leather-ankle-boots-tan':   { folder: 'womens', prefix: 'womens-leather-ankle-boots-tan', count: 4 },
 
   // Oversized T-Shirt
-  'oversized-t-shirt':       { folder: 'womens', filenameBase: 'Oversized T-Shirt White', count: 4 },
-  'oversized-t-shirt-black': { folder: 'womens', filenameBase: 'Oversized T-Shirt Black', count: 4 },
-  'oversized-t-shirt-gray':  { folder: 'womens', filenameBase: 'Oversized T-Shirt Gray', count: 4 },
+  'oversized-t-shirt':       { folder: 'womens', prefix: 'womens-oversized-t-shirt-white', count: 4 },
+  'oversized-t-shirt-black': { folder: 'womens', prefix: 'womens-oversized-t-shirt-black', count: 4 },
+  'oversized-t-shirt-gray':  { folder: 'womens', prefix: 'womens-oversized-t-shirt-gray', count: 4 },
 
-  // High-Waisted Jeans
-  'high-waisted-jeans':       { folder: 'womens', filenameBase: 'High-Waisted Jeans Blue', count: 5 },
-  'high-waisted-jeans-black': { folder: 'womens', filenameBase: 'High-Waisted Jeans Black', count: 5 },
-  'high-waisted-jeans-white': { folder: 'womens', filenameBase: 'High-Waisted Jeans White', count: 5 },
+  // High Waist Jeans (was "High-Waisted Jeans" in old naming)
+  'high-waisted-jeans':       { folder: 'womens', prefix: 'womens-high-waist-jeans-blue', count: 5 },
+  'high-waisted-jeans-black': { folder: 'womens', prefix: 'womens-high-waist-jeans-black', count: 5 },
+  'high-waisted-jeans-white': { folder: 'womens', prefix: 'womens-high-waist-jeans-white', count: 5 },
 
-  // Structured Handbag
-  'structured-handbag':       { folder: 'womens', filenameBase: 'Structured Handbag Black', count: 4, video: 'video-222.mp4' },
-  'structured-handbag-brown': { folder: 'womens', filenameBase: 'Structured Handbag Brown', count: 4 },
-  'structured-handbag-beige': { folder: 'womens', filenameBase: 'Structured Handbag Beige', count: 4 },
+  // Structured Handbag - note: we have "womens-structured-handbag-beige" and "womens-structured-handbag-brown"
+  // but "black" variant uses "womens-shoulder-bag-black"
+  'structured-handbag':       { folder: 'womens', prefix: 'womens-shoulder-bag-black', count: 4, video: 'womens-shoulder-bag-black.mp4' },
+  'structured-handbag-brown': { folder: 'womens', prefix: 'womens-structured-handbag-brown', count: 4 },
+  'structured-handbag-beige': { folder: 'womens', prefix: 'womens-structured-handbag-beige', count: 4 },
 
   // Wool Blend Coat
-  'wool-blend-coat':       { folder: 'womens', filenameBase: 'Wool Blend Coat Black', count: 5 },
-  'wool-blend-coat-navy':  { folder: 'womens', filenameBase: 'Wool Blend Coat Navy', count: 6 },
-  'wool-blend-coat-beige': { folder: 'womens', filenameBase: 'Wool Blend Coat Beige', count: 4 },
+  'wool-blend-coat':       { folder: 'womens', prefix: 'womens-wool-blend-coat-black', count: 5 },
+  'wool-blend-coat-navy':  { folder: 'womens', prefix: 'womens-wool-coat-navy', count: 6 },
+  'wool-blend-coat-beige': { folder: 'womens', prefix: 'womens-wool-blend-coat-beige', count: 4 },
 
   // Silk Blouse
-  'silk-blouse':       { folder: 'womens', filenameBase: 'Silk Blouse White', count: 4 },
-  'silk-blouse-black': { folder: 'womens', filenameBase: 'Silk Blouse Black', count: 4 },
-  'silk-blouse-navy':  { folder: 'womens', filenameBase: 'Silk Blouse Navy', count: 5 },
+  'silk-blouse':       { folder: 'womens', prefix: 'womens-silk-blouse-white', count: 4 },
+  'silk-blouse-black': { folder: 'womens', prefix: 'womens-silk-blouse-black', count: 4 },
+  'silk-blouse-navy':  { folder: 'womens', prefix: 'womens-silk-blouse-navy', count: 5 },
 
   // Knit Midi Skirt
-  'knit-midi-skirt':       { folder: 'womens', filenameBase: 'Knit Midi Skirt Black', count: 4 },
-  'knit-midi-skirt-beige': { folder: 'womens', filenameBase: 'Knit Midi Skirt Beige', count: 4 },
-  'knit-midi-skirt-navy':  { folder: 'womens', filenameBase: 'Knit Midi Skirt Navy', count: 4 },
+  'knit-midi-skirt':       { folder: 'womens', prefix: 'womens-knit-midi-skirt-black', count: 4 },
+  'knit-midi-skirt-beige': { folder: 'womens', prefix: 'womens-knit-midi-skirt-beige', count: 4 },
+  'knit-midi-skirt-navy':  { folder: 'womens', prefix: 'womens-knit-midi-skirt-navy', count: 4 },
 
   // Cropped Cardigan
-  'cropped-cardigan':       { folder: 'womens', filenameBase: 'Cropped Cardigan Beige', count: 4 },
-  'cropped-cardigan-black': { folder: 'womens', filenameBase: 'Cropped Cardigan Black', count: 4 },
-  'cropped-cardigan-gray':  { folder: 'womens', filenameBase: 'Cropped Cardigan Gray', count: 4 },
+  'cropped-cardigan':       { folder: 'womens', prefix: 'womens-cropped-cardigan-beige', count: 4 },
+  'cropped-cardigan-black': { folder: 'womens', prefix: 'womens-cropped-cardigan-black', count: 4 },
+  'cropped-cardigan-gray':  { folder: 'womens', prefix: 'womens-cropped-cardigan-gray', count: 4 },
 
   // Satin Slip Dress
-  'satin-slip-dress':       { folder: 'womens', filenameBase: 'Satin Slip Dress Black', count: 4 },
-  'satin-slip-dress-ivory': { folder: 'womens', filenameBase: 'Satin Slip Dress Ivory', count: 4 },
+  'satin-slip-dress':       { folder: 'womens', prefix: 'womens-slip-dress-black', count: 4 },
+  'satin-slip-dress-ivory': { folder: 'womens', prefix: 'womens-satin-slip-dress-ivory', count: 4 },
 
   // Pleated Midi Skirt
-  'pleated-midi-skirt':      { folder: 'womens', filenameBase: 'Pleated Midi Skirt Black', count: 4 },
-  'pleated-midi-skirt-navy': { folder: 'womens', filenameBase: 'Pleated Midi Skirt Navy', count: 4 },
+  'pleated-midi-skirt':      { folder: 'womens', prefix: 'womens-pleated-skirt-black', count: 4 },
+  'pleated-midi-skirt-navy': { folder: 'womens', prefix: 'womens-pleated-skirt-navy', count: 4 },
 
   // Leather Crossbody Bag
-  'leather-crossbody-bag':       { folder: 'womens', filenameBase: 'Leather Crossbody Bag Black', count: 4 },
-  'leather-crossbody-bag-brown': { folder: 'womens', filenameBase: 'Leather Crossbody Bag Brown', count: 5, video: 'video-89.mp4' },
-  'leather-crossbody-bag-camel': { folder: 'womens', filenameBase: 'Leather Crossbody Bag Camel', count: 4 },
+  'leather-crossbody-bag':       { folder: 'womens', prefix: 'womens-crossbody-bag-black', count: 4 },
+  'leather-crossbody-bag-brown': { folder: 'womens', prefix: 'womens-crossbody-bag-brown', count: 5, video: 'womens-crossbody-bag-brown.mp4' },
+  'leather-crossbody-bag-camel': { folder: 'womens', prefix: 'womens-leather-crossbody-bag-camel', count: 4 },
 
-  // Oversized Denim Shirt (Blue variant has no color suffix in filename)
-  'oversized-denim-shirt':       { folder: 'womens', filenameBase: 'Oversized Denim Shirt', count: 5 },
-  'oversized-denim-shirt-black': { folder: 'womens', filenameBase: 'Oversized Denim Shirt Black', count: 4, video: 'video-88.mp4' },
+  // Oversized Denim Shirt
+  'oversized-denim-shirt':       { folder: 'womens', prefix: 'womens-oversized-denim-shirt', count: 5 },
+  'oversized-denim-shirt-black': { folder: 'womens', prefix: 'womens-oversized-denim-shirt-black', count: 4, video: 'womens-oversized-denim-shirt-black.mp4' },
 
-  // Wool Blend Scarf (files use "Grey" for Gray)
-  'wool-blend-scarf':      { folder: 'womens', filenameBase: 'Wool Blend Scarf Beige', count: 4 },
-  'wool-blend-scarf-gray': { folder: 'womens', filenameBase: 'Wool Blend Scarf Grey', count: 4 },
-  'wool-blend-scarf-navy': { folder: 'womens', filenameBase: 'Wool Blend Scarf Navy', count: 4 },
+  // Wool Blend Scarf
+  'wool-blend-scarf':      { folder: 'womens', prefix: 'womens-wool-blend-scarf-beige', count: 4 },
+  'wool-blend-scarf-gray': { folder: 'womens', prefix: 'womens-wool-blend-scarf-gray', count: 4 },
+  'wool-blend-scarf-navy': { folder: 'womens', prefix: 'womens-silk-scarf-navy', count: 4 },
 
-  // Tailored Blazer
-  'tailored-blazer':      { folder: 'womens', filenameBase: 'Tailored Blazer Black', count: 5 },
-  'tailored-blazer-gray': { folder: 'womens', filenameBase: 'Tailored Blazer Gray', count: 4 },
-  'tailored-blazer-navy': { folder: 'womens', filenameBase: 'Tailored Blazer Navy', count: 4 },
+  // Tailored Blazer (women's)
+  'tailored-blazer':      { folder: 'womens', prefix: 'womens-oversized-blazer-black', count: 4 },
+  'tailored-blazer-gray': { folder: 'womens', prefix: 'womens-oversized-blazer-beige', count: 4 },
+  'tailored-blazer-navy': { folder: 'womens', prefix: 'womens-oversized-blazer-navy', count: 4 },
 
   // ====================== MEN ======================
 
   // Slim Fit Chinos
-  'slim-fit-chinos':       { folder: 'mens', filenameBase: 'Slim Fit Chinos Black', count: 4 },
-  'slim-fit-chinos-navy':  { folder: 'mens', filenameBase: 'Slim Fit Chinos Navy', count: 4 },
-  'slim-fit-chinos-beige': { folder: 'mens', filenameBase: 'Slim Fit Chinos Beige', count: 4 },
+  'slim-fit-chinos':       { folder: 'mens', prefix: 'mens-slim-fit-chinos-black', count: 4 },
+  'slim-fit-chinos-navy':  { folder: 'mens', prefix: 'mens-slim-chinos-navy', count: 4 },
+  'slim-fit-chinos-beige': { folder: 'mens', prefix: 'mens-slim-chinos-beige', count: 4 },
 
   // Oxford Shirt
-  'oxford-shirt':      { folder: 'mens', filenameBase: 'Oxford Shirt White', count: 6 },
-  'oxford-shirt-blue': { folder: 'mens', filenameBase: 'Oxford Shirt Blue', count: 4 },
-  'oxford-shirt-pink': { folder: 'mens', filenameBase: 'Oxford Shirt Pink', count: 4 },
+  'oxford-shirt':      { folder: 'mens', prefix: 'mens-oxford-shirt-white', count: 6 },
+  'oxford-shirt-blue': { folder: 'mens', prefix: 'mens-oxford-shirt-blue', count: 4 },
+  'oxford-shirt-pink': { folder: 'mens', prefix: 'mens-oxford-shirt-pink', count: 4 },
 
   // Merino Wool Sweater
-  'merino-wool-sweater':       { folder: 'mens', filenameBase: 'Merino Wool Sweater Navy', count: 4 },
-  'merino-wool-sweater-black': { folder: 'mens', filenameBase: 'Merino Wool Sweater Black', count: 4 },
-  'merino-wool-sweater-gray':  { folder: 'mens', filenameBase: 'Merino Wool Sweater Gray', count: 4 },
+  'merino-wool-sweater':       { folder: 'mens', prefix: 'mens-merino-sweater-navy', count: 4 },
+  'merino-wool-sweater-black': { folder: 'mens', prefix: 'mens-merino-sweater-black', count: 4 },
+  'merino-wool-sweater-gray':  { folder: 'mens', prefix: 'mens-merino-sweater-gray', count: 4 },
 
   // Leather Chelsea Boots
-  'leather-chelsea-boots':       { folder: 'mens', filenameBase: 'Leather Chelsea Boots Black', count: 4 },
-  'leather-chelsea-boots-brown': { folder: 'mens', filenameBase: 'Leather Chelsea Boots Brown', count: 4 },
+  'leather-chelsea-boots':       { folder: 'mens', prefix: 'mens-chelsea-boots-black', count: 4 },
+  'leather-chelsea-boots-brown': { folder: 'mens', prefix: 'mens-chelsea-boots-brown', count: 4 },
 
-  // Tailored Suit Jacket (Black has special-named images; Gray & Navy are standard)
-  'tailored-suit-jacket': {
-    folder: 'mens', filenameBase: '', count: 0,
-    files: [
-      'Studio Model Shot - Black Suit Jacket.png',
-      'Catalog Packshot - Black Suit Jacket.png',
-      'Detail Shot - Black Suit Jacket Fabric.png',
-      'Lifestyle Context Shot - Black Suit Jacket.png',
-    ],
-  },
-  'tailored-suit-jacket-navy': { folder: 'mens', filenameBase: 'Suit Jacket Navy', count: 4 },
-  'tailored-suit-jacket-gray': { folder: 'mens', filenameBase: 'Suit Jacket Gray', count: 4 },
+  // Tailored Suit Jacket (men's) - Black has special description images, Gray & Navy are standard
+  'tailored-suit-jacket':      { folder: 'mens', prefix: 'mens-tailored-blazer-black', count: 5 },
+  'tailored-suit-jacket-navy': { folder: 'mens', prefix: 'mens-tailored-blazer-navy', count: 4 },
+  'tailored-suit-jacket-gray': { folder: 'mens', prefix: 'mens-tailored-blazer-gray', count: 4 },
 
   // Tailored Suit Trousers
-  'tailored-suit-trousers':      { folder: 'mens', filenameBase: 'Tailored Suit Trousers Black', count: 5 },
-  'tailored-suit-trousers-gray': { folder: 'mens', filenameBase: 'Tailored Suit Trousers Gray', count: 4 },
-  'tailored-suit-trousers-navy': { folder: 'mens', filenameBase: 'Tailored Suit Trousers Navy', count: 4 },
+  'tailored-suit-trousers':      { folder: 'mens', prefix: 'mens-tailored-trousers-black', count: 5 },
+  'tailored-suit-trousers-gray': { folder: 'mens', prefix: 'mens-tailored-trousers-gray', count: 4 },
+  'tailored-suit-trousers-navy': { folder: 'mens', prefix: 'mens-tailored-trousers-navy', count: 4 },
 
-  // Classic Denim Jacket (files use "Denim Jacket")
-  'classic-denim-jacket':       { folder: 'mens', filenameBase: 'Denim Jacket Blue', count: 5, video: 'video-77.mp4' },
-  'classic-denim-jacket-black': { folder: 'mens', filenameBase: 'Denim Jacket Black', count: 4 },
+  // Classic Denim Jacket
+  'classic-denim-jacket':       { folder: 'mens', prefix: 'mens-denim-jacket-blue', count: 5, video: 'mens-denim-jacket-blue.mp4' },
+  'classic-denim-jacket-black': { folder: 'mens', prefix: 'mens-denim-jacket-black', count: 4 },
 
   // Crew Neck T-Shirt
-  'crew-neck-t-shirt':       { folder: 'mens', filenameBase: 'Crew Neck T-Shirt White', count: 4 },
-  'crew-neck-t-shirt-black': { folder: 'mens', filenameBase: 'Crew Neck T-Shirt Black', count: 3 },
-  'crew-neck-t-shirt-gray':  { folder: 'mens', filenameBase: 'Crew Neck T-Shirt Gray', count: 4 },
-  'crew-neck-t-shirt-navy':  { folder: 'mens', filenameBase: 'Crew Neck T-Shirt Navy', count: 4 },
+  'crew-neck-t-shirt':       { folder: 'mens', prefix: 'mens-crew-neck-t-shirt-white', count: 4 },
+  'crew-neck-t-shirt-black': { folder: 'mens', prefix: 'mens-crew-neck-t-shirt-black', count: 3 },
+  'crew-neck-t-shirt-gray':  { folder: 'mens', prefix: 'mens-crew-neck-t-shirt-gray', count: 4 },
+  'crew-neck-t-shirt-navy':  { folder: 'mens', prefix: 'mens-crew-neck-t-shirt-navy', count: 4 },
 
   // Slim Fit Jeans
-  'slim-fit-jeans':       { folder: 'mens', filenameBase: 'Slim Fit Jeans Blue', count: 4 },
-  'slim-fit-jeans-black': { folder: 'mens', filenameBase: 'Slim Fit Jeans Black', count: 6 },
+  'slim-fit-jeans':       { folder: 'mens', prefix: 'mens-straight-jeans-blue', count: 4 },
+  'slim-fit-jeans-black': { folder: 'mens', prefix: 'mens-straight-jeans-black', count: 6 },
 
-  // Leather Belt (files have typo "Bown" for Brown)
-  'leather-belt':       { folder: 'mens', filenameBase: 'Leather Belt Black', count: 4 },
-  'leather-belt-brown': { folder: 'mens', filenameBase: 'Leather Belt Bown', count: 4 },
+  // Leather Belt
+  'leather-belt':       { folder: 'mens', prefix: 'mens-leather-belt-black', count: 4 },
+  'leather-belt-brown': { folder: 'mens', prefix: 'mens-leather-belt-brown', count: 4 },
 
-  // Bomber Jacket (files use "Green" for Olive)
-  'bomber-jacket':       { folder: 'mens', filenameBase: 'Bomber Jacket Black', count: 5, video: 'video-120.mp4' },
-  'bomber-jacket-green': { folder: 'mens', filenameBase: 'Bomber Jacket Green', count: 3 },
-  'bomber-jacket-navy':  { folder: 'mens', filenameBase: 'Bomber Jacket Navy', count: 3 },
+  // Bomber Jacket
+  'bomber-jacket':       { folder: 'mens', prefix: 'mens-bomber-jacket-black', count: 5, video: 'mens-bomber-jacket-black.mp4' },
+  'bomber-jacket-green': { folder: 'mens', prefix: 'mens-bomber-jacket-green', count: 3 },
+  'bomber-jacket-navy':  { folder: 'mens', prefix: 'mens-bomber-jacket-navy', count: 3 },
 
   // Cashmere Scarf
-  'cashmere-scarf':       { folder: 'mens', filenameBase: 'Cashmere Scarf Gray', count: 4 },
-  'cashmere-scarf-navy':  { folder: 'mens', filenameBase: 'Cashmere Scarf Navy', count: 4, video: 'video-135.mp4' },
-  'cashmere-scarf-camel': { folder: 'mens', filenameBase: 'Cashmere Scarf Camel', count: 6 },
+  'cashmere-scarf':       { folder: 'mens', prefix: 'mens-wool-scarf-gray', count: 4 },
+  'cashmere-scarf-navy':  { folder: 'mens', prefix: 'mens-wool-scarf-navy', count: 4, video: 'mens-wool-scarf-navy.mp4' },
+  'cashmere-scarf-camel': { folder: 'mens', prefix: 'mens-cashmere-scarf-camel', count: 6 },
 
   // Leather Messenger Bag
-  'leather-messenger-bag':       { folder: 'mens', filenameBase: 'Leather Messenger Bag Black', count: 4 },
-  'leather-messenger-bag-brown': { folder: 'mens', filenameBase: 'Leather Messenger Bag Brown', count: 4 },
+  'leather-messenger-bag':       { folder: 'mens', prefix: 'mens-messenger-bag-black', count: 4 },
+  'leather-messenger-bag-brown': { folder: 'mens', prefix: 'mens-messenger-bag-brown', count: 4 },
 
   // Wool Blend Overcoat
-  'wool-blend-overcoat':       { folder: 'mens', filenameBase: 'Wool Blend Overcoat Black', count: 4 },
-  'wool-blend-overcoat-camel': { folder: 'mens', filenameBase: 'Wool Blend Overcoat Camel', count: 5 },
-  'wool-blend-overcoat-navy':  { folder: 'mens', filenameBase: 'Wool Blend Overcoat Navy', count: 5 },
+  'wool-blend-overcoat':       { folder: 'mens', prefix: 'mens-wool-overcoat-black', count: 4 },
+  'wool-blend-overcoat-camel': { folder: 'mens', prefix: 'mens-wool-overcoat-camel', count: 5 },
+  'wool-blend-overcoat-navy':  { folder: 'mens', prefix: 'mens-wool-overcoat-navy', count: 5 },
 
   // ====================== KIDS ======================
 
-  // Kids Hooded Jacket
-  'kids-hooded-jacket':      { folder: 'kids', filenameBase: 'Kids Hooded Jacket Pink', count: 4 },
-  'kids-hooded-jacket-navy': { folder: 'kids', filenameBase: 'Kids Hooded Jacket Navy', count: 5 },
-  'kids-hooded-jacket-red':  { folder: 'kids', filenameBase: 'Kids Hooded Jacket Red', count: 4 },
+  // Kids Hooded Jacket - note: we have "kids-puffer-jacket" variants
+  'kids-hooded-jacket':      { folder: 'kids', prefix: 'kids-puffer-jacket-pink', count: 5 },
+  'kids-hooded-jacket-navy': { folder: 'kids', prefix: 'kids-puffer-jacket-navy', count: 6 },
+  'kids-hooded-jacket-red':  { folder: 'kids', prefix: 'kids-hooded-jacket-red', count: 4 },
 
   // Kids Denim Jeans
-  'kids-denim-jeans':       { folder: 'kids', filenameBase: 'Kids Denim Jeans Blue', count: 4, video: 'video-94.mp4' },
-  'kids-denim-jeans-black': { folder: 'kids', filenameBase: 'Kids Denim Jeans Black', count: 5 },
+  'kids-denim-jeans':       { folder: 'kids', prefix: 'girls-denim-jeans-blue', count: 4, video: 'girls-denim-jeans-blue.mp4' },
+  'kids-denim-jeans-black': { folder: 'kids', prefix: 'girls-denim-jeans-black', count: 5 },
 
   // Kids Graphic T-Shirt
-  'kids-graphic-t-shirt':      { folder: 'kids', filenameBase: 'Kids Graphic T-Shirt White', count: 6 },
-  'kids-graphic-t-shirt-gray': { folder: 'kids', filenameBase: 'Kids Graphic T-Shirt Gray', count: 6 },
-  'kids-graphic-t-shirt-navy': { folder: 'kids', filenameBase: 'Kids Graphic T-Shirt Navy', count: 4 },
+  'kids-graphic-t-shirt':      { folder: 'kids', prefix: 'kids-graphic-tee-white', count: 6 },
+  'kids-graphic-t-shirt-gray': { folder: 'kids', prefix: 'kids-graphic-tee-gray', count: 6 },
+  'kids-graphic-t-shirt-navy': { folder: 'kids', prefix: 'kids-graphic-t-shirt-navy', count: 4 },
 
   // Kids Floral Dress
-  'kids-floral-dress':       { folder: 'kids', filenameBase: 'Kids Floral Dress Pink', count: 4 },
-  'kids-floral-dress-blue':  { folder: 'kids', filenameBase: 'Kids Floral Dress Blue', count: 5 },
-  'kids-floral-dress-white': { folder: 'kids', filenameBase: 'Kids Floral Dress White', count: 4 },
+  'kids-floral-dress':       { folder: 'kids', prefix: 'girls-floral-dress-pink', count: 4 },
+  'kids-floral-dress-blue':  { folder: 'kids', prefix: 'girls-floral-dress-blue', count: 5 },
+  'kids-floral-dress-white': { folder: 'kids', prefix: 'kids-floral-dress-white', count: 4 },
 
   // Kids Sneakers
-  'kids-sneakers':       { folder: 'kids', filenameBase: 'Kids Sneakers White', count: 4, video: 'video-55.mp4' },
-  'kids-sneakers-black': { folder: 'kids', filenameBase: 'Kids Sneakers Black', count: 5 },
-  'kids-sneakers-blue':  { folder: 'kids', filenameBase: 'Kids Sneakers Blue', count: 4 },
+  'kids-sneakers':       { folder: 'kids', prefix: 'kids-sneakers-white', count: 4, video: 'kids-sneakers-white.mp4' },
+  'kids-sneakers-black': { folder: 'kids', prefix: 'kids-sneakers-black', count: 5 },
+  'kids-sneakers-blue':  { folder: 'kids', prefix: 'kids-sneakers-blue', count: 4 },
 
   // Kids Knit Cardigan
-  'kids-knit-cardigan':      { folder: 'kids', filenameBase: 'Kids Knit Cardigan Beige', count: 5 },
-  'kids-knit-cardigan-pink': { folder: 'kids', filenameBase: 'Kids Knit Cardigan Pink', count: 5 },
+  'kids-knit-cardigan':      { folder: 'kids', prefix: 'kids-knit-cardigan-beige', count: 5 },
+  'kids-knit-cardigan-pink': { folder: 'kids', prefix: 'girls-cardigan-pink', count: 5 },
 
-  // Kids Cargo Shorts (product "Khaki" = files "Beige")
-  'kids-cargo-shorts':      { folder: 'kids', filenameBase: 'Kids Cargo Shorts Beige', count: 4 },
-  'kids-cargo-shorts-navy': { folder: 'kids', filenameBase: 'Kids Cargo Shorts Navy', count: 4, video: 'video-36.mp4' },
-  'kids-cargo-shorts-gray': { folder: 'kids', filenameBase: 'Kids Cargo Shorts Gray', count: 5 },
+  // Kids Cargo Shorts
+  'kids-cargo-shorts':      { folder: 'kids', prefix: 'kids-cargo-shorts-beige', count: 4 },
+  'kids-cargo-shorts-navy': { folder: 'kids', prefix: 'boys-shorts-navy', count: 5, video: 'boys-shorts-navy.mp4' },
+  'kids-cargo-shorts-gray': { folder: 'kids', prefix: 'boys-shorts-gray', count: 5 },
 
   // Kids Rain Jacket
-  'kids-rain-jacket':      { folder: 'kids', filenameBase: 'Kids Rain Jacket Yellow', count: 6, video: 'video-35.mp4' },
-  'kids-rain-jacket-navy': { folder: 'kids', filenameBase: 'Kids Rain Jacket Navy', count: 6 },
-  'kids-rain-jacket-pink': { folder: 'kids', filenameBase: 'Kids Rain Jacket Pink', count: 4 },
+  'kids-rain-jacket':      { folder: 'kids', prefix: 'kids-rain-jacket-yellow', count: 6, video: 'kids-rain-jacket-yellow.mp4' },
+  'kids-rain-jacket-navy': { folder: 'kids', prefix: 'kids-puffer-jacket-navy', count: 6 },
+  'kids-rain-jacket-pink': { folder: 'kids', prefix: 'kids-puffer-jacket-pink', count: 5 },
 }
 
 /**
@@ -232,13 +225,8 @@ export function getLocalProductImagePath(productId: string, imageIndex: number, 
   const cfg = V[productId]
   if (!cfg) return '/images/placeholder.png'
 
-  if (cfg.files && cfg.files.length > 0) {
-    const idx = Math.min(imageIndex - 1, cfg.files.length - 1)
-    return `/images/products/${cfg.folder}/${encodeURIComponent(cfg.files[idx])}`
-  }
-
   const idx = String(imageIndex).padStart(2, '0')
-  return `/images/products/${cfg.folder}/${encodeURIComponent(`${cfg.filenameBase} ${idx}`)}.png`
+  return `/images/products/${cfg.folder}/${cfg.prefix}-${idx}.png`
 }
 
 /**
@@ -251,10 +239,6 @@ export function getLocalProductImages(productId: string, _color?: string, _count
   const cfg = V[productId]
   if (!cfg) return []
 
-  if (cfg.files && cfg.files.length > 0) {
-    return cfg.files.map(f => `/images/products/${cfg.folder}/${encodeURIComponent(f)}`)
-  }
-
   return Array.from({ length: cfg.count }, (_, i) =>
     getLocalProductImagePath(productId, i + 1)
   )
@@ -266,5 +250,5 @@ export function getLocalProductImages(productId: string, _color?: string, _count
 export function getProductVideoPath(productId: string): string | null {
   const cfg = V[productId]
   if (!cfg?.video) return null
-  return `/images/products/${cfg.folder}/${encodeURIComponent(cfg.video)}`
+  return `/images/products/${cfg.folder}/${cfg.video}`
 }

@@ -56,7 +56,7 @@ export default function AboutPage() {
                     loop
                     playsInline
                   >
-                    <source src="/images/products/womens/video-222.mp4" type="video/mp4" />
+                    <source src="/images/products/womens/womens-oversized-blazer-beige.mp4" type="video/mp4" />
                   </video>
                 </div>
                 <div className="aspect-square bg-brand-gray-100 rounded-lg overflow-hidden">
@@ -67,7 +67,7 @@ export default function AboutPage() {
                     loop
                     playsInline
                   >
-                    <source src="/images/products/womens/video-88.mp4" type="video/mp4" />
+                    <source src="/images/products/womens/womens-crossbody-bag-brown.mp4" type="video/mp4" />
                   </video>
                 </div>
               </div>
@@ -95,7 +95,7 @@ export default function AboutPage() {
                   playsInline
                   preload="metadata"
                 >
-                  <source src="/images/products/womens/video-223.mp4" type="video/mp4" />
+                  <source src="/images/products/womens/womens-silk-midi-dress-pink.mp4" type="video/mp4" />
                   Your browser does not support the video tag.
                 </video>
               </div>

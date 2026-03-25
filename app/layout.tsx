@@ -38,7 +38,7 @@ export const metadata: Metadata = {
       'Discover the latest trends in fashion and retail. Shop the new season collection at Market Street.',
     images: [
       {
-        url: '/images/hero/hero-main.png',
+        url: '/images/content/home-main-04.png',
         width: 1024,
         height: 1024,
         alt: 'Market Street — Fashion and retail for modern living',
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Market Street | Fashion & Retail',
     description: 'Discover the latest trends in fashion and retail.',
-    images: ['/images/hero/hero-main.png'],
+    images: ['/images/content/home-main-04.png'],
   },
   robots: {
     index: true,
