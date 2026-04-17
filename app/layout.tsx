@@ -6,6 +6,8 @@ import TrackingConsentBanner from '../components/TrackingConsentBanner'
 import { AgentProvider } from '../context/AgentContext'
 import AgentLayoutWrapper from '../components/AgentLayoutWrapper'
 import CssDiagnostics from '../components/CssDiagnostics'
+import DemoDisclaimerModal from '../components/DemoDisclaimerModal'
+import InternalDemoBadge from '../components/InternalDemoBadge'
 
 const sen = Sen({
   subsets: ['latin'],
@@ -74,6 +76,8 @@ export default function RootLayout({
           <AgentLayoutWrapper>
             {children}
             <TrackingConsentBanner />
+            <DemoDisclaimerModal />
+            <InternalDemoBadge />
           </AgentLayoutWrapper>
         </AgentProvider>
       </body>
