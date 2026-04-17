@@ -36,6 +36,15 @@ export default function DemoDisclaimerModal() {
     }
   }, [])
 
+  // Allow other components (e.g., the persistent badge) to re-open the modal
+  // by dispatching a `open-demo-disclaimer` event on window.
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    const openHandler = () => setIsVisible(true)
+    window.addEventListener('open-demo-disclaimer', openHandler)
+    return () => window.removeEventListener('open-demo-disclaimer', openHandler)
+  }, [])
+
   useEffect(() => {
     if (!isVisible) return
     const onKey = (e: KeyboardEvent) => {
@@ -119,8 +128,32 @@ export default function DemoDisclaimerModal() {
             </p>
           </div>
 
+          {/* Access note */}
+          <div className="mt-5 flex items-start gap-2.5 p-3 rounded-lg bg-brand-gray-50 border border-brand-gray-200">
+            <svg
+              className="w-4 h-4 mt-0.5 flex-shrink-0 text-brand-gray-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
+              />
+            </svg>
+            <p className="text-xs text-brand-gray-600 leading-relaxed">
+              The Figma file is access-controlled. If you don&apos;t yet have
+              permission, click <strong>Open Pilot Figma</strong> and use
+              Figma&apos;s <em>Request access</em> prompt — approvals are handled
+              by the Salesforce Design team.
+            </p>
+          </div>
+
           {/* Actions */}
-          <div className="mt-7 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:justify-end">
+          <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:justify-end">
             <button
               onClick={handleClose}
               className="px-5 py-2.5 bg-white border border-brand-gray-300 text-brand-black text-sm font-medium rounded-lg hover:bg-brand-gray-50 transition-colors"
